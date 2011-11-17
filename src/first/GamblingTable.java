@@ -9,24 +9,10 @@ package first;
  * @author Alexey
  */
 public class GamblingTable {
-    /*public enum Action {Add, Remove};
-    private class HistoryItem{
-        public Turn turn;
-        public Action action;
-        public int actionNum;
-        public HistoryItem(Turn t, Action a, int aNum)
-        {
-            turn = t;
-            action = a;
-            actionNum = aNum;
-        }
-    };
-    private HistoryItem history[];*/
     public Turn table[][];
     public GamblingTable()
     {
         table = new Turn[0][0];
-        //history = new HistoryItem[0];
     }
     public Turn viewTurn(int actionNum, int cardNum)
     {
