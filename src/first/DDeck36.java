@@ -22,7 +22,7 @@ public class DDeck36 extends Deck{
         {
             for (int j = 0; j < deckSize; j++)
             {
-                allCards[i*deckSize + j] = new Card(Card.Value.values()[5+(j/4)], Card.Color.values()[j%4]);
+                allCards.add(new Card(Card.Value.values()[5+(j/4)], Card.Color.values()[j%4]));
             }
         }
     }

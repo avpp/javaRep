@@ -4,48 +4,45 @@
  */
 package first;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author Alexey
  */
 public class GamblingTable {
-    public Turn table[][];
+    public LinkedList<LinkedList<Turn>> table;
     public GamblingTable()
     {
-        table = new Turn[0][0];
+        table = new LinkedList<LinkedList<Turn>>();
     }
     public Turn viewTurn(int actionNum, int cardNum)
     {
-        if (actionNum < 0 || actionNum >= table.length)
+        if (actionNum < 0 || actionNum >= table.size())
             return null;
-        if (cardNum < 0 || cardNum >= table[actionNum].length)
+        if (cardNum < 0 || cardNum >= table.get(actionNum).size())
             return null;
-        return table[actionNum][cardNum];
+        return table.get(actionNum).get(cardNum);
     }
     public void AddTurn(Turn turn, int actionNum)
     {
-        if (actionNum < 0 || actionNum >= table.length)
+        if (actionNum < 0 || actionNum >= table.size())
         {
-            actionNum = table.length;
-            Turn tmpTable[][] = new Turn[table.length + 1][0];
-            System.arraycopy(table, 0, tmpTable, 0, table.length);
-            table = tmpTable;
+            actionNum = table.size();
+            table.add(new LinkedList<Turn>());
         }
-        Turn tmpTurns[] = new Turn[table[actionNum].length + 1];
-        System.arraycopy(table[actionNum], 0, tmpTurns, 0, table[actionNum].length);
-        tmpTurns[tmpTurns.length - 1] = turn;
-        table[actionNum] = tmpTurns;
+        table.get(actionNum).add(turn);
     }
     public Card[] getAllCards()
     {
         int count = 0;
-        for(Turn[] t: table)
+        for(LinkedList<Turn> t: table)
         {
-            count +=t.length;
+            count += t.size();
         }
         Card answer[] = new Card[count];
         int i = 0;
-        for(Turn[] t: table)
+        for(LinkedList<Turn> t: table)
         {
             for(Turn tt: t)
             {
@@ -56,7 +53,7 @@ public class GamblingTable {
     }
     public void PrintGamblingTable()
     {
-        for (Turn[] t: table)
+        for (LinkedList<Turn> t: table)
         {
             for(Turn tt: t)
             {

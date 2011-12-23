@@ -5,6 +5,9 @@
 package first;
 
 //Dealer = тот, который следит за правилами игры. фактически он изменяет состояние игры.
+
+import java.io.IOException;
+
 //Player = тот, который делает выбор(как походить) в данной игровой ситуации.
 ////Server = тот, кто инициализирует игру.
 //Каждый игрок локально имеет свой сервер/клиент. и имеет соединение с остольными участниками.
@@ -31,9 +34,30 @@ public class First {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        Deck d = new DDeck36(1);
-        d.Shuffle();
+        Admin a = new Admin();
+        a.StartServer();
+        a.createDealer();
+        int choice = 0;
+        while (choice != 'n')
+        {
+            System.out.println("Players: ");
+            for (String s : a.getPlayerList())
+            {
+                System.out.println(s);
+            }
+            do
+            {
+                choice = System.in.read();
+            }
+            while (choice == '\n');
+            if (choice >= '0' && choice <= '9')
+            {
+                choice = choice - 48;
+                a.addPlayer(choice);
+            }
+        }
+        a.startGame();
     }
 }

@@ -8,11 +8,5 @@ package first;
  *
  * @author Alexey
  */
-public class DPlayer extends Player{
-    @Override
-    public String move(String situation)
-    {
-        String answer = "";
-        return answer;
-    }
+public class DPlayer{
 }

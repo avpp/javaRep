@@ -4,32 +4,32 @@
  */
 package first;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author Alexey
  */
-public abstract class Dealer {
-    public Player players[];
+public abstract class Dealer implements Runnable {
+    //public ServPlayer players[];
+    public LinkedList<ServPlayer> players;
     public Deck deck;
     public History history;
-    public abstract void initGame(Deck deck);
-    public abstract void play();
-    public void addPlayer(Player player)
+    public Dealer(Deck deck)
     {
-        Player tmp[] = new Player[players.length + 1];
-        System.arraycopy(players, 0, tmp, 0, players.length);
-        tmp[players.length] = player;
-        players = tmp;
+        this.deck = deck;
+        players = new LinkedList<ServPlayer>();
+        history = new History();
     }
-    public void remPlayer(int index)
+    public abstract void initGame();
+    public void initGame(Deck deck)
     {
-        if (index < 0 || index >= players.length)
-        {
-            return;
-        }
-        Player tmp[] = new Player[players.length - 1];
-        System.arraycopy(players, 0, tmp, 0, index-1);
-        System.arraycopy(players, index+1, tmp, index, players.length - index);
-        players = tmp;
+        this.deck = deck;
+        initGame();
+    }
+    public abstract void play();
+    @Override
+    public void run() {
+        play();
     }
 }

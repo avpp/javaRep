@@ -1,0 +1,99 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package first;
+
+import java.util.LinkedList;
+
+/**
+ *
+ * @author Alexey
+ */
+public class Admin {
+    private class GatheringMessages implements Runnable {
+        @Override
+        public void run() {
+            String template[] = {"motion", "message", "delete"};
+            LinkedList<ServPlayer> delPlayers = new LinkedList<ServPlayer>();
+            while (true)
+            {
+                server.serverDontWork();
+                for (ServPlayer curPlayer : server.players)
+                {
+                    int mes_count = curPlayer.messages.size();
+                    for (int j =0; j < mes_count; j++)
+                    {
+                        String s = curPlayer.messages.removeFirst();
+                        for (int i = 0; i < template.length; i++)
+                        if (s.startsWith(template[i]))
+                        {
+                            switch (i)
+                            {
+                                case 0 : {
+                                    curPlayer.setAnswer(s.substring(6));
+                                } break;
+                                case 1 : {
+                                    String message = ((curPlayer.name).concat(": ")).concat(s.substring(7));
+                                    for (ServPlayer tmpPlayer : server.players)
+                                    {
+                                        tmpPlayer.sendMessage(message);
+                                    }
+                                } break;
+                                case 2 : {
+                                    curPlayer.closeSocket();
+                                    delPlayers.add(curPlayer);
+                                } break;
+                            }
+                        }
+                    }
+                }
+                if (delPlayers.size() > 0)
+                {
+                    server.players.removeAll(delPlayers);
+                    if (dealer.players.removeAll(delPlayers))
+                        gameTh.interrupt();
+                    delPlayers.clear();
+                }
+                server.serverMayWork();
+            }
+        }
+        
+    }
+    private Server server;
+    private Thread servTh, gameTh, mesTh;
+    private Dealer dealer;
+    public Admin()
+    {
+        server = new Server();
+        servTh = new Thread(server);
+    }
+    public void StartServer()
+    {
+        servTh.start();
+    }
+    public LinkedList<String> getPlayerList()
+    {
+        LinkedList<String> ans = new LinkedList<String>();
+        for(ServPlayer tmpPl : server.players)
+        {
+            ans.add(tmpPl.name);
+        }
+        return ans;
+    }
+    public void createDealer()
+    {
+        dealer = new DDealer(new DDeck36(1));
+    }
+    public void addPlayer(int index)
+    {
+        dealer.players.add(server.players.get(index));
+    }
+    public void startGame()
+    {
+        gameTh = new Thread(dealer);
+        gameTh.start();
+        mesTh = new Thread(new GatheringMessages());
+        mesTh.start();
+    }
+}

@@ -9,8 +9,12 @@ package first;
  * @author Alexey
  */
 public class DDealer extends Dealer{
+    public DDealer(Deck deck)
+    {
+        super(deck);
+    }
     @Override
-    public void initGame(Deck deck)
+    public void initGame()
     {
         /*
          * 1. Проверить колоду
@@ -35,7 +39,13 @@ public class DDealer extends Dealer{
          * в. отбиться
          * г. повтор а., пока все + 1 человек подряд не откажутся от хода
          */
-        
+        for (ServPlayer sp : players)
+        {
+            System.out.print("From player ");
+            System.out.print(sp.name);
+            System.out.print(" motion: ");
+            System.out.print(sp.move("situation"));
+        }
     }
     
     

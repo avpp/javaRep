@@ -4,6 +4,7 @@
  */
 package first;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 /**
@@ -16,14 +17,14 @@ public abstract class Deck {
     public abstract int countCardsInSimpleDeck();
     protected int deckCount;
     protected int topNum, lowNum;
-    protected Card allCards[];
+    protected LinkedList<Card> allCards;
     
     public Deck(int deckCount)
     {
         this.deckCount = deckCount;
-        allCards = new Card[deckCount*countCardsInSimpleDeck()];
+        allCards = new LinkedList<Card>();//  Card[deckCount*countCardsInSimpleDeck()];
         topNum = 0;
-        lowNum = allCards.length - 1;
+        lowNum = allCards.size() - 1;
     }
     /*{
         this.deckType = deckType;
@@ -55,12 +56,12 @@ public abstract class Deck {
             java.util.Random r = new Random();
             Card tmpCard;
             int pos;
-            for (int i = 0; i < allCards.length; i++)
+            for (int i = 0; i < allCards.size(); i++)
             {
-                pos = (Math.abs(r.nextInt()))%allCards.length;
-                tmpCard = allCards[i];
-                allCards[i] = allCards[pos];
-                allCards[pos] = tmpCard;
+                pos = (Math.abs(r.nextInt()))%allCards.size();
+                tmpCard = allCards.get(i);
+                allCards.set(i, allCards.get(pos));
+                allCards.set(pos, tmpCard);
             }
         }
     }
@@ -71,8 +72,8 @@ public abstract class Deck {
             return null;
         switch (side)
         {
-            case top: {return allCards[topNum++];}
-            case low: {return allCards[lowNum--];}
+            case top: {return allCards.get(topNum++);}
+            case low: {return allCards.get(lowNum--);}
         }
         return null;
     }
@@ -83,8 +84,8 @@ public abstract class Deck {
             return null;
         switch (side)
         {
-            case top: {return allCards[topNum];}
-            case low: {return allCards[lowNum];}
+            case top: {return allCards.get(topNum);}
+            case low: {return allCards.get(lowNum);}
         }
         return null;
     }

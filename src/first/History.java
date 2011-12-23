@@ -4,26 +4,25 @@
  */
 package first;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author Alexey
  */
 public class History {
-    private GamblingTable tables[];
+    private LinkedList<GamblingTable> tables;
 
     public History() {
-        tables = new GamblingTable[0];
+        tables = new LinkedList<GamblingTable>();
     }
-    public GamblingTable getTop() {
-        return tables[0];
+    public GamblingTable getLast() {
+        return tables.getLast();
     }
     public GamblingTable getTable(int t) {
-        return (t < 0 || t >= tables.length) ? null : tables[tables.length - t];
+        return tables.get(t);
     }
     public void AddNew() {
-        GamblingTable tmp[] = new GamblingTable[tables.length + 1];
-        System.arraycopy(tables, 0, tmp, 1, tables.length);
-        tables = tmp;
-        tables[0] = new GamblingTable();
+        tables.add(new GamblingTable());
     }
 }
