@@ -10,8 +10,8 @@ package first;
  */
 public class Turn {
     private Card card;
-    private ServPlayer player;
-    Turn (ServPlayer p, Card c)
+    private GamePlayer player;
+    Turn (GamePlayer p, Card c)
     {
         card = c;
         player = p;
@@ -20,7 +20,7 @@ public class Turn {
     {
         return card;
     }
-    public ServPlayer getPlayer()
+    public GamePlayer getPlayer()
     {
         return player;
     }

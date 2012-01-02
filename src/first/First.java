@@ -36,7 +36,7 @@ public class First {
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        Admin a = new Admin();
+        Admin a = new DAdmin();
         a.StartServer();
         a.createDealer();
         int choice = 0;

@@ -95,6 +95,11 @@ public abstract class Deck {
         return lowNum - topNum + 1;
     }
     
+    public int fullDeckSize()
+    {
+        return deckCount*countCardsInSimpleDeck();
+    }
+    
     public void PrintDeck()
     {
         int i =0;

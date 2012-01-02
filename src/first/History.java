@@ -22,7 +22,9 @@ public class History {
     public GamblingTable getTable(int t) {
         return tables.get(t);
     }
-    public void AddNew() {
-        tables.add(new GamblingTable());
+    public GamblingTable AddNew() {
+        GamblingTable gt = new GamblingTable();
+        tables.add(gt);
+        return gt;
     }
 }

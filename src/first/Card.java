@@ -26,6 +26,36 @@ public class Card {
         value = v;
         color = c;
     }
+    
+    public static Card getCard(String name)
+    {
+        Value v;
+        try
+        {
+            v = Value.valueOf(name.substring(0, name.length() - 2));
+        } catch (IllegalArgumentException ex)
+        {
+            return null;
+        }
+        Color c;
+        switch (name.charAt(name.length() - 1))
+        {
+            case '♣' : {c = Color.clubs;}
+                break;
+            case '♦' : {c = Color.diamonds;}
+                break;
+            case '♥' : {c = Color.hearts;}
+                break;
+            case '♠' : {c = Color.spades;}
+                break;
+            default: {return null;}
+        }
+        return new Card(v, c);
+    }
+    public static Boolean isEqual(Card c1, Card c2)
+    {
+        return (c1.getColor().equals(c2.getColor())) && (c1.getValue().equals(c2.getValue()));
+    }
     public String getName()
     {
         String c = "";

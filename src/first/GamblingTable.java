@@ -18,8 +18,12 @@ public class GamblingTable {
     }
     public Turn viewTurn(int actionNum, int cardNum)
     {
+        if (actionNum == -1)
+            actionNum = table.size() - 1;
         if (actionNum < 0 || actionNum >= table.size())
             return null;
+        if (cardNum == -1)
+            cardNum = table.get(actionNum).size() - 1;
         if (cardNum < 0 || cardNum >= table.get(actionNum).size())
             return null;
         return table.get(actionNum).get(cardNum);
@@ -33,20 +37,20 @@ public class GamblingTable {
         }
         table.get(actionNum).add(turn);
     }
-    public Card[] getAllCards()
+    public LinkedList<Card> getAllCards()
     {
         int count = 0;
         for(LinkedList<Turn> t: table)
         {
             count += t.size();
         }
-        Card answer[] = new Card[count];
+        LinkedList<Card> answer = new LinkedList<Card>();
         int i = 0;
         for(LinkedList<Turn> t: table)
         {
             for(Turn tt: t)
             {
-                answer[i++] = tt.getCard();
+                answer.add(tt.getCard());
             }
         }
         return answer;

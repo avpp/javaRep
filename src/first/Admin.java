@@ -10,7 +10,7 @@ import java.util.LinkedList;
  *
  * @author Alexey
  */
-public class Admin {
+public abstract class Admin {
     private class GatheringMessages implements Runnable {
         @Override
         public void run() {
@@ -62,7 +62,7 @@ public class Admin {
     }
     private Server server;
     private Thread servTh, gameTh, mesTh;
-    private Dealer dealer;
+    protected Dealer dealer;
     public Admin()
     {
         server = new Server();
@@ -81,18 +81,27 @@ public class Admin {
         }
         return ans;
     }
-    public void createDealer()
+    public abstract void createDealer();
+    public abstract Boolean isPlayerOK(ServPlayer player);
+    public Boolean addPlayer(ServPlayer player)
     {
-        dealer = new DDealer(new DDeck36(1));
+        if (isPlayerOK(player))
+            dealer.players.add(new GamePlayer(player));
+        else
+            return false;
+        return true;
     }
-    public void addPlayer(int index)
+    public Boolean addPlayer(int index)
     {
-        dealer.players.add(server.players.get(index));
+        return addPlayer(server.players.get(index));
     }
     public void startGame()
     {
         gameTh = new Thread(dealer);
         gameTh.start();
+    }
+    public void startGathering()
+    {
         mesTh = new Thread(new GatheringMessages());
         mesTh.start();
     }

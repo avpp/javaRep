@@ -51,7 +51,7 @@ public class ServPlayer {
     private Thread l_th;
     private Socket s;
     public String name;
-    public LinkedList<Card> cards;
+//    public LinkedList<Card> cards;
     private String answer;
     private Semaphore sem;
     public LinkedList<String> messages;
@@ -71,7 +71,7 @@ public class ServPlayer {
         l_th = new Thread(new Listen(socket));
         l_th.start();
         messages = new LinkedList<String>();
-        cards = new LinkedList<Card>();
+//        cards = new LinkedList<Card>();
         sem = new Semaphore(0);
     }
     public void closeSocket()
