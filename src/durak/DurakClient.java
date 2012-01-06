@@ -18,6 +18,13 @@ public class DurakClient extends Client {
     private LinkedList<Card> m_cards;
     private LinkedList<DurakAdversary> m_adversaries;
     
+    public void parseAllString(String bigMesg) {
+        String delim = "\n";
+        String[] data = bigMesg.split(delim);
+        for (String s : data)
+            parseMessage(s);
+    }
+        
     public void parseMessage(String message) {
         String template[] = {"turn", "take", "your",
                              "gamt", "wint", "scor",
@@ -72,7 +79,9 @@ public class DurakClient extends Client {
         }
     }
     
-    private void parseTake(String message)
+    private void parseTake(String message) {
+        
+    }
             
     private void parseYour(String message) {
         m_cards.clear();
@@ -88,7 +97,7 @@ public class DurakClient extends Client {
     
     private void parseListPlayers(String message) {
         m_adversaries.clear();
-        String delimeter = "\\\\";
+        String delimeter = "/";
         String plArr[] = message.split(delimeter);
         //Пропускаем 1й элемент(содержит команду "plls"
         for (int i = 1; i < plArr.length; i += 2) {
@@ -99,30 +108,7 @@ public class DurakClient extends Client {
     }
         
     private void parseGamblingTable(String message) {
-        m_gambTable = null;
-        m_gambTable = new GamblingTable();
-        
-        LinkedList<Turn> tmpStack;
-        Card tmpCard;
-        Turn tmpTurn;
-        
-        String delimeter = "\\\\";
-        String gamtArr[] = message.split(delimeter);
-        
-        for (int i = 1; i < gamtArr.length; i++) {
-            tmpStack = new LinkedList<Turn>();
-            for (int j = 0; j < gamtArr[i].length(); j+=2) {
-                int iColor = (int)gamtArr[i].charAt(j);
-                int iValue = (int)gamtArr[i].charAt(j + 1);
-                Color c = Color.values()[iColor];
-                Value v = Value.values()[iValue];
-                
-                tmpCard = new Card(v, c);
-                tmpTurn = new Turn(null, tmpCard);
-                tmpStack.add(tmpTurn);
-            }
-            m_gambTable.addStack(tmpStack);
-        }
+        m_gambTable = GamblingTable.fromString(message);
     }
     
     private void parseWinTable(String message) {
