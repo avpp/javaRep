@@ -24,4 +24,13 @@ public class GamePlayer {
     {
         return p.move(s);
     }
+    public String getCards()
+    {
+        String ans = "your/";
+        for (Card c : cards)
+        {
+            ans.concat(c.toString()).concat(",");
+        }
+        return ans;
+    }
 }

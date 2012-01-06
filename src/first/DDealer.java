@@ -89,7 +89,8 @@ public class DDealer extends Dealer{
         endGame = false;
         return true;
     }
-    
+    Boolean lastRemoved;
+    int curPlayerBounceIndex, curPlayerMoveIndex, counSeqNoMoves;
     @Override
     public void play()
     {
@@ -113,15 +114,16 @@ public class DDealer extends Dealer{
          * 
          */
         GamblingTable curTable;
-        int curPlayerBounceIndex = 0, curPlayerMoveIndex = players.size() - 1, counSeqNoMoves = 0;
+        curPlayerBounceIndex = 0;
+        curPlayerMoveIndex = players.size() - 1;
+        counSeqNoMoves = 0;
         String playerAnswer;
-        Boolean lastRemoved, endTable;
+        Boolean endTable;
         while (!endGame)
         {
             lastRemoved = false;
             endTable = false;
             curTable = history.AddNew();  //добавили новый игровой стол.
-            !Надо сообщить об этом всем
             do
             {
                 Boolean repeatMove;
@@ -148,7 +150,7 @@ public class DDealer extends Dealer{
                     }
                     else
                     {
-                        Card c = Card.getCard(playerAnswer);
+                        Card c = Card.fromString(playerAnswer);
                         if (c == null)
                         {
                             repeatMove = true;
@@ -176,7 +178,7 @@ public class DDealer extends Dealer{
                                 {//Теперь, наконец-то, мы можем фактически сделать ход!!!
                                     curTable.AddTurn(new Turn(players.get(curPlayerMoveIndex), c), -1);
                                     players.get(curPlayerMoveIndex).cards.remove(c);
-                                    !Надо сообщить всем.
+                                    //!Надо сообщить всем.
                                 }
                                 else
                                 {
@@ -186,7 +188,8 @@ public class DDealer extends Dealer{
                         }
                     }
                 } while(repeatMove);
-                
+                //Отправляем всем всю информацию
+                sendAll(curTable.toString(),getLsPl());
                 //Отбиваем карту
                 if (!lastRemoved)
                 {
@@ -201,7 +204,7 @@ public class DDealer extends Dealer{
                         else
                         {
                             
-                            Card c = Card.getCard(playerAnswer);
+                            Card c = Card.fromString(playerAnswer);
                             if (c == null)
                             {
                                 repeatMove = true;
@@ -226,7 +229,7 @@ public class DDealer extends Dealer{
                                     {//Теперь, наконец-то, мы можем фактически сделать ход!!!
                                         curTable.AddTurn(new Turn(players.get(curPlayerBounceIndex), c), curTable.table.size() - 1);
                                         players.get(curPlayerBounceIndex).cards.remove(c);
-                                        !Надо сообщить всем.
+                                        //!Надо сообщить всем.
                                     }
                                     else
                                     {
@@ -237,6 +240,7 @@ public class DDealer extends Dealer{
                         
                         }
                     } while(repeatMove);
+                    //!Отправляем всем всю информацию
                 }
                 endTable = (curTable.table.size() == 6) || (counSeqNoMoves >= players.size() - 1);
             } while(!endTable);
@@ -318,7 +322,21 @@ public class DDealer extends Dealer{
             return false;
         return true;
     }
-
+//список игроков
+//игровой стол
+//карты игрока
+//wint
+//колода
+//
+    public String getLsPl()
+    {
+        String ans = "";
+        for (GamePlayer p : players)
+        {
+            ans.concat(p.name).concat(",").concat(String.valueOf(p.cards.size())).concat(",");
+        }
+        return ans;
+    }
     @Override
     public String generateAllGameInfo() {
         String ans = "info:\n";
@@ -339,7 +357,7 @@ public class DDealer extends Dealer{
         //Добавим количество карт в колоде и начальный размер колоды
         ans = ans.concat("deck\n").concat(String.valueOf(deck.size())).concat("/").concat(String.valueOf(deck.fullDeckSize())).concat("\n");
         //Добавим козырную карту
-        ans = ans.concat("trump\n").concat(cardTrump.getName()).concat("\n");
+        ans = ans.concat("trump\n").concat(cardTrump.toString()).concat("\n");
         return ans;
     }
 }

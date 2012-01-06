@@ -54,12 +54,13 @@ public class WinTable {
         for (i = 0; i < records.size() && !records.get(i).getPlayer().equals(p); i++);
         return records.get(i).getScore();
     }
-    public String generateString()
+    @Override
+    public String toString()
     {
-        String ans = "wint";
+        String ans = "wint/";
         for(rec r : records)
         {
-            ans.concat("\n").concat(r.getPlayer().name).concat(String.valueOf(r.getScore()));
+            ans.concat(r.getPlayer().name).concat(",");
         }
         return ans;
     }

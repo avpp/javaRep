@@ -105,9 +105,14 @@ public abstract class Deck {
         int i =0;
         for(Card card : allCards)
         {
-            System.out.print(card.getName() + " ");
+            System.out.print(card.toString() + " ");
             if ((++i)%4 == 0)
                 System.out.println();
         }
+    }
+    
+    public String getInfo()
+    {
+        return "deck/".concat(String.valueOf(size())).concat(String.valueOf(fullDeckSize()));
     }
 }

@@ -27,7 +27,7 @@ public class Card {
         color = c;
     }
     
-    public static Card getCard(String name)
+    public static Card fromString(String name)
     {
         Value v;
         try
@@ -56,7 +56,8 @@ public class Card {
     {
         return (c1.getColor().equals(c2.getColor())) && (c1.getValue().equals(c2.getValue()));
     }
-    public String getName()
+    @Override
+    public String toString()
     {
         String c = "";
         switch (color)

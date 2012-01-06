@@ -79,28 +79,42 @@ public class GamblingTable {
         {
             for(Turn tt: t)
             {
-                System.out.print(tt.getCard().getName() + " ");
+                System.out.print(tt.getCard().toString() + " ");
             }
             System.out.println();
         }
     }
-    public String generateString()
+    
+    @Override
+    public String toString()
     {
         String ans = "gamt";
         for (LinkedList<Turn> t: table)
         {
-            ans.concat("\n");
+            ans.concat("/");
             for(Turn tt: t)
             {
-                ans.concat(tt.getCard().getName());
+                ans.concat(tt.getCard().toString()).concat(",");
             }
         }
         return ans;
     }
-    public static GamblingTable generateObject(String str)
+    public static GamblingTable fromString(String str)
     {
-        String[] s = str.split("\n");
+        String[] s = str.split("/");
         if (s.length <= 0)
             return null;
+        if (!"gamt".equals(s[0]))
+            return null;
+        GamblingTable ans = new GamblingTable();
+        for (int i = 1; i < s.length; i++)
+        {
+            String cards[] =s[i].split(",");
+            for (int j = 0; j < cards.length; j++)
+            {
+                ans.AddTurn(new Turn(null, Card.fromString(cards[j])), i - 1);
+            }
+        }
+        return ans;
     }
 }
