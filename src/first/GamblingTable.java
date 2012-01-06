@@ -12,10 +12,28 @@ import java.util.LinkedList;
  */
 public class GamblingTable {
     public LinkedList<LinkedList<Turn>> table;
+    
     public GamblingTable()
     {
         table = new LinkedList<LinkedList<Turn>>();
     }
+    
+    public LinkedList<LinkedList<Turn>> getGamblingTable() {
+        return table;
+    }
+    
+    public LinkedList<Turn> getStackbyIndex(int index) {
+        return table.get(index);
+    }
+    
+    public int numOfStacks() {
+        return table.size();
+    }
+    
+    public void addStack(LinkedList<Turn> stack) {
+        table.add(stack);
+    }
+    
     public Turn viewTurn(int actionNum, int cardNum)
     {
         if (actionNum == -1)
