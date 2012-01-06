@@ -66,4 +66,23 @@ public class GamblingTable {
             System.out.println();
         }
     }
+    public String generateString()
+    {
+        String ans = "gamt";
+        for (LinkedList<Turn> t: table)
+        {
+            ans.concat("\n");
+            for(Turn tt: t)
+            {
+                ans.concat(tt.getCard().getName());
+            }
+        }
+        return ans;
+    }
+    public static GamblingTable generateObject(String str)
+    {
+        String[] s = str.split("\n");
+        if (s.length <= 0)
+            return null;
+    }
 }

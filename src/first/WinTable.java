@@ -48,4 +48,19 @@ public class WinTable {
             r.incScore();
         }
     }
+    public int getScore(GamePlayer p)
+    {
+        int i;
+        for (i = 0; i < records.size() && !records.get(i).getPlayer().equals(p); i++);
+        return records.get(i).getScore();
+    }
+    public String generateString()
+    {
+        String ans = "wint";
+        for(rec r : records)
+        {
+            ans.concat("\n").concat(r.getPlayer().name).concat(String.valueOf(r.getScore()));
+        }
+        return ans;
+    }
 }

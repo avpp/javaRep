@@ -14,7 +14,7 @@ public abstract class Admin {
     private class GatheringMessages implements Runnable {
         @Override
         public void run() {
-            String template[] = {"motion", "message", "delete"};
+            String template[] = {"turn", "mesg", "exit"};
             LinkedList<ServPlayer> delPlayers = new LinkedList<ServPlayer>();
             while (true)
             {
@@ -31,7 +31,7 @@ public abstract class Admin {
                             switch (i)
                             {
                                 case 0 : {
-                                    curPlayer.setAnswer(s.substring(6));
+                                    curPlayer.setAnswer(s.substring(4));
                                 } break;
                                 case 1 : {
                                     String message = ((curPlayer.name).concat(": ")).concat(s.substring(7));

@@ -10,7 +10,7 @@ package first;
  */
 public class Card {
     public enum Color {clubs, spades, hearts, diamonds};
-    public enum Value {c2, c3, c4, c5, c6, c7, c8, c9, c10, cJ, cQ, cK, cA, cjoker};
+    public enum Value {c2, c3, c4, c5, c6, c7, c8, c9, c0, cJ, cQ, cK, cA, cj};
     private Color color;
     private Value value;
     public Color getColor()

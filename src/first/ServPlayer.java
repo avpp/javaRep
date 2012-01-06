@@ -116,7 +116,7 @@ public class ServPlayer {
             try {
                 s.close();
                 messages.clear();
-                messages.add("delete");
+                messages.add("exit");
             } catch (IOException ex1) {
                 Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex1);
             }
