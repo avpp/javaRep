@@ -75,8 +75,8 @@ public class First {
             DurakClient dc = new DurakClient();
             
             //String str;
-            String address = "127.0.0.1";
-            int port = 12345;
+            String address = "95.30.118.221";
+            int port = 15147;
             /*
             System.out.println("Введи ip, через пробел порт");
             InputStreamReader input = new InputStreamReader(System.in);
@@ -88,7 +88,7 @@ public class First {
             port = Integer.parseInt(data[1]);
             */
             System.out.println("Connecting to " + 
-                    address + String.valueOf(port));
+                    address + " " + String.valueOf(port));
             
             dc.runLoop(address, port);
         }

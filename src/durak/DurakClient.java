@@ -56,7 +56,12 @@ public class DurakClient extends Client {
             }
             
             String mesg = read();
-            parseAllString(mesg);
+            /*!!!!*/System.out.println(mesg);
+            
+            if (mesg == "name")
+                this.write("Andrew");
+            else
+                parseAllString(mesg);
         }
     }
     
