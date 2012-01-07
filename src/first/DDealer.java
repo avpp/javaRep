@@ -17,9 +17,9 @@ public class DDealer extends Dealer{
     private Card cardTrump;
     private Boolean endGame;
     
-    public DDealer(Deck deck)
+    public DDealer(Deck deck, Admin admin)
     {
-        super(deck);
+        super(deck, admin);
         endGame = true;
     }
     
@@ -89,8 +89,8 @@ public class DDealer extends Dealer{
         endGame = false;
         return true;
     }
-    Boolean lastRemoved;
-    int curPlayerBounceIndex, curPlayerMoveIndex, counSeqNoMoves;
+    public Boolean lastRemoved;
+    public int curPlayerBounceIndex, curPlayerMoveIndex, counSeqNoMoves;
     @Override
     public void play()
     {
@@ -126,12 +126,14 @@ public class DDealer extends Dealer{
             curTable = history.AddNew();  //добавили новый игровой стол.
             do
             {
+                admin.AddMessage(null, curTable.toString());
+                admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'x'));
                 Boolean repeatMove;
                 // Подкидываем карту
                 do
                 {
                     repeatMove = false;
-                    playerAnswer = players.get(curPlayerMoveIndex).move(situation);
+                    playerAnswer = players.get(curPlayerMoveIndex).move("turn/+");
                     if ("no".equals(playerAnswer))
                     {
                         if (curTable.getAllCards().size() == 0)
@@ -189,14 +191,15 @@ public class DDealer extends Dealer{
                     }
                 } while(repeatMove);
                 //Отправляем всем всю информацию
-                sendAll(curTable.toString(),getLsPl());
-                //Отбиваем карту
+                admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'x'));
+                admin.AddMessage(null, curTable.toString());
+                //Отбиваем картуsendAll(curTable.toString(),getLsPl());
                 if (!lastRemoved)
                 {
                     do
                     {
                         repeatMove = false;
-                        playerAnswer = players.get(curPlayerBounceIndex).move(situation);
+                        playerAnswer = players.get(curPlayerBounceIndex).move("turn/-");
                         if ("no".equals(playerAnswer))
                         {
                             lastRemoved = true;
@@ -241,6 +244,8 @@ public class DDealer extends Dealer{
                         }
                     } while(repeatMove);
                     //!Отправляем всем всю информацию
+                    admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'x'));
+                    admin.AddMessage(null, curTable.toString());
                 }
                 endTable = (curTable.table.size() == 6) || (counSeqNoMoves >= players.size() - 1);
             } while(!endTable);
@@ -249,7 +254,6 @@ public class DDealer extends Dealer{
             if (lastRemoved)
             {
                 players.get(curPlayerBounceIndex).cards.addAll(curTable.getAllCards());
-                ! Надо сообщить об этом клиенту
             }
             //Набирает тот, кто ходил первым
             curPlayerMoveIndex = (curPlayerBounceIndex + players.size() - 1) % players.size();
@@ -272,6 +276,9 @@ public class DDealer extends Dealer{
             {
                 players.get(curPlayerBounceIndex).cards.add(deck.getCard(Deck.SideType.top));
             }
+            //!Надо бы соощить всемих карты
+            admin.AddMessage(null, "your/");
+            admin.AddMessage(null, deck.getInfo());
             //Переведём в таблицу победителей тех, кто вышел из игры.
             LinkedList <GamePlayer> addToWinList = new LinkedList<GamePlayer>();
             for (GamePlayer tmpPl : players)
@@ -287,7 +294,10 @@ public class DDealer extends Dealer{
                 }
                 wtable.incScore();
                 players.removeAll(addToWinList);
-                ! Надо бы сообщить всем
+                //! Надо бы сообщить всем
+                //wint+lspl для всех
+                admin.AddMessage(null, wtable.toString());
+                admin.AddMessage(null, getLsPl(-1, -1, 'x'));
             }
             //Рассчитаем номер следующего ходящего и отбивающегося
             curPlayerMoveIndex = curPlayerBounceIndex;
@@ -328,14 +338,19 @@ public class DDealer extends Dealer{
 //wint
 //колода
 //
-    public String getLsPl()
+    public String getLsPl(int indexTh, int indexBo, char modifer)
     {
-        String ans = "";
+        //создаём строчку "lspl/indexPl,indexTh,indexBo,modifer/"
+        String ans = "lspl/%d,".concat(String.valueOf(indexTh)).concat(",").concat(String.valueOf(indexBo)).concat(",").concat(String.valueOf(modifer)).concat("/");
         for (GamePlayer p : players)
         {
             ans.concat(p.name).concat(",").concat(String.valueOf(p.cards.size())).concat(",");
         }
         return ans;
+    }
+    public String getTrmp()
+    {
+        return "trmp/".concat(cardTrump.toString());
     }
     @Override
     public String generateAllGameInfo() {

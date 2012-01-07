@@ -18,8 +18,10 @@ public abstract class Dealer implements Runnable {
     public WinTable wtable;
     public Deck deck;
     public History history;
-    public Dealer(Deck deck)
+    protected Admin admin;
+    public Dealer(Deck deck, Admin admin)
     {
+        this.admin = admin;
         this.deck = deck;
         players = new LinkedList<GamePlayer>();
         history = new History();

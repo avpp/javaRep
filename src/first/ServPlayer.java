@@ -38,7 +38,10 @@ public class ServPlayer {
                         {
                             curString += "\0";
                         }
-                        messages.addAll(submes);
+                        while (submes.size() > 0)
+                        {
+                            acceptMessage(submes.removeFirst());
+                        }
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
@@ -54,10 +57,13 @@ public class ServPlayer {
 //    public LinkedList<Card> cards;
     private String answer;
     private Semaphore sem;
-    public LinkedList<String> messages;
+    private Admin myAdmin;
+    private GamePlayer gp;
     
-    public ServPlayer(Socket socket)
+    public ServPlayer(Socket socket, Admin admin)
     {
+        myAdmin = admin;
+        gp = null;
         s = socket;
         try {
             s.getOutputStream().write("name".getBytes());
@@ -70,9 +76,15 @@ public class ServPlayer {
         }
         l_th = new Thread(new Listen(socket));
         l_th.start();
-        messages = new LinkedList<String>();
-//        cards = new LinkedList<Card>();
         sem = new Semaphore(0);
+    }
+    public void setGamePlayer(GamePlayer p)
+    {
+        gp = p;
+    }
+    public GamePlayer getGamePlayer()
+    {
+        return gp;
     }
     public void closeSocket()
     {
@@ -104,6 +116,10 @@ public class ServPlayer {
         ans = getAnswer();
         return ans;
     }
+    public void acceptMessage(String message)
+    {
+        myAdmin.AddMessage(this, message);
+    }
     public void sendMessage(String message)
     {
         if (s.isClosed())
@@ -115,8 +131,7 @@ public class ServPlayer {
             Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
             try {
                 s.close();
-                messages.clear();
-                messages.add("exit");
+                myAdmin.AddMessage(this, "exit/");
             } catch (IOException ex1) {
                 Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex1);
             }

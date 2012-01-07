@@ -18,11 +18,13 @@ import java.util.logging.Logger;
  */
 public class Server implements Runnable{
     private ServerSocket ssocket;
+    private Admin a;
     public Boolean work;
     // Socket csockets[];
     public LinkedList<ServPlayer> players;
-    public Server()
+    public Server(Admin admin)
     {
+        a = admin;
         try {
             ssocket = new ServerSocket(15147, 100, null);
         } catch (IOException ex) {
@@ -34,11 +36,11 @@ public class Server implements Runnable{
         sem = new Semaphore(1);
     }
     private Semaphore sem;
-    public void serverMayWork()
+    public void ContinueWork()
     {
         sem.release();
     }
-    public void serverDontWork()
+    public void PauseWork()
     {
         try {
             sem.acquire();
@@ -54,7 +56,7 @@ public class Server implements Runnable{
                 Socket s = ssocket.accept();
                 try {
                     sem.acquire();
-                    players.add(new ServPlayer(s));
+                    players.add(new ServPlayer(s, a));
                     sem.release();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
