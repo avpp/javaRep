@@ -5,6 +5,8 @@
 package first;
 
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -64,10 +66,10 @@ public class Client {
         messages = new LinkedList<String>();
     }
     
-    public Boolean tryConnectTo(String addr, int Port)
+    public Boolean tryConnectTo(byte addr[], int Port)
     {
         try {
-            s.connect(new InetSocketAddress(addr, Port));
+            s.connect(new InetSocketAddress(InetAddress.getByAddress(addr), Port));
             th = new Thread(new Listen());
             th.start();
         } catch (IOException ex) {

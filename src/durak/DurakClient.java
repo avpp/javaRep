@@ -39,7 +39,7 @@ public class DurakClient extends Client {
         m_chat = new LinkedList<String>();
     }
     
-    public void runLoop(String address, int port) {
+    public void runLoop(byte address[], int port) {
         if (this.tryConnectTo(address, port))
             mainLoop();
         else

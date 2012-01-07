@@ -54,8 +54,10 @@ public class Server implements Runnable{
         {
             try {
                 Socket s = ssocket.accept();
+                System.out.print("Socket... ");
                 try {
                     sem.acquire();
+                    System.out.println("accepted");
                     players.add(new ServPlayer(s, a));
                     sem.release();
                 } catch (InterruptedException ex) {
