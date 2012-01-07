@@ -29,6 +29,10 @@ import java.io.IOException;
  *
  * @author Alexey
  */
+
+import durak.*;
+import java.io.*;
+
 public class First {
 
     /**
@@ -67,8 +71,26 @@ public class First {
             System.out.println(a.dealer.wtable.toString());
             a.stopServer();
         }
-        else if (choice == '2')
-        {
+        else if (choice == '2') {
+            DurakClient dc = new DurakClient();
+            
+            //String str;
+            String address = "127.0.0.1";
+            int port = 12345;
+            /*
+            System.out.println("Введи ip, через пробел порт");
+            InputStreamReader input = new InputStreamReader(System.in);
+            BufferedReader reader = new BufferedReader(input);
+            
+            str = reader.readLine();
+            String[] data = str.split(",");
+            address = data[0];
+            port = Integer.parseInt(data[1]);
+            */
+            System.out.println("Connecting to " + 
+                    address + String.valueOf(port));
+            
+            dc.runLoop(address, port);
         }
     }
 }

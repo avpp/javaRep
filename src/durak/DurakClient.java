@@ -4,26 +4,61 @@
  */
 package durak;
 
+import java.io.*;
+import java.io.IOException;
 import java.util.LinkedList;
 import first.*;
-import first.Card.Color;
-import first.Card.Value;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.lang.Thread;
 /**
  *
  * @author Andrew
  */
 public class DurakClient extends Client {
     private String m_name;
+    private DurakDeck m_deck;
     private GamblingTable m_gambTable;
     private LinkedList<Card> m_cards;
     private LinkedList<DurakAdversary> m_adversaries;
+    private DurakWinTable m_winTable;
     private int m_active;
     private int m_passive;
     private char m_whoseTurn;
     private int m_me;
+    private DurakScore m_score;
+    private Card m_trump;
+    private LinkedList<String> m_chat;
     
-    public DurakClient
+    public DurakClient() {
+        m_gambTable = new GamblingTable();
+        m_cards = new LinkedList<Card>();
+        m_adversaries = new LinkedList<DurakAdversary>();
+        m_winTable = new DurakWinTable();
+        m_score = new DurakScore();
+        m_chat = new LinkedList<String>();
+    }
+    
+    public void runLoop(String address, int port) {
+        if (this.tryConnectTo(address, port))
+            mainLoop();
+        else
+            System.out.println("Ошибка соединения!");
+    }
+    
+    public void mainLoop() {
+        long pause = 100;
+        while(true) {
+            try {
+                Thread.sleep(pause);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DurakClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            String mesg = read();
+            parseAllString(mesg);
+        }
+    }
     
     public void parseAllString(String bigMesg) {
         String delim = "\n";
@@ -74,11 +109,20 @@ public class DurakClient extends Client {
     
     private void parseTurn(String message) {
         int i = 6;
+        
         if (message.charAt(i) == '+') {
-            !!!makeTurn()
+            try {
+                makeTurn();
+            } catch (IOException ex) {
+                Logger.getLogger(DurakClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if (message.charAt(i) == '-') {
-            !!!responseTurn()
+            try {
+                responseTurn();
+            } catch (IOException ex) {
+                Logger.getLogger(DurakClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
       
@@ -89,7 +133,7 @@ public class DurakClient extends Client {
         String delim = ",";
         String[] data = message.split(delim);
         for (String s : data)
-            m_cards.add(new Card.fromString(s));
+            m_cards.add(Card.fromString(s));
     }
     
     private void parseListPlayers(String message) {
@@ -120,9 +164,67 @@ public class DurakClient extends Client {
     }
     
     private void parseWinTable(String message) {
-        
+        m_winTable.clearAll();
+        int i = 6;
+        String delim = ",";
+        String[] data = message.substring(i).split(delim);
+        for (String s : data)
+            m_winTable.addWinner(s);
     }
     
-    private void parseTurn(String message)
-    private void parseTurn(String message)        
+    private void parseScore(String message) {
+        m_score.clearAll();
+        int beginIndex = 6;
+        message = message.substring(beginIndex);
+        String delim = ",";
+        String[] data = message.split(delim);
+        for (int i = 0; i < data.length; i +=2)
+            m_score.add(
+                    data[i], Integer.parseInt(data[i + 1]));
+    }
+    
+    private void parseTrump(String message) {
+        int i = 6;
+        message = message.substring(i);
+        m_trump = Card.fromString(message);
+    }
+    
+    public void parseDeck(String message) {
+        int i = 6;
+        message = message.substring(i);
+        String delim = ",";
+        String[] data = message.split(delim);
+        int amount = Integer.parseInt(data[0]);
+        m_deck.setCurrentAmount(amount);
+    }
+    
+    public void parseJustMessage(String message) {
+        int i = 6;
+        m_chat.add(message.substring(i));
+    }
+
+    @Override
+    public String read() {
+        return super.read();
+    }
+    
+    public void makeTurn() throws IOException {
+        System.out.println("Подкидывай!");
+        String str = "";
+        InputStreamReader input = new InputStreamReader(System.in);
+        BufferedReader reader = new BufferedReader(input);
+        str = reader.readLine();
+        
+        this.write(str);
+    }
+    
+    public void responseTurn() throws IOException {
+        System.out.println("Отбивайся!");
+        String str = "";
+        InputStreamReader input = new InputStreamReader(System.in);
+        BufferedReader reader = new BufferedReader(input);
+        str = reader.readLine();
+        
+        this.write(str);
+    }
 }

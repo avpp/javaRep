@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sun.audio.AudioPlayer;
 
 /**
  *
@@ -25,8 +24,14 @@ public class Client {
 
         @Override
         public void run() {
+            long pause = 100;
             while(true)
             {
+                try {
+                    Thread.sleep(pause);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 try {
                     if (s.getInputStream().available() > 0)
                     {
@@ -46,16 +51,19 @@ public class Client {
         }
         
     }
+    
     private Thread th;
     private Socket s;
     private Semaphore sem;
     private LinkedList<String> messages;
+    
     public Client()
     {
         s = new Socket();
         sem = new Semaphore(0);
         messages = new LinkedList<String>();
     }
+    
     public Boolean tryConnectTo(String addr, int Port)
     {
         try {
@@ -68,11 +76,13 @@ public class Client {
         }
         return true;
     }
+    
     private void addMessage(String str)
     {
         messages.add(str);
         sem.release();
     }
+    
     public String read()
     {
         String ans = "";
@@ -84,6 +94,7 @@ public class Client {
         }
         return ans;
     }
+    
     public void write(String str)
     {
         try {
