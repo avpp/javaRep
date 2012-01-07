@@ -14,9 +14,16 @@ import first.Card.Value;
  * @author Andrew
  */
 public class DurakClient extends Client {
+    private String m_name;
     private GamblingTable m_gambTable;
     private LinkedList<Card> m_cards;
     private LinkedList<DurakAdversary> m_adversaries;
+    private int m_active;
+    private int m_passive;
+    private char m_whoseTurn;
+    private int m_me;
+    
+    public DurakClient
     
     public void parseAllString(String bigMesg) {
         String delim = "\n";
@@ -26,10 +33,9 @@ public class DurakClient extends Client {
     }
         
     public void parseMessage(String message) {
-        String template[] = {"turn", "take", "your",
-                             "gamt", "wint", "scor",
-                             "lspl", "deck", "trmp",
-                             "mesg"};
+        String template[] = {"turn", "your", "gamt", 
+                             "wint", "scor", "lspl",
+                             "deck", "trmp", "mesg"};
         
         for (int i = 0; i < template.length; i++)
             if (message.startsWith(template[i])) {
@@ -39,30 +45,27 @@ public class DurakClient extends Client {
                         parseTurn(message);
                     } break;
                     case 1 : {
-                        parseTake(message);
-                    } break;
-                    case 2 : {
                         parseYour(message);
                     } break;
-                    case 3 : {
+                    case 2 : {
                         parseGamblingTable(message);
                     } break;
-                    case 4 : {
+                    case 3 : {
                         parseWinTable(message);
                     } break;
-                    case 5 : {
+                    case 4 : {
                         parseScore(message);
                     } break;
-                    case 6 : {
+                    case 5 : {
                         parseListPlayers(message);
                     } break;    
-                    case 7 : {
+                    case 6 : {
                         parseDeck(message);
                     } break;
-                    case 8 : {
+                    case 7 : {
                         parseTrump(message);
                     } break;
-                    case 9 : {
+                    case 8: {
                         parseJustMessage(message);
                     } break;
                 }
@@ -78,32 +81,37 @@ public class DurakClient extends Client {
             !!!responseTurn()
         }
     }
-    
-    private void parseTake(String message) {
-        
-    }
-            
+      
     private void parseYour(String message) {
         m_cards.clear();
-        for (int i = 6; i < message.length(); i += 2) {
-            int iColor = (int)message.charAt(i);
-            int iValue = (int)message.charAt(i + 1);
-            Color c = Color.values()[iColor];
-            Value v = Value.values()[iValue];
-            
-            m_cards.add(new Card(v, c));
-        }
+        int beginIndex = 6;
+        message = message.substring(beginIndex);
+        String delim = ",";
+        String[] data = message.split(delim);
+        for (String s : data)
+            m_cards.add(new Card.fromString(s));
     }
     
     private void parseListPlayers(String message) {
         m_adversaries.clear();
-        String delimeter = "/";
-        String plArr[] = message.split(delimeter);
-        //Пропускаем 1й элемент(содержит команду "plls"
-        for (int i = 1; i < plArr.length; i += 2) {
-            int amount = Integer.parseInt(plArr[i + 1]);
+        
+        String delim = "/";
+        String[] data = message.split(delim);
+        String p = data[1];
+        
+        m_me = (int)p.charAt(0);
+        m_active = (int)p.charAt(1);
+        m_passive = (int)p.charAt(2);
+        m_whoseTurn = p.charAt(3);
+        
+        delim = ",";
+        String[] players = data[2].split(delim);
+        
+        for (int i = 0; i < players.length; i += 2) {
+            String name = players[i];
+            int amount = Integer.parseInt(players[i + 1]);
             m_adversaries.add(
-                    new DurakAdversary(plArr[i], amount));
+                    new DurakAdversary(name, amount));
         }
     }
         
