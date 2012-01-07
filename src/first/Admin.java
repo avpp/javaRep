@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sun.tools.jar.resources.jar;
 
 /**
  *
@@ -37,52 +36,7 @@ public abstract class Admin {
                     gatheringMessage(m);
                 }
             }
-            /*
-            String template[] = {"turn", "mesg", "exit"};
-            LinkedList<ServPlayer> delPlayers = new LinkedList<ServPlayer>();
-            while (true)
-            {
-                server.serverDontWork();
-                for (ServPlayer curPlayer : server.players)
-                {
-                    int mes_count = curPlayer.messages.size();
-                    for (int j =0; j < mes_count; j++)
-                    {
-                        String s = curPlayer.messages.removeFirst();
-                        for (int i = 0; i < template.length; i++)
-                        if (s.startsWith(template[i]))
-                        {
-                            switch (i)
-                            {
-                                case 0 : {
-                                    curPlayer.setAnswer(s.substring(4));
-                                } break;
-                                case 1 : {
-                                    String message = template[1].concat(curPlayer.name).concat(": ").concat(s.substring(4));
-                                    for (ServPlayer tmpPlayer : server.players)
-                                    {
-                                        tmpPlayer.sendMessage(message);
-                                    }
-                                } break;
-                                case 2 : {
-                                    curPlayer.closeSocket();
-                                    delPlayers.add(curPlayer);
-                                } break;
-                            }
-                        }
-                    }
-                }
-                if (delPlayers.size() > 0)
-                {
-                    server.players.removeAll(delPlayers);
-                    if (dealer.players.removeAll(delPlayers))
-                        gameTh.interrupt();
-                    delPlayers.clear();
-                }
-                server.serverMayWork();
-            }*/
         }
-        
     }
     private LinkedList<Message> messages;
     protected Server server;
@@ -173,5 +127,23 @@ public abstract class Admin {
     {
         mesTh = new Thread(new GatheringMessages());
         mesTh.start();
+    }
+    public void stopServer()
+    {
+        if (servTh.isAlive())
+            servTh.interrupt();
+        if (mesTh.isAlive())
+            mesTh.interrupt();
+    }
+    public Boolean waitEndGame()
+    {
+        try {
+            if (gameTh.isAlive())
+                gameTh.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
     }
 }

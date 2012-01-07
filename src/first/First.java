@@ -36,28 +36,39 @@ public class First {
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        Admin a = new DAdmin();
-        a.StartServer();
-        a.createDealer();
-        int choice = 0;
-        while (choice != 'n')
+        System.out.println("Choose type\n1.Admin\n2.Client\n");
+        int choice = System.in.read();
+        if (choice == '1')
         {
-            System.out.println("Players: ");
-            for (String s : a.getPlayerList())
+            Admin a = new DAdmin();
+            a.StartServer();
+            a.startGathering();
+            a.createDealer();
+            while (choice != 'n')
             {
-                System.out.println(s);
+                System.out.println("Players: ");
+                for (String s : a.getPlayerList())
+                {
+                    System.out.println(s);
+                }
+                do
+                {
+                    choice = System.in.read();
+                }
+                while (choice == '\n');
+                if (choice >= '0' && choice <= '9')
+                {
+                    choice = choice - 48;
+                    a.addPlayer(choice);
+                }
             }
-            do
-            {
-                choice = System.in.read();
-            }
-            while (choice == '\n');
-            if (choice >= '0' && choice <= '9')
-            {
-                choice = choice - 48;
-                a.addPlayer(choice);
-            }
+            a.startGame();
+            a.waitEndGame();
+            System.out.println(a.dealer.wtable.toString());
+            a.stopServer();
         }
-        a.startGame();
+        else if (choice == '2')
+        {
+        }
     }
 }
