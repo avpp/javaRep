@@ -42,8 +42,7 @@ public class DurakClient extends Client {
             } catch (IOException ex) {
                 Logger.getLogger(DurakClient.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            if (!("no".equals(str))) {
+             if (!("no".equals(str))) {
                 int c = Integer.parseInt(str);
                 Card ansCard = m_cards.get(c - 1);
                 str = ansCard.toString();
@@ -108,8 +107,9 @@ public class DurakClient extends Client {
                 System.out.println("Введи имя");
                 byte[] mes = new byte[50];
                 int count = 0;
+                int c = 0;
                 try {
-                    System.in.read();
+                    c = System.in.read();
                 } catch (IOException ex) {
                     Logger.getLogger(DurakClient.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -122,9 +122,19 @@ public class DurakClient extends Client {
                 }
                 if (count > 0)
                 {
-                    byte tmp[] = new byte [count - 1];
-                    System.arraycopy(mes, 0, tmp, 0, count - 1);
-                    this.write(new String(tmp));
+                    //byte tmp[];
+                    if (c == 10) {
+                        byte tmp[] = new byte[count - 1];
+                        System.arraycopy(mes, 0, tmp, 0, count - 1);
+                        this.write(new String(tmp));
+                    }
+                    else {
+                        byte tmp[] = new byte [count];
+                        tmp[0] = (byte)c;
+                        System.arraycopy(mes, 0, tmp, 1, count - 1);
+                        this.write(new String(tmp));
+                    }
+                    
                 }
                 mes = new byte[0];
             }
