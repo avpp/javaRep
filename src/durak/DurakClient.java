@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import first.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.*;
 import java.lang.Thread;
 /**
  *
@@ -30,6 +31,47 @@ public class DurakClient extends Client {
     private Card m_trump;
     private LinkedList<String> m_chat;
     
+    private class setmakeTurn implements Runnable {
+        public void run() {
+            System.out.println("Подкидывай!");
+            String str = "";
+            InputStreamReader input = new InputStreamReader(System.in);
+            BufferedReader reader = new BufferedReader(input);
+            try {
+                str = reader.readLine();
+            } catch (IOException ex) {
+                Logger.getLogger(DurakClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            if (!("no".equals(str))) {
+                int c = Integer.parseInt(str);
+                Card ansCard = m_cards.get(c - 1);
+                str = ansCard.toString();
+            }
+            write("turn/".concat(str));
+        }
+    }
+    
+     private class setresponseTurn implements Runnable {
+        public void run() {
+            System.out.println("Отбивайся!");
+            String str = "";
+            InputStreamReader input = new InputStreamReader(System.in);
+            BufferedReader reader = new BufferedReader(input);
+            try {
+                str = reader.readLine();
+            } catch (IOException ex) {
+                Logger.getLogger(DurakClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+             if (!("no".equals(str))) {
+                int c = Integer.parseInt(str);
+                Card ansCard = m_cards.get(c - 1);
+                str = ansCard.toString();
+            }
+            write("turn/".concat(str));
+        }
+    }
+    
     public DurakClient() {
         m_gambTable = new GamblingTable();
         m_cards = new LinkedList<Card>();
@@ -37,11 +79,14 @@ public class DurakClient extends Client {
         m_winTable = new DurakWinTable();
         m_score = new DurakScore();
         m_chat = new LinkedList<String>();
+        m_deck = new DurakDeck();
     }
     
     public void runLoop(byte address[], int port) {
-        if (this.tryConnectTo(address, port))
+        if (this.tryConnectTo(address, port)) {
+            System.out.println("Соединено!");
             mainLoop();
+        }
         else
             System.out.println("Ошибка соединения!");
     }
@@ -58,8 +103,31 @@ public class DurakClient extends Client {
             String mesg = read();
             /*!!!!*/System.out.println(mesg);
             
-            if (mesg == "name")
-                this.write("Andrew");
+            if ("name".equals(mesg)) {
+                String str = "";
+                System.out.println("Введи имя");
+                byte[] mes = new byte[50];
+                int count = 0;
+                try {
+                    System.in.read();
+                } catch (IOException ex) {
+                    Logger.getLogger(DurakClient.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                while (count == 0) {
+                    try {
+                        count = System.in.read(mes);
+                    } catch (IOException ex) {
+                        Logger.getLogger(DurakClient.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (count > 0)
+                {
+                    byte tmp[] = new byte [count - 1];
+                    System.arraycopy(mes, 0, tmp, 0, count - 1);
+                    this.write(new String(tmp));
+                }
+                mes = new byte[0];
+            }
             else
                 parseAllString(mesg);
         }
@@ -113,7 +181,7 @@ public class DurakClient extends Client {
     }
     
     private void parseTurn(String message) {
-        int i = 6;
+        int i = 5;
         
         if (message.charAt(i) == '+') {
             try {
@@ -133,7 +201,7 @@ public class DurakClient extends Client {
       
     private void parseYour(String message) {
         m_cards.clear();
-        int beginIndex = 6;
+        int beginIndex = 5;
         message = message.substring(beginIndex);
         String delim = ",";
         String[] data = message.split(delim);
@@ -170,7 +238,7 @@ public class DurakClient extends Client {
     
     private void parseWinTable(String message) {
         m_winTable.clearAll();
-        int i = 6;
+        int i = 5;
         String delim = ",";
         String[] data = message.substring(i).split(delim);
         for (String s : data)
@@ -189,13 +257,13 @@ public class DurakClient extends Client {
     }
     
     private void parseTrump(String message) {
-        int i = 6;
+        int i = 5;
         message = message.substring(i);
         m_trump = Card.fromString(message);
     }
     
     public void parseDeck(String message) {
-        int i = 6;
+        int i = 5;
         message = message.substring(i);
         String delim = ",";
         String[] data = message.split(delim);
@@ -204,7 +272,7 @@ public class DurakClient extends Client {
     }
     
     public void parseJustMessage(String message) {
-        int i = 6;
+        int i = 5;
         m_chat.add(message.substring(i));
     }
 
@@ -214,22 +282,12 @@ public class DurakClient extends Client {
     }
     
     public void makeTurn() throws IOException {
-        System.out.println("Подкидывай!");
-        String str = "";
-        InputStreamReader input = new InputStreamReader(System.in);
-        BufferedReader reader = new BufferedReader(input);
-        str = reader.readLine();
-        
-        this.write(str);
+        Thread th = new Thread(new setmakeTurn());
+        th.start();
     }
     
     public void responseTurn() throws IOException {
-        System.out.println("Отбивайся!");
-        String str = "";
-        InputStreamReader input = new InputStreamReader(System.in);
-        BufferedReader reader = new BufferedReader(input);
-        str = reader.readLine();
-        
-        this.write(str);
+        Thread th = new Thread(new setresponseTurn());
+        th.start();
     }
 }

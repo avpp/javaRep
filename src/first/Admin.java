@@ -26,8 +26,14 @@ public abstract class Admin {
     private class GatheringMessages implements Runnable {
         @Override
         public void run() {
+            long pause = 100;
             while (true)
             {
+                try {
+                    Thread.sleep(pause);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 while (messages.size() > 0)
                 {
                     PauseAdding();
