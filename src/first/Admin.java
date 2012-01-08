@@ -14,6 +14,10 @@ import java.util.logging.Logger;
  * @author Alexey
  */
 public abstract class Admin {
+    public static String gameName()
+    {
+        return "game";
+    }
     public class Message {
         public ServPlayer source;
         public String message;
@@ -56,7 +60,7 @@ public abstract class Admin {
         sem = new Semaphore(1);
         messages = new LinkedList<Message>();
     }
-    public void StartServer()
+    public void startServer()
     {
         servTh.start();
     }
@@ -109,10 +113,25 @@ public abstract class Admin {
     public abstract void createDealer();
     public abstract Boolean isPlayerOK(ServPlayer player);
     public abstract void gatheringMessage(Message m);
+    public abstract void runInterface();
+    public abstract void playersChanged();
+    
+    protected LinkedList<ServPlayer> reservedPlayers = new LinkedList<ServPlayer>();
+    public LinkedList<String> getReservedPlayerList()
+    {
+        LinkedList<String> ans = new LinkedList<String>();
+        for (ServPlayer sp : reservedPlayers)
+            ans.add(sp.name);
+        return ans;
+    }
+    
     public Boolean addPlayer(ServPlayer player)
     {
         if (isPlayerOK(player))
-            dealer.players.add(new GamePlayer(player));
+            if (reservedPlayers.indexOf(player) == -1)
+                reservedPlayers.add(player);
+            else
+                return false;
         else
             return false;
         return true;
@@ -121,8 +140,18 @@ public abstract class Admin {
     {
         return addPlayer(server.players.get(index));
     }
+    public Boolean removePlayer(ServPlayer player)
+    {
+        return reservedPlayers.remove(player);
+    }
+    public Boolean removePlayer(int index)
+    {
+        return removePlayer(reservedPlayers.get(index));
+    }
     public void startGame()
     {
+        for (ServPlayer p : reservedPlayers)
+            dealer.players.add(new GamePlayer(p));
         dealer.initGame();
         gameTh = new Thread(dealer);
         gameTh.setName("Dealer thread");

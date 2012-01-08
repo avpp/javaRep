@@ -46,6 +46,7 @@ public class Server implements Runnable{
                     }
                 }*/
                 players.add(p);
+                a.playersChanged();
                 sem.release();
             } catch (InterruptedException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);

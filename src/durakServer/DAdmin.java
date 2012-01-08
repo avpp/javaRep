@@ -11,7 +11,12 @@ import first.ServPlayer;
  *
  * @author Alexey
  */
-public class DAdmin extends Admin {
+
+public class DAdmin extends Admin{
+    public static String gameName()
+    {
+        return "Durak";
+    }
     @Override
     public void createDealer()
     {
@@ -27,6 +32,7 @@ public class DAdmin extends Admin {
     private String Dtemplate[] = {"lspl", "gamt", "trmp", "deck", "wint","your"};
     @Override
     public void gatheringMessage(Message m) {
+        adminMessage(((m.source == null)?"to all":m.source.name) + ": "+m.message);
         String sm[] = m.message.split("/");
         if (sm.length <= 0)
             return;
@@ -88,8 +94,10 @@ public class DAdmin extends Admin {
                         m.source.closeSocket();
                         server.PauseWork();
                         server.players.remove(m.source);
+                        reservedPlayers.remove(m.source);
                         server.ContinueWork();
-                        if (dealer.players.remove(m.source.getGamePlayer()))
+                        playersChanged();
+                        if (dealer != null && dealer.players.remove(m.source.getGamePlayer()))
                             stopGame();
                         RemoveMessagesByPlayer(m.source);
                     } break;
@@ -100,5 +108,24 @@ public class DAdmin extends Admin {
                 break;
             }
         }
+    }
+
+    @Override
+    public void runInterface() {
+        DAdminInterface.admin = this;
+        DAdminInterface.main(new String[0]);
+    }
+    DAdminInterface visual = null;
+    public void setInterface(DAdminInterface visual)
+    {
+        this.visual = visual;
+    }
+    @Override
+    public void playersChanged() {
+        visual.refreshPlayerList();
+    }
+    public void adminMessage(String s)
+    {
+        visual.addMessage(s);
     }
 }

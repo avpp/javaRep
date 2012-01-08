@@ -42,6 +42,7 @@ public class First {
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
+        MainForm.main(args);/*
         System.out.println("Choose type\n1.Admin\n2.Client\n");
         int choice = System.in.read();
         if (choice == '1')
@@ -78,29 +79,29 @@ public class First {
             
             //String str;
             byte address[] = new byte[4];
-            /*address[0] = 2;
-            address[1] = 95;
-            address[2] = -42;
-            address[3] = -5;*/
+            //address[0] = 2;
+            //address[1] = 95;
+            //address[2] = -42;
+            //address[3] = -5;
             address[0] = 127;
             address[1] = 0;
             address[2] = 0;
             address[3] = 1;
             int port = 15147;
-            /*
-            System.out.println("Введи ip, через пробел порт");
-            InputStreamReader input = new InputStreamReader(System.in);
-            BufferedReader reader = new BufferedReader(input);
             
-            str = reader.readLine();
-            String[] data = str.split(",");
-            address = data[0];
-            port = Integer.parseInt(data[1]);
-            */
+            //System.out.println("Введи ip, через пробел порт");
+            //InputStreamReader input = new InputStreamReader(System.in);
+            //BufferedReader reader = new BufferedReader(input);
+            
+            //str = reader.readLine();
+            //String[] data = str.split(",");
+            //address = data[0];
+            //port = Integer.parseInt(data[1]);
+            
             System.out.println("Connecting to " + 
                     address + " " + String.valueOf(port));
             
             dc.runLoop(address, port);
-        }
+        }*/
     }
 }
