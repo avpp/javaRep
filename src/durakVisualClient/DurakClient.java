@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package durak;
+package durakVisualClient;
 
 import java.io.*;
 import java.io.IOException;
@@ -30,6 +30,97 @@ public class DurakClient extends Client {
     private DurakScore m_score;
     private Card m_trump;
     private LinkedList<String> m_chat;
+
+    /**
+     * @return the m_name
+     */
+    public String getM_name() {
+        return m_name;
+    }
+
+    /**
+     * @return the m_deck
+     */
+    public DurakDeck getM_deck() {
+        return m_deck;
+    }
+
+    /**
+     * @return the m_gambTable
+     */
+    public GamblingTable getM_gambTable() {
+        return m_gambTable;
+    }
+
+    /**
+     * @return the m_cards
+     */
+    public LinkedList<Card> getM_cards() {
+        return m_cards;
+    }
+
+    /**
+     * @return the m_adversaries
+     */
+    public LinkedList<DurakAdversary> getM_adversaries() {
+        return m_adversaries;
+    }
+
+    /**
+     * @return the m_winTable
+     */
+    public DurakWinTable getM_winTable() {
+        return m_winTable;
+    }
+
+    /**
+     * @return the m_active
+     */
+    public int getM_active() {
+        return m_active;
+    }
+
+    /**
+     * @return the m_passive
+     */
+    public int getM_passive() {
+        return m_passive;
+    }
+
+    /**
+     * @return the m_whoseTurn
+     */
+    public char getM_whoseTurn() {
+        return m_whoseTurn;
+    }
+
+    /**
+     * @return the m_me
+     */
+    public int getM_me() {
+        return m_me;
+    }
+
+    /**
+     * @return the m_score
+     */
+    public DurakScore getM_score() {
+        return m_score;
+    }
+
+    /**
+     * @return the m_trump
+     */
+    public Card getM_trump() {
+        return m_trump;
+    }
+
+    /**
+     * @return the m_chat
+     */
+    public LinkedList<String> getM_chat() {
+        return m_chat;
+    }
     
     private class setmakeTurn implements Runnable {
         public void run() {
@@ -44,7 +135,7 @@ public class DurakClient extends Client {
             }
              if (!("no".equals(str))) {
                 int c = Integer.parseInt(str);
-                Card ansCard = m_cards.get(c - 1);
+                Card ansCard = getM_cards().get(c - 1);
                 str = ansCard.toString();
             }
             write("turn/".concat(str));
@@ -64,7 +155,7 @@ public class DurakClient extends Client {
             }
              if (!("no".equals(str))) {
                 int c = Integer.parseInt(str);
-                Card ansCard = m_cards.get(c - 1);
+                Card ansCard = getM_cards().get(c - 1);
                 str = ansCard.toString();
             }
             write("turn/".concat(str));
@@ -210,17 +301,17 @@ public class DurakClient extends Client {
     }
       
     private void parseYour(String message) {
-        m_cards.clear();
+        getM_cards().clear();
         int beginIndex = 5;
         message = message.substring(beginIndex);
         String delim = ",";
         String[] data = message.split(delim);
         for (String s : data)
-            m_cards.add(Card.fromString(s));
+            getM_cards().add(Card.fromString(s));
     }
     
     private void parseListPlayers(String message) {
-        m_adversaries.clear();
+        getM_adversaries().clear();
         
         String delim = "/";
         String[] data = message.split(delim);
@@ -237,7 +328,7 @@ public class DurakClient extends Client {
         for (int i = 0; i < players.length; i += 2) {
             String name = players[i];
             int amount = Integer.parseInt(players[i + 1]);
-            m_adversaries.add(
+            getM_adversaries().add(
                     new DurakAdversary(name, amount));
         }
     }
@@ -247,22 +338,22 @@ public class DurakClient extends Client {
     }
     
     private void parseWinTable(String message) {
-        m_winTable.clearAll();
+        getM_winTable().clearAll();
         int i = 5;
         String delim = ",";
         String[] data = message.substring(i).split(delim);
         for (String s : data)
-            m_winTable.addWinner(s);
+            getM_winTable().addWinner(s);
     }
     
     private void parseScore(String message) {
-        m_score.clearAll();
+        getM_score().clearAll();
         int beginIndex = 6;
         message = message.substring(beginIndex);
         String delim = ",";
         String[] data = message.split(delim);
         for (int i = 0; i < data.length; i +=2)
-            m_score.add(
+            getM_score().add(
                     data[i], Integer.parseInt(data[i + 1]));
     }
     
@@ -278,12 +369,12 @@ public class DurakClient extends Client {
         String delim = ",";
         String[] data = message.split(delim);
         int amount = Integer.parseInt(data[0]);
-        m_deck.setCurrentAmount(amount);
+        getM_deck().setCurrentAmount(amount);
     }
     
     public void parseJustMessage(String message) {
         int i = 5;
-        m_chat.add(message.substring(i));
+        getM_chat().add(message.substring(i));
     }
 
     @Override

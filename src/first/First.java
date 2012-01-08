@@ -31,7 +31,7 @@ import java.io.IOException;
  * @author Alexey
  */
 
-import durak.*;
+import durakVisualClient.*;
 import java.io.*;
 import java.net.InetAddress;
 
