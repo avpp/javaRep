@@ -20,8 +20,8 @@ public class DAdmin extends Admin {
         return true;
     }
 
-    private String template[] = {"turn", "mesg", "exit"};
-    private String Dtemplate[] = {"lspl", "gamt", "trmp", "deck", "wint"};
+    private String template[] = {"turn", "mesg", "exit", "your"};
+    private String Dtemplate[] = {"lspl", "gamt", "trmp", "deck", "wint","your"};
     @Override
     public void gatheringMessage(Message m) {
         String sm[] = m.message.split("/");
@@ -47,6 +47,12 @@ public class DAdmin extends Admin {
                             case 4 : {
                                 p.sendMessage(m.message);
                             } break;
+                            case 5 : {
+                                if (p.getGamePlayer() != null)
+                                {
+                                    p.sendMessage(p.getGamePlayer().getCards());
+                                }
+                            } break;
                         }
                     }
                     server.ContinueWork();
@@ -67,7 +73,7 @@ public class DAdmin extends Admin {
                         m.source.setAnswer(sm[1]);
                     } break;
                     case 1 : {
-                        String text = "mesg/".concat(m.source.name).concat(m.message.substring(4));
+                        String text = "mesg/".concat(m.source.name).concat(m.message.substring(4)).concat("\n");
                         server.PauseWork();
                         for (ServPlayer sp : server.players)
                         {
@@ -84,6 +90,9 @@ public class DAdmin extends Admin {
                             stopGame();
                         RemoveMessagesByPlayer(m.source);
                     } break;
+                    case 3 : {
+                        m.source.sendMessage(m.source.getGamePlayer().getCards());
+                    }
                 }
                 break;
             }

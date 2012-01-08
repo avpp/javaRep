@@ -89,7 +89,7 @@ public class DDealer extends Dealer{
         endGame = false;
         return true;
     }
-    public Boolean lastRemoved;
+    public Boolean lastRemoved, endThrow;
     public int curPlayerBounceIndex, curPlayerMoveIndex, counSeqNoMoves;
     @Override
     public void play()
@@ -124,16 +124,19 @@ public class DDealer extends Dealer{
             lastRemoved = false;
             endTable = false;
             curTable = history.AddNew();  //добавили новый игровой стол.
+            admin.AddMessage(null, deck.getInfo());
+            admin.AddMessage(null, getTrmp());
+            admin.AddMessage(null, "your/");
             do
             {
                 admin.AddMessage(null, curTable.toString());
-                admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'x'));
+                admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'a'));
                 Boolean repeatMove;
                 // Подкидываем карту
                 do
                 {
                     repeatMove = false;
-                    playerAnswer = players.get(curPlayerMoveIndex).move("turn/+");
+                    playerAnswer = players.get(curPlayerMoveIndex).move("turn/+\n");
                     if ("no".equals(playerAnswer))
                     {
                         if (curTable.getAllCards().size() == 0)
@@ -142,7 +145,6 @@ public class DDealer extends Dealer{
                         }
                         else
                         {
-                            lastRemoved = true;
                             counSeqNoMoves++;
                             do
                             {
@@ -180,6 +182,7 @@ public class DDealer extends Dealer{
                                 {//Теперь, наконец-то, мы можем фактически сделать ход!!!
                                     curTable.AddTurn(new Turn(players.get(curPlayerMoveIndex), c), -1);
                                     players.get(curPlayerMoveIndex).cards.remove(c);
+                                    players.get(curPlayerMoveIndex).sendCards();
                                     //!Надо сообщить всем.
                                 }
                                 else
@@ -191,15 +194,15 @@ public class DDealer extends Dealer{
                     }
                 } while(repeatMove);
                 //Отправляем всем всю информацию
-                admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'x'));
+                admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'a'));
                 admin.AddMessage(null, curTable.toString());
                 //Отбиваем картуsendAll(curTable.toString(),getLsPl());
-                if (!lastRemoved)
+                if (!lastRemoved && curTable.table.get(curTable.table.size() - 1).size() == 1)
                 {
                     do
                     {
                         repeatMove = false;
-                        playerAnswer = players.get(curPlayerBounceIndex).move("turn/-");
+                        playerAnswer = players.get(curPlayerBounceIndex).move("turn/-\n");
                         if ("no".equals(playerAnswer))
                         {
                             lastRemoved = true;
@@ -220,6 +223,10 @@ public class DDealer extends Dealer{
                                 {
                                     Card tmpC = players.get(curPlayerBounceIndex).cards.get(i);
                                     check = Card.isEqual(c, tmpC);
+                                    if (check)
+                                    {
+                                        c = tmpC;
+                                    }
                                 }
                                 if (!check)
                                 {
@@ -232,6 +239,7 @@ public class DDealer extends Dealer{
                                     {//Теперь, наконец-то, мы можем фактически сделать ход!!!
                                         curTable.AddTurn(new Turn(players.get(curPlayerBounceIndex), c), curTable.table.size() - 1);
                                         players.get(curPlayerBounceIndex).cards.remove(c);
+                                        players.get(curPlayerBounceIndex).sendCards();
                                         //!Надо сообщить всем.
                                     }
                                     else
@@ -244,7 +252,7 @@ public class DDealer extends Dealer{
                         }
                     } while(repeatMove);
                     //!Отправляем всем всю информацию
-                    admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'x'));
+                    admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'a'));
                     admin.AddMessage(null, curTable.toString());
                 }
                 endTable = (curTable.table.size() == 6) || (counSeqNoMoves >= players.size() - 1);
@@ -297,7 +305,7 @@ public class DDealer extends Dealer{
                 //! Надо бы сообщить всем
                 //wint+lspl для всех
                 admin.AddMessage(null, wtable.toString());
-                admin.AddMessage(null, getLsPl(-1, -1, 'x'));
+                admin.AddMessage(null, getLsPl(-1, -1, 'a'));
             }
             //Рассчитаем номер следующего ходящего и отбивающегося
             curPlayerMoveIndex = curPlayerBounceIndex;
@@ -344,13 +352,14 @@ public class DDealer extends Dealer{
         String ans = "lspl/%d,".concat(String.valueOf(indexTh)).concat(",").concat(String.valueOf(indexBo)).concat(",").concat(String.valueOf(modifer)).concat("/");
         for (GamePlayer p : players)
         {
-            ans.concat(p.name).concat(",").concat(String.valueOf(p.cards.size())).concat(",");
+            ans = ans.concat(p.name).concat(",").concat(String.valueOf(p.cards.size())).concat(",");
         }
+        ans = ans.concat("\n");
         return ans;
     }
     public String getTrmp()
     {
-        return "trmp/".concat(cardTrump.toString());
+        return "trmp/".concat(cardTrump.toString()).concat("\n");
     }
     @Override
     public String generateAllGameInfo() {

@@ -32,6 +32,7 @@ import java.io.IOException;
 
 import durak.*;
 import java.io.*;
+import java.net.InetAddress;
 
 public class First {
 
@@ -77,15 +78,16 @@ public class First {
             //String str;
             //String address = "95.30.118.221";
             byte address[] = new byte[4];
-            address[0] = 95;
-            address[1] = 30;
-            address[2] = 118;
-            address[3] = -35;
-            //83.139.135.86
-            /*address[0] = 83;
-            address[1] = (byte)139;
-            address[2] = (byte)135;
-            address[3] = 86;*/
+            address[0] = 2;
+            address[1] = 95;
+            address[2] = -42;
+            address[3] = -5;
+            //94.141.43.201
+            /*address[0] = 94;
+            address[1] = (byte)141;
+            address[2] = 43;
+            address[3] = (byte)201;
+            System.out.println("Try connecting to " + InetAddress.getByAddress(address).toString());*/
             int port = 15147;
             /*
             System.out.println("Введи ip, через пробел порт");

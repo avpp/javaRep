@@ -43,7 +43,7 @@ public class Client {
                         String submes[] = inmes.split("\0");
                         for (String m : submes)
                         {
-                            addMessage(m.concat("\0"));
+                            addMessage(m/*.concat("\0")*/);
                         }
                     }
                 } catch (IOException ex) {

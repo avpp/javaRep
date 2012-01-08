@@ -34,10 +34,10 @@ public class ServPlayer {
                         s.getInputStream().read(b);
                         String mes = new String(b);
                         LinkedList<String> submes = new LinkedList(java.util.Arrays.asList(mes.split("\0")));
-                        for (String curString : submes)
+                        /*for (String curString : submes)
                         {
                             curString += "\0";
-                        }
+                        }*/
                         while (submes.size() > 0)
                         {
                             acceptMessage(submes.removeFirst());

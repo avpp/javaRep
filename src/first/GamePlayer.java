@@ -17,6 +17,7 @@ public class GamePlayer {
     public GamePlayer(ServPlayer pl)
     {
         p = pl;
+        p.setGamePlayer(this);
         name = pl.name;
         cards = new LinkedList<Card>();
     }
@@ -29,8 +30,13 @@ public class GamePlayer {
         String ans = "your/";
         for (Card c : cards)
         {
-            ans.concat(c.toString()).concat(",");
+            ans = ans.concat(c.toString()).concat(",");
         }
+        ans = ans.concat("\n");
         return ans;
+    }
+    public void sendCards()
+    {
+        p.sendMessage(getCards());
     }
 }

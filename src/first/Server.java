@@ -27,6 +27,7 @@ public class Server implements Runnable{
         a = admin;
         try {
             ssocket = new ServerSocket(15147, 100, null);
+            System.out.println(ssocket.getLocalSocketAddress().toString());
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -59,6 +60,7 @@ public class Server implements Runnable{
                     sem.acquire();
                     System.out.println("accepted");
                     players.add(new ServPlayer(s, a));
+                    System.out.println("add client with name " + players.getLast().name);
                     sem.release();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);

@@ -91,12 +91,13 @@ public class GamblingTable {
         String ans = "gamt";
         for (LinkedList<Turn> t: table)
         {
-            ans.concat("/");
+            ans = ans.concat("/");
             for(Turn tt: t)
             {
-                ans.concat(tt.getCard().toString()).concat(",");
+                ans = ans.concat(tt.getCard().toString()).concat(",");
             }
         }
+        ans = ans.concat("\n");
         return ans;
     }
     public static GamblingTable fromString(String str)

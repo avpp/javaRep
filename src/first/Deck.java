@@ -24,7 +24,7 @@ public abstract class Deck {
         this.deckCount = deckCount;
         allCards = new LinkedList<Card>();//  Card[deckCount*countCardsInSimpleDeck()];
         topNum = 0;
-        lowNum = allCards.size() - 1;
+        lowNum = 0;
     }
     /*{
         this.deckType = deckType;
@@ -113,6 +113,6 @@ public abstract class Deck {
     
     public String getInfo()
     {
-        return "deck/".concat(String.valueOf(size())).concat(String.valueOf(fullDeckSize()));
+        return "deck/".concat(String.valueOf(size())).concat(",").concat(String.valueOf(fullDeckSize())).concat("\n");
     }
 }

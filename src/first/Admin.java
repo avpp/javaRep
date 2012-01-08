@@ -116,6 +116,7 @@ public abstract class Admin {
     }
     public void startGame()
     {
+        dealer.initGame();
         gameTh = new Thread(dealer);
         gameTh.start();
     }

@@ -32,7 +32,8 @@ public class Card {
         Value v;
         try
         {
-            v = Value.valueOf(name.substring(0, name.length() - 2));
+            String vStr = name.substring(0, name.length() - 1);
+            v = Value.valueOf("c".concat(vStr));
         } catch (IllegalArgumentException ex)
         {
             return null;
