@@ -52,6 +52,7 @@ public abstract class Admin {
     {
         server = new Server(this);
         servTh = new Thread(server);
+        servTh.setName("Server thread");
         sem = new Semaphore(1);
         messages = new LinkedList<Message>();
     }
@@ -124,6 +125,7 @@ public abstract class Admin {
     {
         dealer.initGame();
         gameTh = new Thread(dealer);
+        gameTh.setName("Dealer thread");
         gameTh.start();
     }
     public void stopGame()
@@ -133,6 +135,7 @@ public abstract class Admin {
     public void startGathering()
     {
         mesTh = new Thread(new GatheringMessages());
+        mesTh.setName("Message gathering thread");
         mesTh.start();
     }
     public void stopServer()

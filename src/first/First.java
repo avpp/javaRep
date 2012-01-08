@@ -6,6 +6,7 @@ package first;
 
 //Dealer = тот, который следит за правилами игры. фактически он изменяет состояние игры.
 
+import durakServer.DAdmin;
 import java.io.IOException;
 
 //Player = тот, который делает выбор(как походить) в данной игровой ситуации.
@@ -77,10 +78,14 @@ public class First {
             
             //String str;
             byte address[] = new byte[4];
-            address[0] = 2;
+            /*address[0] = 2;
             address[1] = 95;
             address[2] = -42;
-            address[3] = -5;
+            address[3] = -5;*/
+            address[0] = 127;
+            address[1] = 0;
+            address[2] = 0;
+            address[3] = 1;
             int port = 15147;
             /*
             System.out.println("Введи ip, через пробел порт");

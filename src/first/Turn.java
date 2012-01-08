@@ -11,7 +11,7 @@ package first;
 public class Turn {
     private Card card;
     private GamePlayer player;
-    Turn (GamePlayer p, Card c)
+    public Turn (GamePlayer p, Card c)
     {
         card = c;
         player = p;

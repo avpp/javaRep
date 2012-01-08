@@ -60,21 +60,37 @@ public class ServPlayer {
     private Admin myAdmin;
     private GamePlayer gp;
     
-    public ServPlayer(Socket socket, Admin admin)
+    public ServPlayer(Socket socket, Admin admin) throws InterruptedException
     {
         myAdmin = admin;
         gp = null;
         s = socket;
         try {
-            s.getOutputStream().write("name".getBytes());
-            while(s.getInputStream().available() <= 0);
-            byte b[] = new byte [s.getInputStream().available()];
-            s.getInputStream().read(b);
-            name = new String(b);
+            Boolean check = true;
+            do
+            {
+                s.getOutputStream().write("name".getBytes());
+                while(s.getInputStream().available() <= 0)
+                {
+                    Thread.sleep((long)100);
+                    if (s.isInputShutdown())
+                        throw new InterruptedException("client don't has name");
+                }
+                byte b[] = new byte [s.getInputStream().available()];
+                s.getInputStream().read(b);
+                name = new String(b);
+                LinkedList<String> ReservedNames = myAdmin.getPlayerList();
+                check = false;
+                for (int i = 0; i < ReservedNames.size() && !check; i++)
+                {
+                    check = ReservedNames.get(i).equals(name);
+                }
+            } while (check);
         } catch (IOException ex) {
             Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
         l_th = new Thread(new Listen(socket));
+        l_th.setName("Listen player ".concat(name));
         l_th.start();
         sem = new Semaphore(0);
     }

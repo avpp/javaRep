@@ -17,6 +17,41 @@ import java.util.logging.Logger;
  * @author Alexey
  */
 public class Server implements Runnable{
+    private class AddClient implements Runnable {
+        private Socket s;
+        public AddClient(Socket socket)
+        {
+            s = socket;
+        }
+        @Override
+        public void run() {
+            try {
+                ServPlayer p;
+                p = new ServPlayer(s, a);
+                sem.acquire();
+                /*Boolean check = true;
+                while (check)
+                {
+                    check = false;
+                    for (int i = 0; i < players.size() && !check; i++)
+                    {
+                        check = players.get(i).name.equals(p.name);
+                    }
+                    if (check)
+                    {
+                        sem.release();
+                        //p = new ServPlayer(s, a);
+                        //p.changeName();
+                        sem.acquire();
+                    }
+                }*/
+                players.add(p);
+                sem.release();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     private ServerSocket ssocket;
     private Admin a;
     public Boolean work;
@@ -55,7 +90,10 @@ public class Server implements Runnable{
         {
             try {
                 Socket s = ssocket.accept();
-                System.out.print("Socket... ");
+                Thread th = new Thread(new AddClient(s));
+                th.setName("Request name by ".concat(s.getInetAddress().toString()).concat(":").concat(String.valueOf(s.getPort())));
+                th.start();
+                /*System.out.print("Socket... ");
                 try {
                     sem.acquire();
                     System.out.println("accepted");
@@ -64,7 +102,7 @@ public class Server implements Runnable{
                     sem.release();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }*/
                 /*
                 Socket tmp[] = new Socket[csockets.length + 1];
                 System.arraycopy(csockets, 0, tmp, 0, csockets.length);

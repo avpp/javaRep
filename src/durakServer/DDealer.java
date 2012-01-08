@@ -2,8 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package first;
+package durakServer;
 
+import first.Admin;
+import first.Card;
+import first.Dealer;
+import first.Deck;
+import first.GamblingTable;
+import first.GamePlayer;
+import first.Turn;
 import first.WinTable.rec;
 import java.util.LinkedList;
 
@@ -36,6 +43,16 @@ public class DDealer extends Dealer{
         if (c1.getColor().compareTo(trump) != 0 && c2.getColor().compareTo(trump) == 0)
             return -1;
         return c1.getValue().compareTo(c2.getValue());
+    }
+    private Boolean findCardOnTableWithEqualValue(GamblingTable gt, Card c)
+    {
+        Boolean ans = false;
+        LinkedList<Card> allCards = gt.getAllCards();
+        for (int i = 0; i < allCards.size() && !ans; i++)
+        {
+            ans = allCards.get(i).getValue().equals(c.getValue());
+        }
+        return ans;
     }
     
     @Override
@@ -119,18 +136,20 @@ public class DDealer extends Dealer{
         counSeqNoMoves = 0;
         String playerAnswer;
         Boolean endTable;
+        admin.AddMessage(null, deck.getInfo());
+        admin.AddMessage(null, getTrmp());
+        admin.AddMessage(null, "your/");
         while (!endGame)
         {
             lastRemoved = false;
             endTable = false;
+            counSeqNoMoves = 0;
             curTable = history.AddNew();  //добавили новый игровой стол.
-            admin.AddMessage(null, deck.getInfo());
-            admin.AddMessage(null, getTrmp());
-            admin.AddMessage(null, "your/");
+            
             do
             {
                 admin.AddMessage(null, curTable.toString());
-                admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'a'));
+                admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, (lastRemoved)?'t':'a'));
                 Boolean repeatMove;
                 // Подкидываем карту
                 do
@@ -178,7 +197,7 @@ public class DDealer extends Dealer{
                             }
                             else
                             {//Сюда мы попадём, если если у игрока была такая карта. Проверим, может ли он её положить
-                                if (curTable.getAllCards().size() == 0 || curTable.getAllCards().contains(c))
+                                if (curTable.getAllCards().size() == 0 || findCardOnTableWithEqualValue(curTable, c))//curTable.getAllCards().contains(c))
                                 {//Теперь, наконец-то, мы можем фактически сделать ход!!!
                                     curTable.AddTurn(new Turn(players.get(curPlayerMoveIndex), c), -1);
                                     players.get(curPlayerMoveIndex).cards.remove(c);
@@ -194,11 +213,12 @@ public class DDealer extends Dealer{
                     }
                 } while(repeatMove);
                 //Отправляем всем всю информацию
-                admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'a'));
-                admin.AddMessage(null, curTable.toString());
-                //Отбиваем картуsendAll(curTable.toString(),getLsPl());
+                
+                //Отбиваем карту в том случае, если перед этим не затянул и есть что отбивать.
                 if (!lastRemoved && curTable.table.get(curTable.table.size() - 1).size() == 1)
                 {
+                    admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'p'));
+                    admin.AddMessage(null, curTable.toString());
                     do
                     {
                         repeatMove = false;
@@ -252,8 +272,8 @@ public class DDealer extends Dealer{
                         }
                     } while(repeatMove);
                     //!Отправляем всем всю информацию
-                    admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'a'));
-                    admin.AddMessage(null, curTable.toString());
+                    //admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'a'));
+                    //admin.AddMessage(null, curTable.toString());
                 }
                 endTable = (curTable.table.size() == 6) || (counSeqNoMoves >= players.size() - 1);
             } while(!endTable);
@@ -305,7 +325,7 @@ public class DDealer extends Dealer{
                 //! Надо бы сообщить всем
                 //wint+lspl для всех
                 admin.AddMessage(null, wtable.toString());
-                admin.AddMessage(null, getLsPl(-1, -1, 'a'));
+                //admin.AddMessage(null, getLsPl(-1, -1, 'a'));
             }
             //Рассчитаем номер следующего ходящего и отбивающегося
             curPlayerMoveIndex = curPlayerBounceIndex;
