@@ -14,6 +14,10 @@ public class DurakDeck {
     private int m_currAmount;
     private int m_fullAmount;
 
+    public DurakDeck() {
+        m_currAmount = 36;
+    }
+    
     public DurakDeck(int amount) {
         m_currAmount = amount;
     }

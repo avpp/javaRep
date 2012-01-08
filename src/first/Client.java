@@ -40,10 +40,10 @@ public class Client {
                         byte b[] = new byte[s.getInputStream().available()];
                         s.getInputStream().read(b);
                         String inmes = new String(b);
-                        String submes[] = inmes.split("\0");
+                        String submes[] = inmes.split("\n");
                         for (String m : submes)
                         {
-                            addMessage(m.concat("\0"));
+                            addMessage(m);
                         }
                     }
                 } catch (IOException ex) {

@@ -75,17 +75,12 @@ public class First {
             DurakClient dc = new DurakClient();
             
             //String str;
-            //String address = "95.30.118.221";
             byte address[] = new byte[4];
-            address[0] = 95;
-            address[1] = 30;
-            address[2] = 118;
-            address[3] = -35;
-            //83.139.135.86
-            /*address[0] = 83;
-            address[1] = (byte)139;
-            address[2] = (byte)135;
-            address[3] = 86;*/
+            address[0] = 2;
+            address[1] = 95;
+            address[2] = -42;
+            address[3] = -5;
+            
             int port = 15147;
             /*
             System.out.println("Введи ip, через пробел порт");
