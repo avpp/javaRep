@@ -84,7 +84,7 @@ public class First {
             a.stopServer();
         }*/
         else if (choice == '2') {
-            DurakClient dc = new DurakClient();
+            DurakPlayer dc = new DurakPlayer();
             
             //String str;
             byte address[] = new byte[4];

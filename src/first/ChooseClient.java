@@ -10,7 +10,7 @@
  */
 package first;
 
-import durakVisualClient.DurakClient;
+import durakVisualClient.DurakPlayer;
 
 /**
  *
