@@ -84,10 +84,19 @@ public class DurakGameInterface extends javax.swing.JFrame {
                 Logger.getLogger(DurakGameInterface.class.getName()).log(Level.SEVERE, null, ex);
             }
         m_cloth = img;
+        
+        drawAll();
     }
 
     public void drawAll() {
-        
+        jBtn1.setIcon(new ImageIcon(m_imgsClubs[4]));
+        jBtn2.setIcon(new ImageIcon(m_imgsDiamonds[9]));
+        jBtn3.setIcon(new ImageIcon(m_imgsDiamonds[12]));
+        jBtn4.setIcon(new ImageIcon(m_imgsSpades[10]));
+        jBtn5.setIcon(new ImageIcon(m_imgsHearts[7]));
+        jBtn6.setIcon(new ImageIcon(m_imgsSpades[5]));
+        jBtnCardLeft.setVisible(false);
+        //jBtnCardRight.setVisible(false);
     }
     
     private void loadCardImages(String path) {
@@ -133,12 +142,16 @@ public class DurakGameInterface extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btn1 = new java.awt.Button();
-        btn2 = new java.awt.Button();
-        btn3 = new java.awt.Button();
-        btn4 = new java.awt.Button();
-        btn5 = new java.awt.Button();
-        btn6 = new java.awt.Button();
+        jBtn1 = new javax.swing.JButton();
+        jBtn2 = new javax.swing.JButton();
+        jBtn3 = new javax.swing.JButton();
+        jBtn4 = new javax.swing.JButton();
+        jBtn5 = new javax.swing.JButton();
+        jBtn6 = new javax.swing.JButton();
+        jBtnCardRight = new javax.swing.JButton();
+        jBtnCardLeft = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("Form"); // NOI18N
@@ -149,60 +162,93 @@ public class DurakGameInterface extends javax.swing.JFrame {
         });
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(netcards.NetCardsApp.class).getContext().getResourceMap(DurakGameInterface.class);
-        btn1.setLabel(resourceMap.getString("btn1.label")); // NOI18N
-        btn1.setName("btn1"); // NOI18N
-        btn1.addMouseListener(new java.awt.event.MouseAdapter() {
+        jBtn1.setText(resourceMap.getString("jBtn1.text")); // NOI18N
+        jBtn1.setName("jBtn1"); // NOI18N
+        jBtn1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn1MouseClicked(evt);
+                jBtn1MouseClicked(evt);
             }
         });
 
-        btn2.setLabel(resourceMap.getString("label")); // NOI18N
-        btn2.setName(""); // NOI18N
+        jBtn2.setText(resourceMap.getString("jBtn2.text")); // NOI18N
+        jBtn2.setName("jBtn2"); // NOI18N
 
-        btn3.setLabel(resourceMap.getString("btn3.label")); // NOI18N
-        btn3.setName("btn3"); // NOI18N
+        jBtn3.setText(resourceMap.getString("jBtn3.text")); // NOI18N
+        jBtn3.setName("jBtn3"); // NOI18N
 
-        btn4.setLabel(resourceMap.getString("btn4.label")); // NOI18N
-        btn4.setName("btn4"); // NOI18N
+        jBtn4.setText(resourceMap.getString("jBtn4.text")); // NOI18N
+        jBtn4.setName("jBtn4"); // NOI18N
 
-        btn5.setLabel(resourceMap.getString("btn5.label")); // NOI18N
-        btn5.setName("btn5"); // NOI18N
+        jBtn5.setText(resourceMap.getString("jBtn5.text")); // NOI18N
+        jBtn5.setName("jBtn5"); // NOI18N
 
-        btn6.setLabel(resourceMap.getString("btn6.label")); // NOI18N
-        btn6.setName("btn6"); // NOI18N
+        jBtn6.setName("jBtn6"); // NOI18N
+
+        jBtnCardRight.setText(resourceMap.getString("jBtnCardRight.text")); // NOI18N
+        jBtnCardRight.setName("jBtnCardRight"); // NOI18N
+
+        jBtnCardLeft.setText(resourceMap.getString("jBtnCardLeft.text")); // NOI18N
+        jBtnCardLeft.setName("jBtnCardLeft"); // NOI18N
+
+        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
+        jButton1.setName("jButton1"); // NOI18N
+
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(122, 122, 122)
-                .addComponent(btn1, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                .addGap(34, 34, 34)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(82, 82, 82)
+                .addComponent(jBtnCardLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn2, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                .addComponent(jBtn2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn3, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                .addComponent(jBtn3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn4, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                .addComponent(jBtn4, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn5, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                .addComponent(jBtn5, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(155, 155, 155))
+                .addComponent(jBtn6, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jBtnCardRight, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(482, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(243, 243, 243))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(72, 72, 72)
+                .addComponent(jButton1)
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(475, 475, 475)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn6, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-                    .addComponent(btn5, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-                    .addComponent(btn4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-                    .addComponent(btn3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-                    .addComponent(btn2, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-                    .addComponent(btn1, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE))
-                .addGap(26, 26, 26))
+                .addGap(31, 31, 31)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 500, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jBtn5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jBtn1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jBtn2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jBtn4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
+                    .addComponent(jBtn3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jBtnCardLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21))
+                    .addComponent(jBtn6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jBtnCardRight, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)))
+                .addGap(20, 20, 20))
         );
 
         pack();
@@ -214,14 +260,9 @@ private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRS
         m_canvas.setBounds(0, 0, width, height);
 }//GEN-LAST:event_formComponentResized
 
-private void btn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn1MouseClicked
+private void jBtn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBtn1MouseClicked
 // TODO add your handling code here:
-    Graphics gc;
-            gc = btn1.getGraphics();
-            int w = btn1.getWidth();
-            int h = btn1.getWidth();
-            gc.drawImage(m_imgsClubs[0], w, h, rootPane);
-}//GEN-LAST:event_btn1MouseClicked
+}//GEN-LAST:event_jBtn1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -259,12 +300,16 @@ private void btn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.awt.Button btn1;
-    private java.awt.Button btn2;
-    private java.awt.Button btn3;
-    private java.awt.Button btn4;
-    private java.awt.Button btn5;
-    private java.awt.Button btn6;
+    private javax.swing.JButton jBtn1;
+    private javax.swing.JButton jBtn2;
+    private javax.swing.JButton jBtn3;
+    private javax.swing.JButton jBtn4;
+    private javax.swing.JButton jBtn5;
+    private javax.swing.JButton jBtn6;
+    private javax.swing.JButton jBtnCardLeft;
+    private javax.swing.JButton jBtnCardRight;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
 

@@ -27,77 +27,126 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="122" max="-2" attributes="0"/>
-              <Component id="btn1" pref="82" max="32767" attributes="1"/>
+              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+              <Component id="jButton1" min="-2" pref="72" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
+              <Component id="jBtnCardLeft" min="-2" pref="24" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="jBtn1" min="-2" pref="80" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="btn2" pref="82" max="32767" attributes="0"/>
+              <Component id="jBtn2" min="-2" pref="81" max="-2" attributes="1"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="btn3" pref="82" max="32767" attributes="0"/>
+              <Component id="jBtn3" min="-2" pref="81" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="btn4" pref="82" max="32767" attributes="0"/>
+              <Component id="jBtn4" min="-2" pref="82" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="btn5" pref="82" max="32767" attributes="0"/>
+              <Component id="jBtn5" min="-2" pref="82" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="btn6" min="-2" pref="82" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="155" max="-2" attributes="0"/>
+              <Component id="jBtn6" min="-2" pref="82" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="jBtnCardRight" min="-2" pref="24" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace pref="482" max="32767" attributes="0"/>
+              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="243" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
+              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace min="-2" pref="475" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="btn6" alignment="0" pref="108" max="32767" attributes="0"/>
-                  <Component id="btn5" alignment="0" pref="108" max="32767" attributes="0"/>
-                  <Component id="btn4" alignment="1" pref="108" max="32767" attributes="0"/>
-                  <Component id="btn3" alignment="1" pref="108" max="32767" attributes="0"/>
-                  <Component id="btn2" alignment="0" pref="108" max="32767" attributes="0"/>
-                  <Component id="btn1" alignment="0" pref="108" max="32767" attributes="1"/>
+              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+              <Component id="jLabel1" min="-2" pref="27" max="-2" attributes="0"/>
+              <EmptySpace pref="500" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="jBtn5" alignment="1" max="32767" attributes="1"/>
+                  <Component id="jBtn1" alignment="1" max="32767" attributes="1"/>
+                  <Component id="jBtn2" alignment="1" max="32767" attributes="1"/>
+                  <Component id="jBtn4" alignment="1" pref="101" max="32767" attributes="1"/>
+                  <Component id="jBtn3" alignment="1" max="32767" attributes="1"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="jBtnCardLeft" min="-2" pref="62" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="jBtn6" alignment="1" max="32767" attributes="1"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="jBtnCardRight" min="-2" pref="62" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="java.awt.Button" name="btn1">
+    <Component class="javax.swing.JButton" name="jBtn1">
       <Properties>
-        <Property name="label" type="java.lang.String" resourceKey="btn1.label"/>
-        <Property name="name" type="java.lang.String" value="btn1" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="jBtn1.text"/>
+        <Property name="name" type="java.lang.String" value="jBtn1" noResource="true"/>
       </Properties>
       <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btn1MouseClicked"/>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jBtn1MouseClicked"/>
       </Events>
     </Component>
-    <Component class="java.awt.Button" name="btn2">
+    <Component class="javax.swing.JButton" name="jBtn2">
       <Properties>
-        <Property name="label" type="java.lang.String" resourceKey="label"/>
-        <Property name="name" type="java.lang.String" value="" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="jBtn2.text"/>
+        <Property name="name" type="java.lang.String" value="jBtn2" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="java.awt.Button" name="btn3">
+    <Component class="javax.swing.JButton" name="jBtn3">
       <Properties>
-        <Property name="label" type="java.lang.String" resourceKey="btn3.label"/>
-        <Property name="name" type="java.lang.String" value="btn3" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="jBtn3.text"/>
+        <Property name="name" type="java.lang.String" value="jBtn3" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="java.awt.Button" name="btn4">
+    <Component class="javax.swing.JButton" name="jBtn4">
       <Properties>
-        <Property name="label" type="java.lang.String" resourceKey="btn4.label"/>
-        <Property name="name" type="java.lang.String" value="btn4" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="jBtn4.text"/>
+        <Property name="name" type="java.lang.String" value="jBtn4" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="java.awt.Button" name="btn5">
+    <Component class="javax.swing.JButton" name="jBtn5">
       <Properties>
-        <Property name="label" type="java.lang.String" resourceKey="btn5.label"/>
-        <Property name="name" type="java.lang.String" value="btn5" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="jBtn5.text"/>
+        <Property name="name" type="java.lang.String" value="jBtn5" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="java.awt.Button" name="btn6">
+    <Component class="javax.swing.JButton" name="jBtn6">
       <Properties>
-        <Property name="label" type="java.lang.String" resourceKey="btn6.label"/>
-        <Property name="name" type="java.lang.String" value="btn6" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="jBtn6" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jBtnCardRight">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="jBtnCardRight.text"/>
+        <Property name="name" type="java.lang.String" value="jBtnCardRight" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jBtnCardLeft">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="jBtnCardLeft.text"/>
+        <Property name="name" type="java.lang.String" value="jBtnCardLeft" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButton1">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="jButton1.text"/>
+        <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
+        <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>
