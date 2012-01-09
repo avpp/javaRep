@@ -15,13 +15,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Клиентская часть
  * @author Andrew
  */
 public class Client {
    //Здесь реализовать базовое сетевое взаимодействие,
    //получение и принятие строки-сообщения
    //От этого класса будем наследовать конкретных игроков
+    /**
+     * Класс для обработки входящих сообщений
+     */
     private class Listen implements Runnable {
 
         @Override
@@ -57,15 +60,26 @@ public class Client {
     private Thread th;
     private Socket s;
     private Semaphore sem;
+    /**
+     * Список сообщений
+     */
     private LinkedList<String> messages;
     
+    /**
+     * Конструктор
+     */
     public Client()
     {
         s = new Socket();
         sem = new Semaphore(0);
         messages = new LinkedList<String>();
     }
-    
+    /**
+     * Данный метод пытается создать сетевое подключение
+     * @param addr IP адрес сервера
+     * @param Port порт на сервере
+     * @return возвращает true, если подключение было успешным
+     */
     public Boolean tryConnectTo(byte addr[], int Port)
     {
         try {
@@ -78,13 +92,19 @@ public class Client {
         }
         return true;
     }
-    
+    /**
+     * Добавление нового сообщения
+     * @param str сообщение
+     */
     private void addMessage(String str)
     {
         messages.add(str);
         sem.release();
     }
-    
+    /**
+     * Чтение текущего сообщения. Если нет сообщений, то метод ожидает его
+     * @return сообщение
+     */
     public String read()
     {
         String ans = "";
@@ -96,7 +116,10 @@ public class Client {
         }
         return ans;
     }
-    
+    /**
+     * Отправление сообщения
+     * @param str сообщеие
+     */
     public void write(String str)
     {
         try {

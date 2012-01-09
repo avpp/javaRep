@@ -8,17 +8,44 @@ import java.util.LinkedList;
 import java.util.Random;
 
 /**
- *
+ * Класс Deck представляет из себя колоду (стопку карт).
+ * Для конкретной игры требуется реализовать свою колоду
  * @author Alexey
  */
 public abstract class Deck {
+    /**
+     * перечисление SideType представляет две стороны для доступа к колоде
+     * top =  сверху
+     * low = снизу
+     */
     public enum SideType {top, low};
-    
+    /**
+     * Данный метод должен возвращать количество карт в простой колоде
+     * @return количество карт в одной простой колоде
+     */
     public abstract int countCardsInSimpleDeck();
+    /**
+     * количество простых колод из которых состоит данная колода
+     */
     protected int deckCount;
-    protected int topNum, lowNum;
+    /**
+     * указатель на верхнюю карту в колоде
+     */
+    protected int topNum;
+    /**
+     * указатель на нижнюю карту в колоде
+     */
+    protected int lowNum;
+    /**
+     * спислк всех карт в колоде
+     */
     protected LinkedList<Card> allCards;
-    
+    /**
+     * Конструктор, который инициализирует начальные параметры.
+     * Заполнение колоды картами производится в конструкторе класса,
+     * реализующего данный класс
+     * @param deckCount количество простыых колод
+     */
     public Deck(int deckCount)
     {
         this.deckCount = deckCount;
@@ -41,12 +68,17 @@ public abstract class Deck {
             }
         }
     }*/
-    
+    /**
+     * Метод для перетасовки карт один раз
+     */
     public void Shuffle()
     {
         Shuffle(1);
     }
-    
+    /**
+     * Метод для перетасовки карт несколько раз
+     * @param count количетво перетасовок
+     */
     public void Shuffle(int count)
     {
         if (count < 1)
@@ -65,7 +97,11 @@ public abstract class Deck {
             }
         }
     }
-    
+    /**
+     * Получение карты с определённой стороны. (В результате карта "вынимается" из колоды, в отличии от метода {@link viewCard(SideType side)})
+     * @param side сторона, с которой следует взять карту
+     * @return Возвращает саму карту
+     */
     public Card getCard(SideType side)
     {
         if (topNum > lowNum)
@@ -77,7 +113,11 @@ public abstract class Deck {
         }
         return null;
     }
-    
+    /**
+     * Просмотр карты с определённой стороны. (Карта остаётся в колоде, в отличии от метода {@link getCard(SideType side)}
+     * @param side сторона, с которой следует посмотреть карту
+     * @return Карта, котораю находится со стороны side
+     */
     public Card viewCard(SideType side)
     {
         if (topNum > lowNum)
@@ -89,17 +129,25 @@ public abstract class Deck {
         }
         return null;
     }
-    
+    /**
+     * Размер колоды
+     * @return возвращает размер колоды (количество оставшихся в колоде карт)
+     */
     public int size()
     {
         return lowNum - topNum + 1;
     }
-    
+    /**
+     * Возвращает размер полной колоды
+     * @return возвращает максимальное количество карт в данной колоде
+     */
     public int fullDeckSize()
     {
         return deckCount*countCardsInSimpleDeck();
     }
-    
+    /**
+     * Просто вывод колоды на экран 
+     */
     public void PrintDeck()
     {
         int i =0;
@@ -110,9 +158,9 @@ public abstract class Deck {
                 System.out.println();
         }
     }
-    
-    public String getInfo()
-    {
-        return "deck/".concat(String.valueOf(size())).concat(",").concat(String.valueOf(fullDeckSize())).concat("\n");
-    }
+    /**
+     * Возвращает информацию о колоде
+     * @return информация о колоде
+     */
+    public abstract String getInfo();
 }

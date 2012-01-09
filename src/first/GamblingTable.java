@@ -7,19 +7,22 @@ package first;
 import java.util.LinkedList;
 
 /**
- *
+ * Данный класс реализует игровой стол
  * @author Alexey
  */
 public class GamblingTable {
+    /**
+     * игровое поле, на котором происходит игра.
+     * представляет из себя двумерный "массив" ходов, т.е.
+     * набор игровых событий, состоящих из ходов
+     */
     public LinkedList<LinkedList<Turn>> table;
-    
+    /**
+     * Конструктор, инициализирующий игровой стол
+     */
     public GamblingTable()
     {
         table = new LinkedList<LinkedList<Turn>>();
-    }
-    
-    public LinkedList<LinkedList<Turn>> getGamblingTable() {
-        return table;
     }
     
     public LinkedList<Turn> getStackbyIndex(int index) {
@@ -33,7 +36,12 @@ public class GamblingTable {
     public void addStack(LinkedList<Turn> stack) {
         table.add(stack);
     }
-    
+    /**
+     * Просмотр определённого хода
+     * @param actionNum первй индекс "массива", показывает номер игрового события (-1, если необходимо обратится к последнему событию)
+     * @param cardNum второй индекс массива, показывает номер карты в этом игровом событии (-1, если необходимо обратится к последней карте)
+     * @return возвращает объект класса {@link Turn} либо null, если указан неверный номер
+     */
     public Turn viewTurn(int actionNum, int cardNum)
     {
         if (actionNum == -1)
@@ -46,6 +54,11 @@ public class GamblingTable {
             return null;
         return table.get(actionNum).get(cardNum);
     }
+    /**
+     * Добавляет новый ход в конец игрового события
+     * @param turn ход, который добавляется
+     * @param actionNum номер игрового события или -1, если требуется добавить в последнее
+     */
     public void AddTurn(Turn turn, int actionNum)
     {
         if (actionNum < 0 || actionNum >= table.size())
@@ -55,6 +68,10 @@ public class GamblingTable {
         }
         table.get(actionNum).add(turn);
     }
+    /**
+     * Получает список всех карт, находящихся на игровом столе
+     * @return список карт
+     */
     public LinkedList<Card> getAllCards()
     {
         int count = 0;
@@ -73,6 +90,9 @@ public class GamblingTable {
         }
         return answer;
     }
+    /**
+     * Вывод на экран игрового стола
+     */
     public void PrintGamblingTable()
     {
         for (LinkedList<Turn> t: table)
@@ -84,7 +104,10 @@ public class GamblingTable {
             System.out.println();
         }
     }
-    
+    /**
+     * Преобразует игровой стол в строковое представление.
+     * @return строчку
+     */
     @Override
     public String toString()
     {
@@ -100,6 +123,11 @@ public class GamblingTable {
         ans = ans.concat("\n");
         return ans;
     }
+    /**
+     * Данный метод возвращает игровой стол по его строковому представлению
+     * @param str строчка, хранящая описание стола
+     * @return новый игровой стол
+     */
     public static GamblingTable fromString(String str)
     {
         String[] s = str.split("/");
