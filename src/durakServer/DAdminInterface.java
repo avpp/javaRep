@@ -161,6 +161,38 @@ public class DAdminInterface extends javax.swing.JFrame {
     private void jStopGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStopGameActionPerformed
         // TODO add your handling code here:
         admin.stopGame();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }//GEN-LAST:event_jStopGameActionPerformed
 
     /**

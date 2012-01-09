@@ -33,18 +33,27 @@ import java.io.IOException;
 
 import durakVisualClient.*;
 import java.io.*;
-import java.net.InetAddress;
 
+/**
+ * 
+ * @author Alexey
+ */
 public class First {
 
     /**
      * @param args the command line arguments
+     * @throws IOException  
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        MainForm.main(args);/*
+        //MainForm.main(args);/*
         System.out.println("Choose type\n1.Admin\n2.Client\n");
         int choice = System.in.read();
+        if (choice=='1')
+        {
+            MainForm.main(args);
+        }
+        /*
         if (choice == '1')
         {
             Admin a = new DAdmin();
@@ -73,7 +82,7 @@ public class First {
             a.waitEndGame();
             System.out.println(a.dealer.wtable.toString());
             a.stopServer();
-        }
+        }*/
         else if (choice == '2') {
             DurakClient dc = new DurakClient();
             
@@ -102,6 +111,6 @@ public class First {
                     address + " " + String.valueOf(port));
             
             dc.runLoop(address, port);
-        }*/
+        }/**/
     }
 }

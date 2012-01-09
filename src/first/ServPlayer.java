@@ -13,10 +13,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Экземпляр данного класса осуществляет связь с удалённым клиентом
  * @author Alexey
  */
 public class ServPlayer {
+    /**
+     * Класс для прослушивания входящих сообщений
+     */
     private class Listen implements Runnable {
         private Socket s;
         public Listen(Socket socket)
@@ -59,7 +62,12 @@ public class ServPlayer {
     private Semaphore sem;
     private Admin myAdmin;
     private GamePlayer gp;
-    
+    /**
+     * Конструктор данного класс, создаёт экземпляр данного класса.
+     * @param socket сокет, с помощью которого осуществляется связь с клиентом
+     * @param admin экземпляр класса {@link Admin}, который курирует работу данного объекта
+     * @throws InterruptedException
+     */
     public ServPlayer(Socket socket, Admin admin) throws InterruptedException
     {
         myAdmin = admin;
@@ -94,14 +102,25 @@ public class ServPlayer {
         l_th.start();
         sem = new Semaphore(0);
     }
+    /**
+     * Связь даного экземпляра с экземпляром класса {@link GamePlayer}
+     * @param p экземпляр класса {@link GamePlayer}, с которым надо осуществить связь
+     */
     public void setGamePlayer(GamePlayer p)
     {
         gp = p;
     }
+    /**
+     * Получение связанного с данным классом объекта {@link GamePlayer}
+     * @return объекта класса {@link GamePlayer}
+     */
     public GamePlayer getGamePlayer()
     {
         return gp;
     }
+    /**
+     * Завершение соединения
+     */
     public void closeSocket()
     {
         try {
@@ -111,11 +130,19 @@ public class ServPlayer {
             Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Установка ответа на запрос хода
+     * @param s текст ответа
+     */
     public synchronized void setAnswer(String s)
     {
         answer = s;
         sem.release();
     }
+    /**
+     * получение ответа на запрос хода
+     * @return текст ответа
+     */
     private String getAnswer()
     {
         try {
@@ -125,6 +152,11 @@ public class ServPlayer {
         }
         return answer;
     }
+    /**
+     * Запрос хода. Посылает сообщение с текущей игровой ситуацией и ожидает ответа на это сообщение
+     * @param situation игровая ситуация
+     * @return ответ на запрос
+     */
     public String move(String situation)
     {
         String ans = "";
@@ -132,10 +164,18 @@ public class ServPlayer {
         ans = getAnswer();
         return ans;
     }
+    /**
+     * Добавление сообщения, пришедшего от имени этого игрока в список обработки сообщений администратора
+     * @param message 
+     */
     public void acceptMessage(String message)
     {
         myAdmin.AddMessage(this, message);
     }
+    /**
+     * Отправка сообщения удалённому клиенту
+     * @param message сообщение
+     */
     public void sendMessage(String message)
     {
         if (s.isClosed())

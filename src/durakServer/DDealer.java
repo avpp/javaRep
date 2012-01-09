@@ -65,7 +65,7 @@ public class DDealer extends Dealer{
          * 3,5. Послать всем игрокам их начальные состояния?????
          * 4. Переместить первого ходящего на нулевую позицию
          */
-        if (!checkDeck())
+        if (!checkDeck(deck))
             return false;
         deck.Shuffle();
         cardTrump = deck.viewCard(Deck.SideType.low);
@@ -381,27 +381,5 @@ public class DDealer extends Dealer{
     {
         return "trmp/".concat(cardTrump.toString()).concat("\n");
     }
-    @Override
-    public String generateAllGameInfo() {
-        String ans = "info:\n";
-        //формируем список играющих игроков и количества карт у них
-        ans = ans.concat("gamePlayers\n");
-        ans = ans.concat(String.valueOf(players.size()));
-        for (GamePlayer tmpPl : players)
-        {
-            ans = ans.concat(tmpPl.name).concat("\n").concat(String.valueOf(tmpPl.cards.size())).concat("\n");
-        }
-        //формируем список победивших игроков и количество очков у них
-        ans = ans.concat("winPlayers\n");
-        ans = ans.concat(String.valueOf(wtable.records.size()));
-        for (rec r : wtable.records)
-        {
-            ans = ans.concat(r.getPlayer().name).concat("\n").concat(String.valueOf(r.getScore())).concat("\n");
-        }
-        //Добавим количество карт в колоде и начальный размер колоды
-        ans = ans.concat("deck\n").concat(String.valueOf(deck.size())).concat("/").concat(String.valueOf(deck.fullDeckSize())).concat("\n");
-        //Добавим козырную карту
-        ans = ans.concat("trump\n").concat(cardTrump.toString()).concat("\n");
-        return ans;
-    }
+    
 }

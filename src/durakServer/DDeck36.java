@@ -30,4 +30,9 @@ public class DDeck36 extends Deck{
         }
         lowNum = allCards.size() - 1;
     }
+
+    @Override
+    public String getInfo() {
+        return "deck/".concat(String.valueOf(size())).concat(",").concat(String.valueOf(fullDeckSize())).concat("\n");
+    }
 }

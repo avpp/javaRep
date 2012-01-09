@@ -13,10 +13,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Класс, принимающий запросы на подключение
  * @author Alexey
  */
 public class Server implements Runnable{
+    /**
+     * класс, добавляющий клиентов в список клиентов
+     */
     private class AddClient implements Runnable {
         private Socket s;
         public AddClient(Socket socket)
@@ -57,7 +60,14 @@ public class Server implements Runnable{
     private Admin a;
     public Boolean work;
     // Socket csockets[];
+    /**
+     * список клиетов, подключённых к серверу
+     */
     public LinkedList<ServPlayer> players;
+    /**
+     * Конструктор, инициализирующий сервер
+     * @param admin Администратор, управляющий работой сервера
+     */
     public Server(Admin admin)
     {
         a = admin;
@@ -73,10 +83,16 @@ public class Server implements Runnable{
         sem = new Semaphore(1);
     }
     private Semaphore sem;
+    /**
+     * Для синхронизации. Продолжение работы сервера (добавление новых клиентов)
+     */
     public void ContinueWork()
     {
         sem.release();
     }
+    /**
+     * Для синхронизации. Приостановка работы сервера (добавления новых клиентов)
+     */
     public void PauseWork()
     {
         try {
@@ -85,6 +101,9 @@ public class Server implements Runnable{
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Метод, вызываемый при запуске потока сервер (реализация класса {@link Runnable})
+     */
     @Override
     public void run() {
         while (work)

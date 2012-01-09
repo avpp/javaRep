@@ -10,14 +10,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Экземпляр данного класса управляет взаимодействием между клиентами
  * @author Alexey
  */
 public abstract class Admin {
-    public static String gameName()
-    {
-        return "game";
-    }
+    /**
+     * Класс Messge хранит в себе текстовое сообщение и отправителя
+     */
     public class Message {
         public ServPlayer source;
         public String message;
@@ -27,6 +26,10 @@ public abstract class Admin {
             message = m;
         }
     }
+    /**
+     * Данный класс реализует метод {@link  Runnable}
+     * для разбора пришедших сообщений
+     */
     private class GatheringMessages implements Runnable {
         @Override
         public void run() {
@@ -48,10 +51,22 @@ public abstract class Admin {
             }
         }
     }
+    /**
+     * Список сообщений
+     */
     private LinkedList<Message> messages;
+    /**
+     * экземпляр класса {@link Server}, который использует администратор
+     */
     protected Server server;
     private Thread servTh, gameTh, mesTh;
+    /**
+     * Экземпляр класса {@link Dealer}, который используется для игры
+     */
     protected Dealer dealer;
+    /**
+     * Конструктор класса. Инициализирует переменные.
+     */
     public Admin()
     {
         server = new Server(this);
@@ -60,11 +75,17 @@ public abstract class Admin {
         sem = new Semaphore(1);
         messages = new LinkedList<Message>();
     }
+    /**
+     * Запуск сервера
+     */
     public void startServer()
     {
         servTh.start();
     }
     private Semaphore sem;
+    /**
+     * Метод для синхронизации. Приостанавливает добавление сообщений
+     */
     public void PauseAdding()
     {
         try {
@@ -73,10 +94,18 @@ public abstract class Admin {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Метод для синхронизации. Возобновляет возможность добавления сообщений
+     */
     public void ContinueAdding()
     {
         sem.release();
     }
+    /**
+     * Добавление сообщений
+     * @param sp источник сообщения
+     * @param mesg само сообщение
+     */
     public void AddMessage(ServPlayer sp, String mesg)
     {
         try {
@@ -87,6 +116,10 @@ public abstract class Admin {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Удаление сообщений от источника p из списка сообщений
+     * @param p источник сообщений.
+     */
     public void RemoveMessagesByPlayer(ServPlayer p)
     {
         PauseAdding();
@@ -101,6 +134,10 @@ public abstract class Admin {
         messages.removeAll(delM);
         ContinueAdding();
     }
+    /**
+     * Возвращает список игроков, которые подключены к серверу
+     * @return Список имён игроков
+     */
     public LinkedList<String> getPlayerList()
     {
         LinkedList<String> ans = new LinkedList<String>();
@@ -110,13 +147,37 @@ public abstract class Admin {
         }
         return ans;
     }
+    /**
+     * Метод, создающий диллера
+     */
     public abstract void createDealer();
+    /**
+     * Метод проверки клиента на возможность участия в данной игре
+     * @param player Пороверяемый клиент
+     * @return возвращает true, если игрок может принять участие, иначе false
+     */
     public abstract Boolean isPlayerOK(ServPlayer player);
+    /**
+     * Метод по разбору одного сообщение
+     * @param m сообщение для разбора
+     */
     public abstract void gatheringMessage(Message m);
+    /**
+     * Запуск Визуальной части сервера
+     */
     public abstract void runInterface();
+    /**
+     * Метод, который вызывается при изменении списка игроков
+     */
     public abstract void playersChanged();
-    
+    /**
+     * Список игроков, зарезервированных на игру
+     */
     protected LinkedList<ServPlayer> reservedPlayers = new LinkedList<ServPlayer>();
+    /**
+     * Получение имён игроков, зарезервированных на игру
+     * @return список имён игроков
+     */
     public LinkedList<String> getReservedPlayerList()
     {
         LinkedList<String> ans = new LinkedList<String>();
@@ -124,7 +185,11 @@ public abstract class Admin {
             ans.add(sp.name);
         return ans;
     }
-    
+    /**
+     * Резервирование игрока
+     * @param player игрок, который резервируется
+     * @return возвращает true, если игрок может принять участие и ещё не содержится в списке зарезервированных игроков, иначе false
+     */
     public Boolean addPlayer(ServPlayer player)
     {
         if (isPlayerOK(player))
@@ -136,18 +201,37 @@ public abstract class Admin {
             return false;
         return true;
     }
+    /**
+     * Добавление игрока по  индексу. (аналогично {@link addPlayer(ServPlayer player)})
+     * @param index индекс игрока
+     * @return аналогично {@link addPlayer(ServPlayer player)}
+     */
     public Boolean addPlayer(int index)
     {
         return addPlayer(server.players.get(index));
     }
+    /**
+     * Удаления игрока из списка зарезервированных
+     * @param player игрок для удаления
+     * @return возвращает true, если игрок успешно удалён
+     */
     public Boolean removePlayer(ServPlayer player)
     {
         return reservedPlayers.remove(player);
     }
+    /**
+     * Удаление игрока из списка зарезервированных по индексу
+     * @param index индекс игрока
+     * @return возвращает true, если игрок успешно удалён
+     */
     public Boolean removePlayer(int index)
     {
         return removePlayer(reservedPlayers.get(index));
     }
+    /**
+     * Начало игры.
+     * Добавлет зарезервированных игроков к диллеру и запускает игру.
+     */
     public void startGame()
     {
         for (ServPlayer p : reservedPlayers)
@@ -157,16 +241,26 @@ public abstract class Admin {
         gameTh.setName("Dealer thread");
         gameTh.start();
     }
+    /**
+     * Остановка игры
+     */
     public void stopGame()
     {
-        gameTh.interrupt();
+        //gameTh.interrupt();
+        gameTh.stop();
     }
+    /**
+     * Начало разбора сообщений
+     */
     public void startGathering()
     {
         mesTh = new Thread(new GatheringMessages());
         mesTh.setName("Message gathering thread");
         mesTh.start();
     }
+    /**
+     * Остановка работы сервера и разбора сообщений
+     */
     public void stopServer()
     {
         if (servTh.isAlive())
@@ -174,6 +268,10 @@ public abstract class Admin {
         if (mesTh.isAlive())
             mesTh.interrupt();
     }
+    /**
+     * Ожидание окончания игры
+     * @return возвращает true, если игра закончилась нормально
+     */
     public Boolean waitEndGame()
     {
         try {
