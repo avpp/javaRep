@@ -77,10 +77,10 @@ public class Client {
      * @param Port порт на сервере
      * @return возвращает true, если подключение было успешным
      */
-    public Boolean tryConnectTo(byte addr[], int Port)
+    public Boolean tryConnectTo(byte addr[], int port)
     {
         try {
-            s.connect(new InetSocketAddress(InetAddress.getByAddress(addr), Port));
+            s.connect(new InetSocketAddress(InetAddress.getByAddress(addr), port));
             th = new Thread(new Listen());
             th.start();
         } catch (IOException ex) {

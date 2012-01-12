@@ -78,7 +78,8 @@ public class MainForm extends javax.swing.JFrame {
     private void jCreateServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCreateServerButtonActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        ChooseAdmin.main(new String[0]);
+        //ChooseAdmin.main(new String[0]);
+        (new ChooseAdmin()).setVisible(true);
     }//GEN-LAST:event_jCreateServerButtonActionPerformed
 
     private void jCreateClientButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCreateClientButtonActionPerformed

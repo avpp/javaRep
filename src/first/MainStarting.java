@@ -38,7 +38,7 @@ import java.io.*;
  * 
  * @author Alexey
  */
-public class First {
+public class MainStarting {
 
     /**
      * @param args the command line arguments
@@ -53,13 +53,18 @@ public class First {
         {
             MainForm.main(args);
         }
-        /*
+        
         if (choice == '1')
         {
             Admin a = new DAdmin();
-            a.StartServer();
+            a.createDealer();
+            choice = System.in.read();
+            /*
+            a.startServer();
             a.startGathering();
             a.createDealer();
+            */
+            /*
             while (choice != 'n')
             {
                 System.out.println("Players: ");
@@ -75,6 +80,7 @@ public class First {
                 if (choice >= '0' && choice <= '9')
                 {
                     choice = choice - 48;
+//!!!!Здесь валится!!!!!                    
                     a.addPlayer(choice);
                 }
             }
@@ -82,9 +88,12 @@ public class First {
             a.waitEndGame();
             System.out.println(a.dealer.wtable.toString());
             a.stopServer();
-        }*/
-        else if (choice == '2') {
-            DurakPlayer dc = new DurakPlayer();
+             * 
+             */
+        }
+        else 
+            if (choice == '2') {
+            DurakPlayer dc = new DurakPlayer(new Client());
             
             //String str;
             byte address[] = new byte[4];
@@ -110,7 +119,7 @@ public class First {
             System.out.println("Connecting to " + 
                     address + " " + String.valueOf(port));
             
-            dc.runLoop(address, port);
-        }/**/
+            dc.startGame(address, port);
+        }
     }
 }

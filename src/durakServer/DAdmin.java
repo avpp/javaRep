@@ -13,6 +13,13 @@ import first.ServPlayer;
  */
 
 public class DAdmin extends Admin{
+    private DAdminInterface visual;
+    private String template[] = {"turn", "mesg",
+                                 "exit", "your"};
+    private String Dtemplate[] = {"lspl", "gamt",
+                                  "trmp", "deck",
+                                  "wint", "your"};
+    
     public static String gameName()
     {
         return "Durak";
@@ -28,8 +35,7 @@ public class DAdmin extends Admin{
         return true;
     }
 
-    private String template[] = {"turn", "mesg", "exit", "your"};
-    private String Dtemplate[] = {"lspl", "gamt", "trmp", "deck", "wint","your"};
+    
     @Override
     public void gatheringMessage(Message m) {
         adminMessage(((m.source == null)?"to all":m.source.name) + ": "+m.message);
@@ -112,14 +118,21 @@ public class DAdmin extends Admin{
 
     @Override
     public void runInterface() {
-        DAdminInterface.admin = this;
-        DAdminInterface.main(new String[0]);
+        //DAdminInterface.admin = this;
+        /*
+         * FIXME
+         */
+        visual = new DAdminInterface(this);
+        visual.setVisible(true);
+        //DAdminInterface.main(new String[0]);
+        
     }
-    DAdminInterface visual = null;
-    public void setInterface(DAdminInterface visual)
-    {
-        this.visual = visual;
+    
+    
+    public void setInterface(DAdminInterface i) {
+        visual = i;
     }
+    
     @Override
     public void playersChanged() {
         visual.refreshPlayerList();

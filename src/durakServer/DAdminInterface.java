@@ -16,13 +16,24 @@ package durakServer;
  */
 public class DAdminInterface extends javax.swing.JFrame {
 
-    public static DAdmin admin;
+    public DAdmin admin;
     /** Creates new form DAdminInterface */
+    
+    /*
     public DAdminInterface() {
         initComponents();
-        admin.setInterface(this);
-        admin.startServer();
-        admin.startGathering();
+        
+        //Здесь этого быть не должно!
+        //интерфейс никоим образом не должен управлять админом
+        //admin.setInterface(this);
+        //admin.startServer();
+        //admin.startGathering();
+    }
+    */
+
+    public DAdminInterface(DAdmin a) {
+        admin = a;
+        initComponents();
     }
     
     public void refreshPlayerList()
@@ -76,7 +87,7 @@ public class DAdminInterface extends javax.swing.JFrame {
 
         jClientListLabel.setText("Клиенты");
 
-        jReservedPlayerListLabel.setText("Потенциальные игроки");
+        jReservedPlayerListLabel.setText("Будут играть");
 
         jStartGame.setLabel("Начать игру");
         jStartGame.addActionListener(new java.awt.event.ActionListener() {
@@ -104,14 +115,17 @@ public class DAdminInterface extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jClientList, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jClientListLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jReservedPlayers, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jReservedPlayerListLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jStartGame, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jStopGame, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(jReservedPlayers, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jStartGame, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jStopGame, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(32, 32, 32)
+                                .addComponent(jReservedPlayerListLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -161,38 +175,6 @@ public class DAdminInterface extends javax.swing.JFrame {
     private void jStopGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStopGameActionPerformed
         // TODO add your handling code here:
         admin.stopGame();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }//GEN-LAST:event_jStopGameActionPerformed
 
     /**
@@ -226,7 +208,7 @@ public class DAdminInterface extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new DAdminInterface().setVisible(true);
+                //new DAdminInterface().setVisible(true);
             }
         });
     }

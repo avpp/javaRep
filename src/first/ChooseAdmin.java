@@ -64,10 +64,9 @@ public class ChooseAdmin extends javax.swing.JFrame {
             dir = dirtmp;
         } while (dir.size() > 0);
         admins = new LinkedList<Class<Admin>>();
-        gamesLoader loader = new gamesLoader(ClassLoader.getSystemClassLoader());
+        GamesLoader loader = new GamesLoader(ClassLoader.getSystemClassLoader());
         for (File f : AllFiles)
         {
-            try {
                 Path path = f.toPath();
                 boolean check = false;
                 int i, j;
@@ -81,15 +80,28 @@ public class ChooseAdmin extends javax.swing.JFrame {
                     name = name.concat(path.getName(j).toString()).concat(".");
                 }
                 name = name.split(".class")[0];
-                Class c = loader.findClass(name,f);
-                check = Admin.class.isAssignableFrom(c);
-                if (check)
-                    admins.add(c);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                Class c = null;
+                
+                if (!(name.startsWith("java"))) {
+                   try {
+                        c = loader.findClass(name, f);
+                        
+                    } catch (SecurityException ex) {
+                        Logger.getLogger(
+                                ChooseAdmin.class.getName())
+                                    .log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(
+                                ChooseAdmin.class.getName())
+                                    .log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+                if (c != null) {
+                    check = Admin.class.isAssignableFrom(c);
+                    if (check)
+                        admins.add(c);
+                }
         }
         for (Class<Admin> c : admins)
         {
@@ -164,6 +176,7 @@ public class ChooseAdmin extends javax.swing.JFrame {
             this.setVisible(false);
             Admin a = admins.get(jAdminList.getSelectedIndex()).newInstance();
             a.runInterface();
+            a.startServer();
             
         } catch (InstantiationException ex) {
             Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);

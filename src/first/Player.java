@@ -9,27 +9,57 @@ package first;
  * @author Andrew
  */
 public abstract class Player {
-    
+
     protected class gameLoop implements Runnable{
         @Override
         public void run() {
             while (true) {
-                String mesg = client.read();
+                String mesg = getClient().read();
                 parseAllString(mesg);
             }
         }
     }
-    
-    protected String name;
-    protected Client client;
+
+    private String name;
+    private Client client;
     protected Thread thGame;
     
+    public Player(Client c) {
+        client = c;
+    }
+    
+    /**
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
     /**
-     * Осуществляет соединение по IP-адресу порту 
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the client
+     */
+    public Client getClient() {
+        return client;
+    }
+
+    /**
+     * @param client the client to set
+     */
+    public void setClient(Client client) {
+        this.client = client;
+    }
+    
+
+    
+    /**
+     * Осуществляет соединение по IP-адресу, порту 
      * и начинает игру
      * @param address
      * @param port

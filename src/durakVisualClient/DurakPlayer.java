@@ -124,6 +124,7 @@ public class DurakPlayer extends Player{
     private class setmakeTurn implements Runnable {
         public void run() {
             System.out.println("Подкидывай!");
+            
             String str = "";
             InputStreamReader input = new InputStreamReader(System.in);
             BufferedReader reader = new BufferedReader(input);
@@ -132,12 +133,12 @@ public class DurakPlayer extends Player{
             } catch (IOException ex) {
                 Logger.getLogger(DurakPlayer.class.getName()).log(Level.SEVERE, null, ex);
             }
-             if (!("no".equals(str))) {
+             if (!("no".equals(str) || "".equals(str))) {
                 int c = Integer.parseInt(str);
                 Card ansCard = getM_cards().get(c - 1);
                 str = ansCard.toString();
             }
-            client.write("turn/".concat(str));
+            getClient().write("turn/".concat(str));
         }
     }
     
@@ -145,6 +146,11 @@ public class DurakPlayer extends Player{
         public void run() {
             System.out.println("Отбивайся!");
             String str = "";
+            try {
+                System.in.read();
+            } catch (IOException ex) {
+                Logger.getLogger(DurakPlayer.class.getName()).log(Level.SEVERE, null, ex);
+            }
             InputStreamReader input = new InputStreamReader(System.in);
             BufferedReader reader = new BufferedReader(input);
             try {
@@ -157,11 +163,12 @@ public class DurakPlayer extends Player{
                 Card ansCard = getM_cards().get(c - 1);
                 str = ansCard.toString();
             }
-            client.write("turn/".concat(str));
+            getClient().write("turn/".concat(str));
         }
     }
     
-    public DurakPlayer() {
+    public DurakPlayer(Client c) {
+        super(c);
         m_gambTable = new GamblingTable();
         m_cards = new LinkedList<Card>();
         m_adversaries = new LinkedList<DurakAdversary>();
@@ -182,6 +189,7 @@ public class DurakPlayer extends Player{
 
     @Override
     public void parseAllString(String bigMesg) {
+        System.out.println(bigMesg);
         String delim = "\n";
         String[] data = bigMesg.split(delim);
         for (String s : data)
@@ -192,6 +200,24 @@ public class DurakPlayer extends Player{
         String template[] = {"turn", "your", "gamt", 
                              "wint", "scor", "lspl",
                              "deck", "trmp", "mesg"};
+        if ("name".equals(message)) {
+            System.out.println("Приветик. Напиши пожалуйста свое имя!");
+            try {
+                System.in.read();
+            } catch (IOException ex) {
+                Logger.getLogger(DurakPlayer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            String str = "";
+            InputStreamReader input = new InputStreamReader(System.in);
+            BufferedReader reader = new BufferedReader(input);
+            try {
+                str = reader.readLine();
+            } catch (IOException ex) {
+                Logger.getLogger(DurakPlayer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            getClient().write(str);
+            return;
+        }
         
         for (int i = 0; i < template.length; i++)
             if (message.startsWith(template[i])) {

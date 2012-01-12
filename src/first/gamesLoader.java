@@ -14,8 +14,8 @@ import java.io.InputStream;
  *
  * @author Alexey
  */
-public class gamesLoader extends ClassLoader{
-    public gamesLoader(ClassLoader parrent)
+public class GamesLoader extends ClassLoader{
+    public GamesLoader(ClassLoader parrent)
     {
         super(parrent);
     }

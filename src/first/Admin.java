@@ -14,6 +14,7 @@ import java.util.logging.Logger;
  * @author Alexey
  */
 public abstract class Admin {
+    private Semaphore sem;
     /**
      * Класс Messge хранит в себе текстовое сообщение и отправителя
      */
@@ -82,7 +83,7 @@ public abstract class Admin {
     {
         servTh.start();
     }
-    private Semaphore sem;
+    
     /**
      * Метод для синхронизации. Приостанавливает добавление сообщений
      */
