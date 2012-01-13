@@ -155,8 +155,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(netcards.NetCardsApp.class).getContext().getResourceMap(DurakGameInterface.class);
-        jBtn1.setText(resourceMap.getString("jBtn1.text")); // NOI18N
+        
         jBtn1.setName("jBtn1"); // NOI18N
         jBtn1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -164,30 +163,22 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
-        jBtn2.setText(resourceMap.getString("jBtn2.text")); // NOI18N
         jBtn2.setName("jBtn2"); // NOI18N
 
-        jBtn3.setText(resourceMap.getString("jBtn3.text")); // NOI18N
         jBtn3.setName("jBtn3"); // NOI18N
 
-        jBtn4.setText(resourceMap.getString("jBtn4.text")); // NOI18N
         jBtn4.setName("jBtn4"); // NOI18N
 
-        jBtn5.setText(resourceMap.getString("jBtn5.text")); // NOI18N
         jBtn5.setName("jBtn5"); // NOI18N
 
         jBtn6.setName("jBtn6"); // NOI18N
 
-        jBtnCardRight.setText(resourceMap.getString("jBtnCardRight.text")); // NOI18N
         jBtnCardRight.setName("jBtnCardRight"); // NOI18N
 
-        jBtnCardLeft.setText(resourceMap.getString("jBtnCardLeft.text")); // NOI18N
         jBtnCardLeft.setName("jBtnCardLeft"); // NOI18N
 
-        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
-        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
         jButton2.setName("jButton2"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

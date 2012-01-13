@@ -15,9 +15,9 @@ import java.io.InputStream;
  * @author Alexey
  */
 public class GamesLoader extends ClassLoader{
-    public GamesLoader(ClassLoader parrent)
+    public GamesLoader(ClassLoader parent)
     {
-        super(parrent);
+        super(parent);
     }
     public Class findClass(String name, File f) throws FileNotFoundException, IOException
     {

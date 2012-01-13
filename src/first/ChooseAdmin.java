@@ -37,19 +37,23 @@ public class ChooseAdmin extends javax.swing.JFrame {
         
         LinkedList<File> AllFiles = new LinkedList<File>();
         LinkedList<File> dir = new LinkedList<File>();
-        dir.add(new File("."));
+        //dir.add(new File("."));
+        dir.add(new File("d:\\Programming\\JavaProjects\\NetworkCards\\src"));
         do
         {
             LinkedList<File> dirtmp = new LinkedList<File>();
             for (File d : dir)
             {
-                LinkedList<File> filesInDir = new LinkedList<File>(java.util.Arrays.asList(d.listFiles(new java.io.FileFilter() {
+                LinkedList<File> filesInDir = new LinkedList<File>(
+                        java.util.Arrays.asList(
+                        d.listFiles(new java.io.FileFilter() {
 
-                    @Override
-                    public boolean accept(File pathname) {
-                        return pathname.isDirectory() || pathname.getName().matches(".*class$");
-                    }
-                })));
+                        @Override
+                        public boolean accept(File pathname) {
+                            return pathname.isDirectory() 
+                                   || pathname.getName().matches(".*class$");
+                        }
+                } )));
                 for (File f : filesInDir)
                 {
                     if (f.isDirectory())
