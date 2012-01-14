@@ -5,7 +5,6 @@
 package first;
 
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -77,11 +76,12 @@ public class Client {
      * @param Port порт на сервере
      * @return возвращает true, если подключение было успешным
      */
-    public Boolean tryConnectTo(byte addr[], int Port)
+    public Boolean tryConnectTo(String addr, int Port)
     {
         try {
-            s.connect(new InetSocketAddress(InetAddress.getByAddress(addr), Port));
+            s.connect(new InetSocketAddress(InetAddress.getByName(addr), Port));
             th = new Thread(new Listen());
+            th.setName("listener");
             th.start();
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);

@@ -191,7 +191,7 @@ public class DurakPlayer extends Player{
     public void parseMessage(String message) {
         String template[] = {"turn", "your", "gamt", 
                              "wint", "scor", "lspl",
-                             "deck", "trmp", "mesg"};
+                             "deck", "trmp", "mesg", "name"};
         
         for (int i = 0; i < template.length; i++)
             if (message.startsWith(template[i])) {
@@ -224,6 +224,9 @@ public class DurakPlayer extends Player{
                     case 8: {
                         parseJustMessage(message);
                     } break;
+                    case 9: {
+                        client.write(name);
+                    }
                 }
             }
     }

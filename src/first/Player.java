@@ -10,6 +10,10 @@ package first;
  */
 public abstract class Player {
     
+    public Player()
+    {
+        client = new Client();
+    }
     protected class gameLoop implements Runnable{
         @Override
         public void run() {
@@ -36,7 +40,20 @@ public abstract class Player {
      * @throws Exception 
      */
     public void startGame(byte address[], int port) throws Exception {
-        if (client.tryConnectTo(address, port)) 
+        String addr = "";
+        for (int i = 0; i < address.length; i++)
+        {
+            addr = addr.concat(String.valueOf(address[i]));
+            if (i != address.length - 1)
+                addr = addr.concat(".");
+        }
+        if (client.tryConnectTo(addr, port)) 
+            runGameLoop();
+        else
+            throw new Exception("Ошибка при подключении");
+    }
+    public void startGame(String address, int port) throws Exception {
+        if (client.tryConnectTo(address, port))
             runGameLoop();
         else
             throw new Exception("Ошибка при подключении");
@@ -47,6 +64,7 @@ public abstract class Player {
      */
     private void runGameLoop() {
         thGame = new Thread(new gameLoop());
+        thGame.setName("Game loop");
         thGame.start();
     }
 

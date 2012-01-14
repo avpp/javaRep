@@ -26,7 +26,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import first.Card.*;
 import java.util.LinkedList;
-
 /**
  *
  * @author Andrew

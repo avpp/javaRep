@@ -10,6 +10,15 @@
  */
 package first;
 
+import durakVisualClient.DurakPlayer;
+import java.awt.Dialog.ModalityType;
+import java.awt.Dimension;
+import java.awt.Label;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  *
@@ -20,6 +29,8 @@ public class ChooseClient extends javax.swing.JFrame {
     /** Creates new form ChooseClient */
     public ChooseClient() {
         initComponents();
+        jIPAddressTextField.setText("localhost");
+        jNameTextField.setFocusable(true);
     }
 
     /** This method is called from within the constructor to
@@ -95,7 +106,28 @@ public class ChooseClient extends javax.swing.JFrame {
 
     private void jStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStartActionPerformed
         // TODO add your handling code here:
-        
+        DurakPlayer dc = new DurakPlayer();
+        dc.name = jNameTextField.getText();
+        try {
+            dc.startGame(jIPAddressTextField.getText(), 15147);
+            setVisible(false);
+        } catch (Exception ex) {
+            Logger.getLogger(ChooseClient.class.getName()).log(Level.SEVERE, null, ex);
+            java.awt.Dialog d = new java.awt.Dialog(this, "Connection error", true);
+            d.add(new Label("connection error to ".concat(jIPAddressTextField.getText()).concat(":15147"), Label.CENTER));
+            d.setModalityType(ModalityType.APPLICATION_MODAL);
+            d.setSize(new Dimension(100,100));
+            d.addWindowListener(new WindowAdapter() {
+
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    super.windowClosing(e);
+                    e.getWindow().setVisible(false);
+                }
+            });
+            d.setVisible(true);
+            d.setSize(new Dimension(200,200));
+        }
     }//GEN-LAST:event_jStartActionPerformed
 
     /**
