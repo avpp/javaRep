@@ -71,12 +71,18 @@ public class Server implements Runnable{
     public Server(Admin admin)
     {
         a = admin;
+        /*
         try {
             ssocket = new ServerSocket(15147, 100, null);
             System.out.println(ssocket.getLocalSocketAddress().toString());
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
+         * При инициализации сервера не должно происходить
+         * открытие сокета
+         * Сокет должен открываться при
+         * непосредственном (!) запуске сервера
+         */
         //csockets = new Socket[0];
         players = new LinkedList<ServPlayer>();
         work = true;
@@ -106,6 +112,15 @@ public class Server implements Runnable{
      */
     @Override
     public void run() {
+        try {
+            ssocket = new ServerSocket(15147, 100, null);
+            System.out.println(ssocket.getLocalSocketAddress().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            
+            return;
+        }
+        
         while (work)
         {
             try {

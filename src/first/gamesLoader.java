@@ -14,10 +14,10 @@ import java.io.InputStream;
  *
  * @author Alexey
  */
-public class gamesLoader extends ClassLoader{
-    public gamesLoader(ClassLoader parrent)
+public class GamesLoader extends ClassLoader{
+    public GamesLoader(ClassLoader parent)
     {
-        super(parrent);
+        super(parent);
     }
     public Class findClass(String name, File f) throws FileNotFoundException, IOException
     {

@@ -31,15 +31,20 @@
                           <Component id="jClientList" alignment="0" min="-2" pref="123" max="-2" attributes="0"/>
                           <Component id="jClientListLabel" alignment="0" min="-2" pref="83" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jReservedPlayers" min="-2" pref="112" max="-2" attributes="0"/>
-                          <Component id="jReservedPlayerListLabel" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="jStartGame" alignment="0" max="32767" attributes="1"/>
-                          <Component id="jStopGame" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                              <Component id="jReservedPlayers" min="-2" pref="112" max="-2" attributes="0"/>
+                              <EmptySpace pref="36" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="jStartGame" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="jStopGame" alignment="0" min="-2" max="-2" attributes="1"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                              <Component id="jReservedPlayerListLabel" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
@@ -95,7 +100,7 @@
     </Component>
     <Component class="java.awt.Label" name="jReservedPlayerListLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&#x41f;&#x43e;&#x442;&#x435;&#x43d;&#x446;&#x438;&#x430;&#x43b;&#x44c;&#x43d;&#x44b;&#x435; &#x438;&#x433;&#x440;&#x43e;&#x43a;&#x438;"/>
+        <Property name="text" type="java.lang.String" value="&#x411;&#x443;&#x434;&#x443;&#x442; &#x438;&#x433;&#x440;&#x430;&#x442;&#x44c;"/>
       </Properties>
     </Component>
     <Component class="java.awt.Button" name="jStartGame">
