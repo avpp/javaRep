@@ -48,3 +48,8 @@ set of certificates than this class (which is unsigned),
 		
 14.01.2012
 	! - удален пакет начального тестового проекта netCards
+14.01.2012
+	В классе DurakInteface
+	+ - отображение карт игрока
+	+ - отрисовка игрового стола
+	

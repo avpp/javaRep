@@ -19,7 +19,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import first.Card;
 import first.Card.*;
+import first.GamblingTable;
+import first.Turn;
+import java.util.LinkedList;
+import javax.swing.JButton;
 
 /**
  *
@@ -41,26 +46,50 @@ public class DurakGameInterface extends javax.swing.JFrame {
         }
     }
     
-    //Ссылка на клиент, который создал форму
     private DurakPlayer m_durakClient;
     //Индекс карты, начиная с которой нужно
     //показывать карты
     private int m_currCardInd;
 
+    private LinkedList<JButton> m_userBtnCards;
+    
     /* ДЛЯ ГРАФИКИ */
     //Канва для рисования всякой всячины
     private DrawGameCanvas m_canvas;
-    //Массивы с картинками карт
+    
     BufferedImage[] m_imgsSpades;
     BufferedImage[] m_imgsDiamonds;
     BufferedImage[] m_imgsClubs;
     BufferedImage[] m_imgsHearts;
-    //Сукно стола
+    
     BufferedImage m_cloth;
+    /*
+     * Координаты начала отрисовки
+     * игровой ситуации
+     */
+    int m_gambTabX;
+    int m_gambTabY;
+    /*
+     * Смещения для отрисовки карт
+     * gamblingTable
+     * на игровом столе
+     */
+    int m_stackShiftX;
+    int m_stackShiftY;
+    int m_cardInStackShiftX;
+    int m_cardInStackShiftY;
     
     /** Creates new form DurakGameInterface */
     public DurakGameInterface() {
         initComponents();
+        
+        m_userBtnCards = new LinkedList<JButton>();
+        m_userBtnCards.add(jBtn1);
+        m_userBtnCards.add(jBtn2);
+        m_userBtnCards.add(jBtn3);
+        m_userBtnCards.add(jBtn4);
+        m_userBtnCards.add(jBtn5);
+        m_userBtnCards.add(jBtn6);
         
         loadCardImages("./src/durakVisualClient/images/cards/");
         
@@ -83,14 +112,72 @@ public class DurakGameInterface extends javax.swing.JFrame {
     }
 
     public void drawAll() {
-        jBtn1.setIcon(new ImageIcon(m_imgsClubs[4]));
-        jBtn2.setIcon(new ImageIcon(m_imgsDiamonds[9]));
-        jBtn3.setIcon(new ImageIcon(m_imgsDiamonds[12]));
-        jBtn4.setIcon(new ImageIcon(m_imgsSpades[10]));
-        jBtn5.setIcon(new ImageIcon(m_imgsHearts[7]));
-        jBtn6.setIcon(new ImageIcon(m_imgsSpades[5]));
-        jBtnCardLeft.setVisible(false);
-        //jBtnCardRight.setVisible(false);
+       drawUserCards();
+    }
+    
+    private void drawGamblingTable(Graphics g) {
+        int x = m_gambTabX - m_stackShiftX;
+        int y = m_gambTabY - m_stackShiftY;
+        GamblingTable gamt = m_durakClient.getM_gambTable();
+        int countInRow = 3;
+        int count = 0;
+        
+        for (LinkedList<Turn> stack : gamt.table) {
+            count++;
+            
+            if (count == countInRow + 1) {
+                y += m_stackShiftY;
+            }
+            
+            x += m_stackShiftX;
+            
+            int inStackX = x - m_cardInStackShiftX;
+            int inStackY = y - m_cardInStackShiftY;
+            
+            for (Turn t : stack) {
+                inStackX += m_cardInStackShiftX;
+                inStackY += m_cardInStackShiftY;
+                
+                BufferedImage img = imgFromCard(t.getCard());
+                g.drawImage(img, x, y, null);
+            }
+        }
+    }
+    
+    private void drawUserCards() {
+        int visibleOnHands = m_userBtnCards.size();
+        int allCards = m_durakClient.getM_cards().size();
+        
+        for (JButton btn : m_userBtnCards) {
+            btn.setVisible(false);
+        }
+        
+        for (int cardInd = m_currCardInd, btnInd = 0;
+                (cardInd <= allCards) && (btnInd < visibleOnHands);
+                    cardInd++, btnInd++) {
+            Card c = m_durakClient.getM_cards().get(cardInd);
+            BufferedImage img = imgFromCard(c);
+            m_userBtnCards.get(btnInd).setIcon(new ImageIcon(img));
+            m_userBtnCards.get(btnInd).setVisible(true);
+        }
+    }
+    
+    private BufferedImage imgFromCard (Card c) {
+        Card.Color col = c.getColor();
+        Card.Value val = c.getValue();
+        BufferedImage[] imgs = null;
+        
+        if (col == Card.Color.spades) {
+            imgs = m_imgsSpades;
+        } else if (col == Card.Color.clubs) {
+            imgs = m_imgsClubs;
+        } else if (col == Card.Color.diamonds) {
+            imgs = m_imgsDiamonds;
+        } else if (col == Card.Color.hearts) {
+            imgs = m_imgsHearts;
+        }
+            
+        return imgs[val.ordinal()];
     }
     
     private void loadCardImages(String path) {
