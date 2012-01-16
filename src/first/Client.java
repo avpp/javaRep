@@ -120,9 +120,7 @@ public class Client {
     public void write(String str)
     {
         try {
-            byte b[] = new byte[str.length() + 1];
-            System.arraycopy(str.getBytes(), 0, b, 0, str.length());
-            b[str.length()] = 0;
+            str = str.concat("@");
             s.getOutputStream().write(str.getBytes());
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);

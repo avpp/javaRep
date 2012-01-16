@@ -367,7 +367,7 @@ public class DurakPlayer extends Player{
     
     public void sendTurn(Card c) {
         m_whoseTurn = '0';
-        String str = (c == null) ? "no" : "turn/".concat(c.toString());
+        String str = (c == null) ? "turn/no" : "turn/".concat(c.toString());
         send(str);
     }
     

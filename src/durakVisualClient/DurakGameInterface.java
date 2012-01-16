@@ -117,16 +117,20 @@ public class DurakGameInterface extends javax.swing.JFrame {
         m_canvas.setBounds(0, 0, width, height);
         this.add(m_canvas);
         
-        m_gambTabX = width / 3;
+        m_gambTabX = width / 4;
         m_gambTabY = height / 3;
         
-        m_stackShiftX = 10;
-        m_stackShiftY = 10;
+        m_stackShiftX = 100;
+        m_stackShiftY = 150;
+        
+        m_cardInStackShiftX = 15;
+        m_cardInStackShiftY = 15;
                 
         drawAll();
     }
 
     public void drawAll() {
+       drawCloth(m_canvas.getGraphics());
        drawUserCards();
        drawGamblingTable(m_canvas.getGraphics());
     }
@@ -164,7 +168,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
                 inStackY += m_cardInStackShiftY;
                 
                 BufferedImage img = imgFromCard(t.getCard());
-                g.drawImage(img, x, y, null);
+                g.drawImage(img, inStackX, inStackY, null);
             }
         }
     }
