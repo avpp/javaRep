@@ -104,7 +104,7 @@ public abstract class Player {
      * Отправка сообщения на сервер
      * @param mesg 
      */
-    public void sendMessage(String mesg) {
+    public void send(String mesg) {
         client.write(mesg);
     }
 }

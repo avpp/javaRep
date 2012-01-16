@@ -121,7 +121,9 @@ public class DurakPlayer extends Player{
         return m_chat;
     }
     
+    /*
     private class setmakeTurn implements Runnable {
+        @Override
         public void run() {
             System.out.println("Подкидывай!");
             
@@ -141,7 +143,10 @@ public class DurakPlayer extends Player{
             getClient().write("turn/".concat(str));
         }
     }
+     * 
+     */
     
+    /*
      private class setresponseTurn implements Runnable {
         @Override
         public void run() {
@@ -163,6 +168,8 @@ public class DurakPlayer extends Player{
             getClient().write("turn/".concat(str));
         }
     }
+     * 
+     */
     
     public DurakPlayer(Client c) {
         super(c);
@@ -231,7 +238,7 @@ public class DurakPlayer extends Player{
                         parseJustMessage(message);
                     } break;
                     case 9: {
-                        sendMessage(getName());
+                        send(getName());
                     }
                 }
             }
@@ -241,19 +248,15 @@ public class DurakPlayer extends Player{
         int i = 5;
         
         if (message.charAt(i) == '+') {
-            try {
-                makeTurn();
-            } catch (IOException ex) {
-                Logger.getLogger(DurakPlayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            m_whoseTurn = '+';
         }
         else if (message.charAt(i) == '-') {
-            try {
-                responseTurn();
-            } catch (IOException ex) {
-                Logger.getLogger(DurakPlayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            m_whoseTurn = '-';
+        } else {
+            m_whoseTurn = '0';
         }
+        
+        
     }
       
     private void parseYour(String message) {
@@ -333,6 +336,7 @@ public class DurakPlayer extends Player{
         getM_chat().add(message.substring(i));
     }
 
+    /*
     public void makeTurn() throws IOException {
         Thread th = new Thread(new setmakeTurn());
         th.start();
@@ -341,5 +345,18 @@ public class DurakPlayer extends Player{
     public void responseTurn() throws IOException {
         Thread th = new Thread(new setresponseTurn());
         th.start();
+    }
+     * 
+     */
+    
+    public void sendTurn(Card c) {
+        m_whoseTurn = '0';
+        String str = (c == null) ? "no" : "turn/".concat(c.toString());
+        send(str);
+    }
+    
+    public void sendMesgToChat(String mesg) {
+        String str = "mesg/".concat(mesg);
+        send(str);
     }
 }

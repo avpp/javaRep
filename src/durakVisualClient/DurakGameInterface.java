@@ -113,6 +113,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
 
     public void drawAll() {
        drawUserCards();
+       drawGamblingTable(m_canvas.getGraphics());
     }
     
     private void drawGamblingTable(Graphics g) {
@@ -364,6 +365,7 @@ private void jBtn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 new DurakGameInterface().setVisible(true);
             }
