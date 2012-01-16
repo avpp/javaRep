@@ -31,8 +31,8 @@ public class ChooseAdmin extends javax.swing.JFrame {
         LinkedList<File> AllFiles = new LinkedList<File>();
         LinkedList<File> dir = new LinkedList<File>();
         dir.add(new File("."));
-        dir.add(new File(
-                  "d:/Programming/JavaProjects/NetworkCards/build/classes/"));
+        //dir.add(new File(
+        //          "d:/Programming/JavaProjects/NetworkCards/build/classes/"));
         do
         {
             LinkedList<File> dirtmp = new LinkedList<File>();

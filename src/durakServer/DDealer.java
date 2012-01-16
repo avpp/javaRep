@@ -68,7 +68,7 @@ public class DDealer extends Dealer{
          */
         if (!checkDeck(deck))
             return false;
-        deck.Shuffle();
+        deck.Shuffle(20);
         cardTrump = deck.viewCard(Deck.SideType.low);
         trump = cardTrump.getColor();
         Card maxc = null;
@@ -276,7 +276,7 @@ public class DDealer extends Dealer{
                     //admin.AddMessage(null, getLsPl(curPlayerMoveIndex, curPlayerBounceIndex, 'a'));
                     //admin.AddMessage(null, curTable.toString());
                 }
-                endTable = (curTable.table.size() == 6) || (counSeqNoMoves >= players.size() - 1);
+                endTable = (curTable.table.size() == 6) || (counSeqNoMoves >= players.size() - 1) || (lastRemoved && curTable.table.size() == players.get(curPlayerBounceIndex).cards.size());
             } while(!endTable);
             //Закончили один игровой стол, пожалуй стоит раздать всем карты
             //Если отбивающийся снял, то скидываем ему все карты

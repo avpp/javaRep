@@ -101,12 +101,12 @@ public class DurakGameInterface extends javax.swing.JFrame {
         m_userBtnCards.add(jBtn5);
         m_userBtnCards.add(jBtn6);
         
-        String str = "d:\\Programming\\JavaProjects\\NetworkCards\\"
+        String str = ".\\"//"d:\\Programming\\JavaProjects\\NetworkCards\\"
                 + "src\\durakVisualClient\\resources\\images\\cards\\";
         
         loadCardImages(str);
         
-        str = "d:\\Programming\\JavaProjects\\NetworkCards\\"
+        str = ".\\"//"d:\\Programming\\JavaProjects\\NetworkCards\\"
                 + "src\\durakVisualClient\\resources\\images\\cloth.jpg";
         
         loadCloth(str);
