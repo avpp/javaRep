@@ -28,8 +28,22 @@ public class DurakPlayer extends Player{
     private Card m_trump;
     private LinkedList<String> m_chat;
     
-    //private 
+    private DurakGameInterface gameInterface;
+    
+    /**
+     * @return the gameInterface
+     */
+    public DurakGameInterface getGameInterface() {
+        return gameInterface;
+    }
 
+    /**
+     * @param gameInterface the gameInterface to set
+     */
+    public void setGameInterface(DurakGameInterface gameInterface) {
+        this.gameInterface = gameInterface;
+    }
+    
     /**
      * @return the m_name
      */
@@ -198,6 +212,10 @@ public class DurakPlayer extends Player{
         String[] data = bigMesg.split(delim);
         for (String s : data)
             parseMessage(s);
+        
+        if (gameInterface != null) {
+            gameInterface.drawAll();
+        }
     }
         
     public void parseMessage(String message) {
@@ -255,8 +273,6 @@ public class DurakPlayer extends Player{
         } else {
             m_whoseTurn = '0';
         }
-        
-        
     }
       
     private void parseYour(String message) {

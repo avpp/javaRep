@@ -46,7 +46,7 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jBtnCardRight" min="-2" pref="24" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-              <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+              <Component id="jBtnGetOrPass" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="39" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -72,7 +72,7 @@
                               <Component id="jBtnCardRight" min="-2" pref="62" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jButton2" alignment="1" min="-2" pref="35" max="-2" attributes="0"/>
+                          <Component id="jBtnGetOrPass" alignment="1" min="-2" pref="35" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   </Group>
@@ -100,41 +100,62 @@
         <Property name="text" type="java.lang.String" resourceKey="jBtn2.text"/>
         <Property name="name" type="java.lang.String" value="jBtn2" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jBtn2MouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jBtn3">
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="jBtn3.text"/>
         <Property name="name" type="java.lang.String" value="jBtn3" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBtn3ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jBtn4">
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="jBtn4.text"/>
         <Property name="name" type="java.lang.String" value="jBtn4" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBtn4ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jBtn5">
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="jBtn5.text"/>
         <Property name="name" type="java.lang.String" value="jBtn5" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBtn5ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jBtn6">
       <Properties>
         <Property name="name" type="java.lang.String" value="jBtn6" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBtn6ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jBtnCardRight">
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="jBtnCardRight.text"/>
         <Property name="name" type="java.lang.String" value="jBtnCardRight" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBtnCardRightActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jBtnCardLeft">
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="jBtnCardLeft.text"/>
         <Property name="name" type="java.lang.String" value="jBtnCardLeft" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBtnCardLeftActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton1">
       <Properties>
@@ -142,11 +163,14 @@
         <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="jBtnGetOrPass">
       <Properties>
-        <Property name="text" type="java.lang.String" resourceKey="jButton2.text"/>
-        <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="jBtnGetOrPass.text"/>
+        <Property name="name" type="java.lang.String" value="jBtnGetOrPass" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBtnGetOrPassActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

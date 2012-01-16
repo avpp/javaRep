@@ -56,8 +56,6 @@ public abstract class Player {
         this.client = client;
     }
     
-
-    
     /**
      * Осуществляет соединение по IP-адресу, порту 
      * и начинает игру

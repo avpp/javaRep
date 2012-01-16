@@ -10,6 +10,7 @@
  */
 package first;
 
+import durakVisualClient.DurakGameInterface;
 import durakVisualClient.DurakPlayer;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
@@ -128,6 +129,10 @@ public class ChooseClient extends javax.swing.JFrame {
             d.setVisible(true);
             d.setSize(new Dimension(200,200));
         }
+        
+        dc.setGameInterface(new DurakGameInterface());
+        dc.getGameInterface().setDurakPlayer(dc);
+        dc.getGameInterface().setVisible(true);
     }//GEN-LAST:event_jStartActionPerformed
 
     /**
