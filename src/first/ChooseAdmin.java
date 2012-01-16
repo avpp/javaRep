@@ -34,7 +34,6 @@ public class ChooseAdmin extends javax.swing.JFrame {
         LinkedList<File> AllFiles = new LinkedList<File>();
         LinkedList<File> dir = new LinkedList<File>();
         dir.add(new File("."));
-        //dir.add(new File("d:\\Programming\\JavaProjects\\NetworkCards\\src"));
         do
         {
             LinkedList<File> dirtmp = new LinkedList<File>();
@@ -181,6 +180,7 @@ public class ChooseAdmin extends javax.swing.JFrame {
             Admin a = admins.get(jAdminList.getSelectedIndex()).newInstance();
             a.runInterface();
             a.startServer();
+            a.startGathering();
             
         } catch (InstantiationException ex) {
             Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
