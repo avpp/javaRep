@@ -278,6 +278,11 @@ public class DurakPlayer extends Player{
     private void parseYour(String message) {
         getM_cards().clear();
         int beginIndex = 5;
+        
+        if (message.length() <= 5) {
+            return;
+        }
+        
         message = message.substring(beginIndex);
         String delim = ",";
         String[] data = message.split(delim);

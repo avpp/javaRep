@@ -13,6 +13,10 @@ import java.util.LinkedList;
 public class DurakWinTable {
     private LinkedList<String> m_winners;
     
+    public DurakWinTable() {
+        m_winners = new LinkedList<String>();
+    }
+    
     public void addWinner(String name) {
         m_winners.add(name);
     }
