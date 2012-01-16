@@ -31,6 +31,11 @@ public class ServPlayer {
             while (!s.isClosed())
             {
                 try {
+                    try {
+                        Thread.sleep((long)500);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     if (s.getInputStream().available() > 0)
                     {
                         byte b[] = new byte[s.getInputStream().available()];
