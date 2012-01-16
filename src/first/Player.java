@@ -99,7 +99,8 @@ public abstract class Player {
      * @param mesg 
      */
     public abstract void parseAllString(String mesg);
-	/**
+    
+    /**
      * Отправка сообщения на сервер
      * @param mesg 
      */

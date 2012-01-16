@@ -143,14 +143,11 @@ public class DurakPlayer extends Player{
     }
     
      private class setresponseTurn implements Runnable {
+        @Override
         public void run() {
             System.out.println("Отбивайся!");
             String str = "";
-            try {
-                System.in.read();
-            } catch (IOException ex) {
-                Logger.getLogger(DurakPlayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            
             InputStreamReader input = new InputStreamReader(System.in);
             BufferedReader reader = new BufferedReader(input);
             try {
@@ -199,25 +196,8 @@ public class DurakPlayer extends Player{
     public void parseMessage(String message) {
         String template[] = {"turn", "your", "gamt", 
                              "wint", "scor", "lspl",
-                             "deck", "trmp", "mesg"};
-        if ("name".equals(message)) {
-            System.out.println("Приветик. Напиши пожалуйста свое имя!");
-            try {
-                System.in.read();
-            } catch (IOException ex) {
-                Logger.getLogger(DurakPlayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            String str = "";
-            InputStreamReader input = new InputStreamReader(System.in);
-            BufferedReader reader = new BufferedReader(input);
-            try {
-                str = reader.readLine();
-            } catch (IOException ex) {
-                Logger.getLogger(DurakPlayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            getClient().write(str);
-            return;
-        }
+                             "deck", "trmp", "mesg",
+                             "name"};
         
         for (int i = 0; i < template.length; i++)
             if (message.startsWith(template[i])) {
@@ -251,7 +231,7 @@ public class DurakPlayer extends Player{
                         parseJustMessage(message);
                     } break;
                     case 9: {
-                        getClient().write(getName());
+                        sendMessage(getName());
                     }
                 }
             }
