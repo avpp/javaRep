@@ -120,7 +120,7 @@ public class GamblingTable {
                 ans = ans.concat(tt.getCard().toString()).concat(",");
             }
         }
-        ans = ans.concat("\n");
+        ans = ans.concat("/\n");
         return ans;
     }
     /**

@@ -41,6 +41,8 @@ public class DDealer extends Dealer{
             return 1;
         if (c1.getColor().compareTo(trump) != 0 && c2.getColor().compareTo(trump) == 0)
             return -1;
+        if (c1.getColor().compareTo(c2.getColor()) != 0)
+            return 0;
         return c1.getValue().compareTo(c2.getValue());
     }
     private Boolean findCardOnTableWithEqualValue(GamblingTable gt, Card c)

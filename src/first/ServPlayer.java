@@ -41,7 +41,7 @@ public class ServPlayer {
                         byte b[] = new byte[s.getInputStream().available()];
                         s.getInputStream().read(b);
                         String mes = new String(b);
-                        LinkedList<String> submes = new LinkedList(java.util.Arrays.asList(mes.split("\0")));
+                        LinkedList<String> submes = new LinkedList(java.util.Arrays.asList(mes.split("@")));
                         /*for (String curString : submes)
                         {
                             curString += "\0";
@@ -91,7 +91,7 @@ public class ServPlayer {
                 }
                 byte b[] = new byte [s.getInputStream().available()];
                 s.getInputStream().read(b);
-                name = new String(b);
+                name = (new String(b)).split("@")[0];
                 LinkedList<String> ReservedNames = myAdmin.getPlayerList();
                 check = false;
                 for (int i = 0; i < ReservedNames.size() && !check; i++)
@@ -135,12 +135,15 @@ public class ServPlayer {
             Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    Boolean mayMakeTurn = true;
     /**
      * Установка ответа на запрос хода
      * @param s текст ответа
      */
     public synchronized void setAnswer(String s)
     {
+        if (sem.availablePermits() != 0 || !mayMakeTurn)
+            return;
         answer = s;
         sem.release();
     }
@@ -166,7 +169,9 @@ public class ServPlayer {
     {
         String ans = "";
         sendMessage(situation);
+        mayMakeTurn = true;
         ans = getAnswer();
+        mayMakeTurn = false;
         return ans;
     }
     /**
