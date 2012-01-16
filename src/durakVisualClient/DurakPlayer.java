@@ -251,7 +251,7 @@ public class DurakPlayer extends Player{
                         parseJustMessage(message);
                     } break;
                     case 9: {
-                        client.write(name);
+                        getClient().write(getName());
                     }
                 }
             }

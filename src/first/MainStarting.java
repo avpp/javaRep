@@ -86,7 +86,7 @@ public class MainStarting {
             System.out.println(a.dealer.wtable.toString());
             a.stopServer();
              * 
-             */
+             *//*
         }
         else 
             if (choice == '2') {
@@ -117,6 +117,6 @@ public class MainStarting {
                     address + " " + String.valueOf(port));
             
             dc.startGame(address, port);
-        }
+        }*/
     }
 }

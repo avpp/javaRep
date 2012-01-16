@@ -106,8 +106,8 @@ public class ChooseClient extends javax.swing.JFrame {
 
     private void jStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStartActionPerformed
         // TODO add your handling code here:
-        DurakPlayer dc = new DurakPlayer();
-        dc.name = jNameTextField.getText();
+        DurakPlayer dc = new DurakPlayer(new Client());
+        dc.setName(jNameTextField.getText());
         try {
             dc.startGame(jIPAddressTextField.getText(), 15147);
             setVisible(false);

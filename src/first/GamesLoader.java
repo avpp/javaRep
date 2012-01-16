@@ -14,7 +14,7 @@ import java.io.InputStream;
  *
  * @author Alexey
  */
-public class GamesLoader extends ClassLoader{
+public class GamesLoader extends ClassLoader {
     public GamesLoader(ClassLoader parent)
     {
         super(parent);
@@ -28,4 +28,5 @@ public class GamesLoader extends ClassLoader{
         file.read(memory);
         return defineClass(name, memory, 0, memory.length);
     }
+    
 }

@@ -33,8 +33,8 @@ public class ChooseAdmin extends javax.swing.JFrame {
         
         LinkedList<File> AllFiles = new LinkedList<File>();
         LinkedList<File> dir = new LinkedList<File>();
-        //dir.add(new File("."));
-        dir.add(new File("d:\\Programming\\JavaProjects\\NetworkCards\\src"));
+        dir.add(new File("."));
+        //dir.add(new File("d:\\Programming\\JavaProjects\\NetworkCards\\src"));
         do
         {
             LinkedList<File> dirtmp = new LinkedList<File>();
@@ -54,7 +54,7 @@ public class ChooseAdmin extends javax.swing.JFrame {
                 {
                     if (f.isDirectory())
                     {
-                        if (!"first".equals(f.getName()))
+                        if (!"first".equals(f.getName()) && !"dist".equals(f.getName()))
                         dirtmp.add(f);
                     }
                     else
@@ -67,7 +67,7 @@ public class ChooseAdmin extends javax.swing.JFrame {
         GamesLoader loader = new GamesLoader(ClassLoader.getSystemClassLoader());
         for (File f : AllFiles)
         {
-                Path path = f.toPath();
+                /*Path path = f.toPath();
                 boolean check = false;
                 int i, j;
                 for (i = 0; i < path.getNameCount() && !check; i++)
@@ -78,7 +78,11 @@ public class ChooseAdmin extends javax.swing.JFrame {
                 for (j = i; j < path.getNameCount(); j++)
                 {
                     name = name.concat(path.getName(j).toString()).concat(".");
-                }
+                }*/
+                String tmp[] = f.getPath().split("classes\\\\");
+                if (tmp.length < 2)
+                    continue;
+                String name = tmp[tmp.length - 1].replace('\\', '.');
                 name = name.split(".class")[0];
                 Class c = null;
                 
@@ -96,7 +100,7 @@ public class ChooseAdmin extends javax.swing.JFrame {
                                     .log(Level.SEVERE, null, ex);
                     }
                 }
-                
+                boolean check = false;
                 if (c != null) {
                     check = Admin.class.isAssignableFrom(c);
                     if (check)
