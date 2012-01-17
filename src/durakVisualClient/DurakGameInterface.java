@@ -242,10 +242,16 @@ public class DurakGameInterface extends javax.swing.JFrame {
         int y = height / 20;
         BufferedImage imgTrmp = 
                 imgFromCard(m_durakClient.getM_trump());
-        g.drawImage(imgTrmp, x, y, null);
-        g.drawImage(m_backHoriz, 
-                x + (imgTrmp.getWidth() - imgTrmp.getHeight()) / 2,
-                y - 10, null);
+        
+        if (m_durakClient.getM_deck().getCurrentAmount() > 0) {
+            g.drawImage(imgTrmp, x, y, null);
+        }
+        
+        if (m_durakClient.getM_deck().getCurrentAmount() > 1) {
+            g.drawImage(m_backHoriz, 
+                    x + (imgTrmp.getWidth() - imgTrmp.getHeight()) / 2,
+                    y - 10, null);
+        }
     }
     
     private void drawThrowOrPass(Graphics g, int width, int heigth) {
@@ -374,7 +380,8 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
-        jBtn1.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtn1.text")); // NOI18N
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class);
+        jBtn1.setText(resourceMap.getString("jBtn1.text")); // NOI18N
         jBtn1.setName("jBtn1"); // NOI18N
         jBtn1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -382,7 +389,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
-        jBtn2.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtn2.text")); // NOI18N
+        jBtn2.setText(resourceMap.getString("jBtn2.text")); // NOI18N
         jBtn2.setName("jBtn2"); // NOI18N
         jBtn2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -390,7 +397,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
-        jBtn3.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtn3.text")); // NOI18N
+        jBtn3.setText(resourceMap.getString("jBtn3.text")); // NOI18N
         jBtn3.setName("jBtn3"); // NOI18N
         jBtn3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -398,7 +405,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
-        jBtn4.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtn4.text")); // NOI18N
+        jBtn4.setText(resourceMap.getString("jBtn4.text")); // NOI18N
         jBtn4.setName("jBtn4"); // NOI18N
         jBtn4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -406,7 +413,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
-        jBtn5.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtn5.text")); // NOI18N
+        jBtn5.setText(resourceMap.getString("jBtn5.text")); // NOI18N
         jBtn5.setName("jBtn5"); // NOI18N
         jBtn5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -421,7 +428,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
-        jBtnCardRight.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtnCardRight.text")); // NOI18N
+        jBtnCardRight.setText(resourceMap.getString("jBtnCardRight.text")); // NOI18N
         jBtnCardRight.setName("jBtnCardRight"); // NOI18N
         jBtnCardRight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -429,7 +436,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
-        jBtnCardLeft.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtnCardLeft.text")); // NOI18N
+        jBtnCardLeft.setText(resourceMap.getString("jBtnCardLeft.text")); // NOI18N
         jBtnCardLeft.setName("jBtnCardLeft"); // NOI18N
         jBtnCardLeft.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -437,10 +444,10 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jButton1.text")); // NOI18N
+        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
-        jBtnGetOrPass.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtnGetOrPass.text")); // NOI18N
+        jBtnGetOrPass.setText(resourceMap.getString("jBtnGetOrPass.text")); // NOI18N
         jBtnGetOrPass.setName("jBtnGetOrPass"); // NOI18N
         jBtnGetOrPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -469,10 +476,10 @@ public class DurakGameInterface extends javax.swing.JFrame {
                 .addComponent(jBtn5, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jBtn6, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jBtnCardRight, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
-                .addComponent(jBtnGetOrPass, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
+                .addComponent(jBtnGetOrPass, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
