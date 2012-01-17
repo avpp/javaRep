@@ -23,6 +23,7 @@ import first.Card;
 import first.Card.*;
 import first.GamblingTable;
 import first.Turn;
+import java.awt.Font;
 import java.util.LinkedList;
 import javax.swing.JButton;
 
@@ -40,8 +41,12 @@ public class DurakGameInterface extends javax.swing.JFrame {
         @Override
         public void paint(Graphics g) {
             super.paint(g);
-            drawCloth(g);
+            
+            int width = getWidth();
+            int height = getHeight();
+            drawCloth(g, width, height);
             drawGamblingTable(g);
+            drawDeck(g, width, height);
         }
     }
     
@@ -71,6 +76,13 @@ public class DurakGameInterface extends javax.swing.JFrame {
     BufferedImage[] m_imgsHearts;
     
     BufferedImage m_cloth;
+    
+    /*
+     * Рубашки карт (вертикально и горизонтально
+     * расположенные)
+     */
+    BufferedImage m_backHoriz;
+    BufferedImage m_backVertic;
     /*
      * Координаты начала отрисовки
      * игровой ситуации
@@ -101,14 +113,11 @@ public class DurakGameInterface extends javax.swing.JFrame {
         m_userBtnCards.add(jBtn5);
         m_userBtnCards.add(jBtn6);
         
-        String str = ".\\"//"d:\\Programming\\JavaProjects\\NetworkCards\\"
+        String str = "d:\\Programming\\JavaProjects\\NetworkCards\\"
                 + "src\\durakVisualClient\\resources\\images\\cards\\";
-        
         loadCardImages(str);
-        
-        str = ".\\"//"d:\\Programming\\JavaProjects\\NetworkCards\\"
+        str = "d:\\Programming\\JavaProjects\\NetworkCards\\"
                 + "src\\durakVisualClient\\resources\\images\\cloth.jpg";
-        
         loadCloth(str);
         
         m_canvas = new DrawGameCanvas();
@@ -124,20 +133,30 @@ public class DurakGameInterface extends javax.swing.JFrame {
         m_stackShiftY = 150;
         
         m_cardInStackShiftX = 15;
-        m_cardInStackShiftY = 15;
-                
+        m_cardInStackShiftY = 20;
+        
+        Font f = new Font("Times New Roman", Font.PLAIN, 12);
+        m_canvas.getGraphics().setFont(f);
+        m_canvas.getGraphics().setColor(java.awt.Color.WHITE);
+        
         drawAll();
     }
 
     public void drawAll() {
-       drawCloth(m_canvas.getGraphics());
-       drawUserCards();
-       drawGamblingTable(m_canvas.getGraphics());
-    }
-    
-    private void drawCloth(Graphics g) {
         int width = m_canvas.getWidth();
         int height = m_canvas.getHeight();
+        BufferedImage img = new BufferedImage(
+                width, height, BufferedImage.TYPE_INT_BGR);
+        Graphics g = img.getGraphics();
+        
+        drawCloth(g, width, height);
+        drawUserCards();
+        drawGamblingTable(g);
+        
+        m_canvas.getGraphics().drawImage(img, 0, 0, null);
+    }
+    
+    private void drawCloth(Graphics g, int width, int height) {
         g.drawImage(m_cloth, 0, 0, width, height, null);
     }
     
@@ -206,6 +225,37 @@ public class DurakGameInterface extends javax.swing.JFrame {
         }
     }
     
+    private void drawDeck(Graphics g, int width, int height) {
+        int x = width - width / 20;
+        int y = height / 20;
+        BufferedImage imgTrmp = 
+                imgFromCard(m_durakClient.getM_trump());
+        g.drawImage(imgTrmp, x, y, null);
+        g.drawImage(m_backHoriz, x - imgTrmp.getWidth() / 4, y, null);
+    }
+    
+    private void drawThrowOrPass(Graphics g, int width, int heigth) {
+        String s;
+        char whose = m_durakClient.getM_whoseTurn();
+        
+        if (whose == '+') {
+            s = "Подкидывай!";
+        } else if (whose == '-') {
+            s = "Отбивайся!";
+        } else {
+            s = "";
+        }
+        
+        int x = width / 20;
+        int y = heigth / 20;
+        
+        g.drawString(s, x, y);
+    }
+    
+    /*
+     * Вспомогательные методы****************************************
+     */
+    
     private BufferedImage imgFromCard (Card c) {
         Card.Color col = c.getColor();
         Card.Value val = c.getValue();
@@ -233,28 +283,34 @@ public class DurakGameInterface extends javax.swing.JFrame {
         
         String[] pImgs = new File(path).list();
         for (String s : pImgs) {
-            String color = s.substring(0, 1);
-            String value = s.substring(1, 2);
-            
-            String name = "c".concat(value);
-            
-            int ind = first.Card.Value.valueOf(name).ordinal();
+            String pathToCard = path.concat(s);
             
             BufferedImage img = null;
             try {
-                img = ImageIO.read(new File(path.concat(s)));
+                img = ImageIO.read(new File(pathToCard));
             } catch (IOException ex) {
                 Logger.getLogger(DurakGameInterface.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            if ("s".equals(color))
-                m_imgsSpades[ind] = img;
-            else if ("c".equals(color))
-                m_imgsClubs[ind] = img;
-            else if ("d".equals(color))
-                m_imgsDiamonds[ind] = img;
-            else if ("h".equals(color))
-                m_imgsHearts[ind] = img;
+            if (s.matches(".*backHoriz.*")) {
+                m_backHoriz = img;
+            } else if (s.matches(".*backVertic.*")) {
+                m_backVertic = img;
+            } else {
+                String color = s.substring(0, 1);
+                String value = s.substring(1, 2);
+                String name = "c".concat(value);
+                int ind = first.Card.Value.valueOf(name).ordinal();
+                
+                if ("s".equals(color))
+                    m_imgsSpades[ind] = img;
+                else if ("c".equals(color))
+                    m_imgsClubs[ind] = img;
+                else if ("d".equals(color))
+                    m_imgsDiamonds[ind] = img;
+                else if ("h".equals(color))
+                    m_imgsHearts[ind] = img;
+            }
         }
     }
     
