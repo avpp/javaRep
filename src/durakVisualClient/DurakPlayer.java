@@ -213,6 +213,8 @@ public class DurakPlayer extends Player{
         for (String s : data)
             parseMessage(s);
         
+        sortCards();
+        
         if (gameInterface != null) {
             gameInterface.drawAll();
         }
@@ -357,18 +359,38 @@ public class DurakPlayer extends Player{
         getM_chat().add(message.substring(i));
     }
 
-    /*
-    public void makeTurn() throws IOException {
-        Thread th = new Thread(new setmakeTurn());
-        th.start();
+    public void sortCards() {
+        int count = m_cards.size();
+        for (int i = 0; i < count - 1; i++) {
+            int min = i;
+            for (int j = i + 1; j < count; j++) {
+                if (compareCards(m_cards.get(j), m_cards.get(min)) < 0) {
+                    m_cards.add(min, m_cards.remove(j));
+                }
+            }
+        }
+        
     }
     
-    public void responseTurn() throws IOException {
-        Thread th = new Thread(new setresponseTurn());
-        th.start();
+    private int compareCards(Card c1, Card c2) {
+        if (c1 == null && c2 == null) {
+            return 0;
+        } else if (c1 == null) {
+            return -1;
+        } else if (c2 == null) {
+            return 1;
+        } 
+        
+        if (c1.getColor().compareTo(m_trump.getColor()) == 0
+            && c2.getColor().compareTo(m_trump.getColor()) != 0) {
+            return 1;
+        } else if (c1.getColor().compareTo(m_trump.getColor()) != 0
+                   && c2.getColor().compareTo(m_trump.getColor()) == 0) {
+            return -1;
+        }
+        
+        return c1.getValue().compareTo(c2.getValue());
     }
-     * 
-     */
     
     public void sendTurn(Card c) {
         m_whoseTurn = '0';

@@ -44,8 +44,10 @@ public class DurakGameInterface extends javax.swing.JFrame {
             
             int width = getWidth();
             int height = getHeight();
+            
             drawCloth(g, width, height);
             drawGamblingTable(g);
+            drawThrowOrPass(g, width, height);
             drawDeck(g, width, height);
         }
     }
@@ -135,7 +137,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
         m_cardInStackShiftX = 15;
         m_cardInStackShiftY = 20;
         
-        Font f = new Font("Times New Roman", Font.PLAIN, 12);
+        Font f = new Font("Times New Roman", Font.PLAIN, 14);
         m_canvas.getGraphics().setFont(f);
         m_canvas.getGraphics().setColor(java.awt.Color.WHITE);
         
@@ -152,6 +154,8 @@ public class DurakGameInterface extends javax.swing.JFrame {
         drawCloth(g, width, height);
         drawUserCards();
         drawGamblingTable(g);
+        drawThrowOrPass(g, width, height);
+        drawDeck(g, width, height);
         
         m_canvas.getGraphics().drawImage(img, 0, 0, null);
     }
@@ -174,10 +178,11 @@ public class DurakGameInterface extends javax.swing.JFrame {
             count++;
             
             if (count == countInRow + 1) {
+                x = m_gambTabX;
                 y += m_stackShiftY;
+            } else {
+                x += m_stackShiftX;
             }
-            
-            x += m_stackShiftX;
             
             int inStackX = x - m_cardInStackShiftX;
             int inStackY = y - m_cardInStackShiftY;
@@ -218,7 +223,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             jBtnCardLeft.setVisible(false);
         }
         
-        if ((m_currCardInd + 1) < (allCards - visibleOnHands)) {
+        if (m_currCardInd < (allCards - visibleOnHands)) {
             jBtnCardRight.setVisible(true);
         } else {
             jBtnCardRight.setVisible(false);
@@ -226,15 +231,28 @@ public class DurakGameInterface extends javax.swing.JFrame {
     }
     
     private void drawDeck(Graphics g, int width, int height) {
-        int x = width - width / 20;
+        if (m_durakClient == null)
+            return;
+        
+        if (m_durakClient.getM_trump() == null) {
+            return;
+        }
+        
+        int x = width - width / 5;
         int y = height / 20;
         BufferedImage imgTrmp = 
                 imgFromCard(m_durakClient.getM_trump());
         g.drawImage(imgTrmp, x, y, null);
-        g.drawImage(m_backHoriz, x - imgTrmp.getWidth() / 4, y, null);
+        g.drawImage(m_backHoriz, 
+                x + (imgTrmp.getWidth() - imgTrmp.getHeight()) / 2,
+                y - 10, null);
     }
     
     private void drawThrowOrPass(Graphics g, int width, int heigth) {
+        if (m_durakClient == null) {
+            return;
+        }
+        
         String s;
         char whose = m_durakClient.getM_whoseTurn();
         
@@ -246,8 +264,8 @@ public class DurakGameInterface extends javax.swing.JFrame {
             s = "";
         }
         
-        int x = width / 20;
-        int y = heigth / 20;
+        int x = width / 2;
+        int y = heigth / 2;
         
         g.drawString(s, x, y);
     }
@@ -257,6 +275,10 @@ public class DurakGameInterface extends javax.swing.JFrame {
      */
     
     private BufferedImage imgFromCard (Card c) {
+        if (c == null) {
+            return null;
+        }
+        
         Card.Color col = c.getColor();
         Card.Value val = c.getValue();
         BufferedImage[] imgs = null;
@@ -352,6 +374,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
+        jBtn1.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtn1.text")); // NOI18N
         jBtn1.setName("jBtn1"); // NOI18N
         jBtn1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -359,6 +382,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
+        jBtn2.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtn2.text")); // NOI18N
         jBtn2.setName("jBtn2"); // NOI18N
         jBtn2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -366,6 +390,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
+        jBtn3.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtn3.text")); // NOI18N
         jBtn3.setName("jBtn3"); // NOI18N
         jBtn3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -373,6 +398,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
+        jBtn4.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtn4.text")); // NOI18N
         jBtn4.setName("jBtn4"); // NOI18N
         jBtn4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -380,6 +406,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
+        jBtn5.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtn5.text")); // NOI18N
         jBtn5.setName("jBtn5"); // NOI18N
         jBtn5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -394,6 +421,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
+        jBtnCardRight.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtnCardRight.text")); // NOI18N
         jBtnCardRight.setName("jBtnCardRight"); // NOI18N
         jBtnCardRight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -401,6 +429,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
+        jBtnCardLeft.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtnCardLeft.text")); // NOI18N
         jBtnCardLeft.setName("jBtnCardLeft"); // NOI18N
         jBtnCardLeft.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -408,8 +437,10 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
+        jBtnGetOrPass.setText(org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class).getString("jBtnGetOrPass.text")); // NOI18N
         jBtnGetOrPass.setName("jBtnGetOrPass"); // NOI18N
         jBtnGetOrPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -440,9 +471,9 @@ public class DurakGameInterface extends javax.swing.JFrame {
                 .addComponent(jBtn6, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jBtnCardRight, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(jBtnGetOrPass)
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addComponent(jBtnGetOrPass, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -533,7 +564,7 @@ private void jBtn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
         // TODO add your handling code here:
         int count = m_durakClient.getM_cards().size();
         
-        if (m_currCardInd + 1 < count - 6) {
+        if (m_currCardInd < count - 6) {
             m_currCardInd++;
             drawUserCards();
         }
