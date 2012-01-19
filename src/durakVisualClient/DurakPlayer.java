@@ -289,7 +289,11 @@ public class DurakPlayer extends Player{
         String delim = ",";
         String[] data = message.split(delim);
         for (String s : data)
-            getM_cards().add(Card.fromString(s));
+        {
+            Card c = Card.fromString(s);
+            //System.out.printf("from string '%s' card '%s'\n", s, (c==null)?"null":c.toString());
+            getM_cards().add(c);
+        }
     }
     
     private void parseListPlayers(String message) {

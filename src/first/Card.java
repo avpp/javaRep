@@ -76,13 +76,13 @@ public class Card {
         Color c;
         switch (name.charAt(name.length() - 1))
         {
-            case '♣' : {c = Color.clubs;}
+            case 'c' : {c = Color.clubs;}
                 break;
-            case '♦' : {c = Color.diamonds;}
+            case 'd' : {c = Color.diamonds;}
                 break;
-            case '♥' : {c = Color.hearts;}
+            case 'h' : {c = Color.hearts;}
                 break;
-            case '♠' : {c = Color.spades;}
+            case 's' : {c = Color.spades;}
                 break;
             default: {return null;}
         }
@@ -108,13 +108,13 @@ public class Card {
         String c = "";
         switch (color)
         {
-            case clubs: {c = "♣";}
+            case clubs: {c = "c";}
                 break;
-            case diamonds: {c = "♦";}
+            case diamonds: {c = "d";}
                 break;
-            case hearts: {c = "♥";}
+            case hearts: {c = "h";}
                 break;
-            case spades: {c = "♠";}
+            case spades: {c = "s";}
                 break;
         }
         return value.name().substring(1) + c;

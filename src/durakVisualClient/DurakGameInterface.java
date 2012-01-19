@@ -24,6 +24,7 @@ import first.Card.*;
 import first.GamblingTable;
 import first.Turn;
 import java.awt.Font;
+import java.net.URL;
 import java.util.LinkedList;
 import javax.swing.JButton;
 
@@ -115,10 +116,10 @@ public class DurakGameInterface extends javax.swing.JFrame {
         m_userBtnCards.add(jBtn5);
         m_userBtnCards.add(jBtn6);
         
-        String str = "d:\\Programming\\JavaProjects\\NetworkCards\\"
+        String str = ".\\"//"d:\\Programming\\JavaProjects\\NetworkCards\\"
                 + "src\\durakVisualClient\\resources\\images\\cards\\";
         loadCardImages(str);
-        str = "d:\\Programming\\JavaProjects\\NetworkCards\\"
+        str = ".\\"//"d:\\Programming\\JavaProjects\\NetworkCards\\"
                 + "src\\durakVisualClient\\resources\\images\\cloth.jpg";
         loadCloth(str);
         
@@ -207,13 +208,24 @@ public class DurakGameInterface extends javax.swing.JFrame {
         for (JButton btn : m_userBtnCards) {
             btn.setVisible(false);
         }
-        
+        /*if (m_durakClient.getM_cards() == null)
+            System.out.printf("No cards!!!\n");
+        System.out.printf("count of cards = %d\n", m_durakClient.getM_cards().size());
+        for (int i = 0; i < m_durakClient.getM_cards().size(); i++)
+        {
+            Card cc = m_durakClient.getM_cards().get(i);
+            if (cc != null)
+                System.out.printf("card %s number %d\n", cc.toString(), m_durakClient.getM_cards().indexOf(cc));
+            else
+                System.out.printf("no card number %d\n", i);
+        }*/
         for (int cardInd = m_currCardInd, btnInd = 0;
                 (cardInd < allCards) && (btnInd < visibleOnHands);
                     cardInd++, btnInd++) {
             Card c = m_durakClient.getM_cards().get(cardInd);
             BufferedImage img = imgFromCard(c);
-            m_userBtnCards.get(btnInd).setIcon(new ImageIcon(img));
+            ImageIcon ii= new ImageIcon(img);
+            m_userBtnCards.get(btnInd).setIcon(ii);
             m_userBtnCards.get(btnInd).setVisible(true);
         }
         
@@ -308,8 +320,23 @@ public class DurakGameInterface extends javax.swing.JFrame {
         m_imgsDiamonds = new BufferedImage[all];
         m_imgsHearts = new BufferedImage[all];
         m_imgsClubs = new BufferedImage[all];
-        
-        String[] pImgs = new File(path).list();
+        try {
+            m_backHoriz = ImageIO.read(getClass().getClassLoader().getResource("images/cards/backHoriz.png"));
+            m_backVertic = ImageIO.read(getClass().getClassLoader().getResource("images/cards/backVertic.png"));
+            for (int i = 0; i < 13; i++)
+            {
+                String val = Card.Value.values()[i].name().substring(1);
+                //System.out.printf("load card %s ", val);
+                m_imgsSpades[i] = ImageIO.read(getClass().getClassLoader().getResource("images/cards/s".concat(val).concat(".png")));
+                m_imgsClubs[i] = ImageIO.read(getClass().getClassLoader().getResource("images/cards/c".concat(val).concat(".png")));
+                m_imgsDiamonds[i] = ImageIO.read(getClass().getClassLoader().getResource("images/cards/d".concat(val).concat(".png")));
+                m_imgsHearts[i] = ImageIO.read(getClass().getClassLoader().getResource("images/cards/h".concat(val).concat(".png")));
+                //System.out.printf("card %s\n", m_imgsClubs[i].getColorModel().toString());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(DurakGameInterface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+/*        String[] pImgs = new File(path).list();
         for (String s : pImgs) {
             String pathToCard = path.concat(s);
             
@@ -339,17 +366,26 @@ public class DurakGameInterface extends javax.swing.JFrame {
                 else if ("h".equals(color))
                     m_imgsHearts[ind] = img;
             }
-        }
+        }*/
     }
     
     private void loadCloth(String str) {
-        BufferedImage img = null;
-            try {
-                img = ImageIO.read(new File(str));
-            } catch (IOException ex) {
-                Logger.getLogger(DurakGameInterface.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        m_cloth = img;
+        URL u = getClass().getClassLoader().getResource("images/cloth.jpg");
+        try {
+            /*
+            BufferedImage img = null;
+                try {
+                    img = ImageIO.read(new File(str));
+                } catch (IOException ex) {
+                    Logger.getLogger(DurakGameInterface.class.getName()).log(Level.SEVERE, null, ex);
+                }
+             * 
+             */
+            //ImageIcon i = new ImageIcon(u);
+            m_cloth = ImageIO.read(u);
+        } catch (IOException ex) {
+            Logger.getLogger(DurakGameInterface.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /** This method is called from within the constructor to
