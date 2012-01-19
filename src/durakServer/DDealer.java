@@ -4,13 +4,13 @@
  */
 package durakServer;
 
-import first.Admin;
-import first.Card;
-import first.Dealer;
-import first.Deck;
-import first.GamblingTable;
-import first.GamePlayer;
-import first.Turn;
+import netCardInterfaces.Admin;
+import netCardInterfaces.Card;
+import netCardInterfaces.Dealer;
+import netCardInterfaces.Deck;
+import netCardInterfaces.GamblingTable;
+import netCardInterfaces.GamePlayer;
+import netCardInterfaces.Turn;
 import java.util.LinkedList;
 
 /**

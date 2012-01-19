@@ -4,6 +4,10 @@
  */
 package durakVisualClient;
 
+import netCardInterfaces.Client;
+import netCardInterfaces.Card;
+import netCardInterfaces.GamblingTable;
+import netCardInterfaces.Player;
 import java.util.LinkedList;
 import first.*;
 import java.util.logging.Level;

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package first;
+package netCardInterfaces;
 
 /**
  * Класс Card хранит в себе определённую карту.

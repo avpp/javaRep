@@ -10,12 +10,18 @@
  */
 package first;
 
+import java.io.IOException;
+import netCardInterfaces.Admin;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Resource;
 
 /**
  *
@@ -25,111 +31,126 @@ public class ChooseAdmin extends javax.swing.JFrame {
 
     /** Creates new form ChooseAdmin */
     private LinkedList<Class<Admin>> admins;
+    private String pluginPropertiesFileName;
+    private URLClassLoader pluginURLLoader;
     public ChooseAdmin() {
         initComponents();
-        
-        LinkedList<File> AllFiles = new LinkedList<File>();
-        LinkedList<File> dir = new LinkedList<File>();
-        dir.add(new File("."));
-        //dir.add(new File("d:/Programming/JavaProjects/NetworkCards/build/classes/"));
-        do
+        pluginURLLoader = MainStarting.pluginURLLoader;
+        pluginPropertiesFileName = MainStarting.pluginPropertiesFileName;
+        if (pluginURLLoader == null)
         {
-            LinkedList<File> dirtmp = new LinkedList<File>();
-            for (File d : dir)
+            LinkedList<File> AllFiles = new LinkedList<File>();
+            LinkedList<File> dir = new LinkedList<File>();
+            dir.add(new File("."));
+            //dir.add(new File("d:/Programming/JavaProjects/NetworkCards/build/classes/"));
+            do
             {
-                LinkedList<File> filesInDir = new LinkedList<File>(
-                        java.util.Arrays.asList(
-                        d.listFiles(new java.io.FileFilter() {
-
-                        @Override
-                        public boolean accept(File pathname) {
-                            return pathname.isDirectory() 
-                                   || pathname.getName().matches(".*class$");
-                        }
-                } )));
-                for (File f : filesInDir)
+                LinkedList<File> dirtmp = new LinkedList<File>();
+                for (File d : dir)
                 {
-                    if (f.isDirectory())
+                    LinkedList<File> filesInDir = new LinkedList<File>(
+                            java.util.Arrays.asList(
+                            d.listFiles(new java.io.FileFilter() {
+
+                            @Override
+                            public boolean accept(File pathname) {
+                                return pathname.isDirectory() 
+                                       || pathname.getName().matches(".*class$");
+                            }
+                    } )));
+                    for (File f : filesInDir)
                     {
-                        if (!"first".equals(f.getName()) && !"dist".equals(f.getName()))
-                        dirtmp.add(f);
+                        if (f.isDirectory())
+                        {
+                            if (!"netCardInterfaces".equals(f.getName()) && !"dist".equals(f.getName()))
+                            dirtmp.add(f);
+                        }
+                        else
+                            AllFiles.add(f);
                     }
-                    else
-                        AllFiles.add(f);
+                }
+                dir = dirtmp;
+            } while (dir.size() > 0);
+            admins = new LinkedList<Class<Admin>>();
+            GamesLoader loader = new GamesLoader(ClassLoader.getSystemClassLoader());
+            for (File f : AllFiles)
+            {
+                    /*Path path = f.toPath();
+                    boolean check = false;
+                    int i, j;
+                    for (i = 0; i < path.getNameCount() && !check; i++)
+                    {
+                        check = "classes".equals(path.getName(i).toString());
+                    }
+                    String name = "";
+                    for (j = i; j < path.getNameCount(); j++)
+                    {
+                        name = name.concat(path.getName(j).toString()).concat(".");
+                    }*/
+                    String tmp[] = f.getPath().split("classes\\\\");
+                    if (tmp.length < 2)
+                        continue;
+                    String name = tmp[tmp.length - 1].replace('\\', '.');
+                    name = name.split(".class")[0];
+                    Class c = null;
+
+                    if (!(name.startsWith("java"))) {
+                       try {
+                            c = loader.findClass(name, f);
+
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(
+                                    ChooseAdmin.class.getName())
+                                        .log(Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            Logger.getLogger(
+                                    ChooseAdmin.class.getName())
+                                        .log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    boolean check = false;
+                    if (c != null) {
+                        check = Admin.class.isAssignableFrom(c);
+                        if (check)
+                            admins.add(c);
+                    }
+            }
+            for (Class<Admin> c : admins)
+            {
+                try {
+                    String gameName;
+                    Method m = c.getDeclaredMethod("gameName", (Class<?>[]) null);
+                    gameName = m.invoke(null, (Object[]) null).toString();
+                    jAdminList.add(gameName);
+                }
+                catch (IllegalAccessException ex) {
+                    Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvocationTargetException ex) {
+                    Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                }catch (NoSuchMethodException ex) {
+                    Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SecurityException ex) {
+                    Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            dir = dirtmp;
-        } while (dir.size() > 0);
-        admins = new LinkedList<Class<Admin>>();
-        GamesLoader loader = new GamesLoader(ClassLoader.getSystemClassLoader());
-        for (File f : AllFiles)
-        {
-                /*Path path = f.toPath();
-                boolean check = false;
-                int i, j;
-                for (i = 0; i < path.getNameCount() && !check; i++)
-                {
-                    check = "classes".equals(path.getName(i).toString());
-                }
-                String name = "";
-                for (j = i; j < path.getNameCount(); j++)
-                {
-                    name = name.concat(path.getName(j).toString()).concat(".");
-                }*/
-                String tmp[] = f.getPath().split("classes\\\\");
-                if (tmp.length < 2)
-                    continue;
-                String name = tmp[tmp.length - 1].replace('\\', '.');
-                name = name.split(".class")[0];
-                Class c = null;
-                
-                if (!(name.startsWith("java"))) {
-                   try {
-                        c = loader.findClass(name, f);
-                        
-                    } catch (SecurityException ex) {
-                        Logger.getLogger(
-                                ChooseAdmin.class.getName())
-                                    .log(Level.SEVERE, null, ex);
-                    } catch (Exception ex) {
-                        Logger.getLogger(
-                                ChooseAdmin.class.getName())
-                                    .log(Level.SEVERE, null, ex);
-                    }
-                }
-                boolean check = false;
-                if (c != null) {
-                    check = Admin.class.isAssignableFrom(c);
-                    if (check)
-                        admins.add(c);
-                }
+            /*
+            admins = Admin.class.getClasses();
+            for (Class<?> c : admins)
+            {
+                jAdminList.add(c.getName());
+            }*/
         }
-        for (Class<Admin> c : admins)
+        else
         {
             try {
-                String gameName;
-                Method m = c.getDeclaredMethod("gameName", (Class<?>[]) null);
-                gameName = m.invoke(null, (Object[]) null).toString();
-                jAdminList.add(gameName);
-            }
-            catch (IllegalAccessException ex) {
-                Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvocationTargetException ex) {
-                Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
-            }catch (NoSuchMethodException ex) {
-                Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
+                Enumeration<URL> pluginsProperties = pluginURLLoader.getResources(pluginPropertiesFileName);
+            } catch (IOException ex) {
                 Logger.getLogger(ChooseAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
         }
-        /*
-        admins = Admin.class.getClasses();
-        for (Class<?> c : admins)
-        {
-            jAdminList.add(c.getName());
-        }*/
     }
 
     /** This method is called from within the constructor to

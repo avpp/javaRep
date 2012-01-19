@@ -4,8 +4,8 @@
  */
 package durakServer;
 
-import first.Admin;
-import first.ServPlayer;
+import netCardInterfaces.Admin;
+import netCardInterfaces.ServPlayer;
 
 /**
  *

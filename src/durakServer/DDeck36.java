@@ -4,8 +4,8 @@
  */
 package durakServer;
 
-import first.Card;
-import first.Deck;
+import netCardInterfaces.Card;
+import netCardInterfaces.Deck;
 
 /**
  *

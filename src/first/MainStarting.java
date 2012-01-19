@@ -30,6 +30,7 @@ package first;
  */
 
 import java.io.*;
+import java.net.URLClassLoader;
 
 /**
  * 
@@ -37,11 +38,19 @@ import java.io.*;
  */
 public class MainStarting {
 
+    public static URLClassLoader pluginURLLoader = null;
+    public static String pluginPropertiesFileName = null;
+    public static void main(URLClassLoader urlcl, String propertiesName)
+    {
+        pluginURLLoader = urlcl;
+        pluginPropertiesFileName = propertiesName;
+        main(new String[0]);
+    }
     /**
      * @param args the command line arguments
      * @throws IOException  
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         // TODO code application logic here
         MainForm.main(args);/*
         /*System.out.println("Choose type\n1.Admin\n2.Client\n");

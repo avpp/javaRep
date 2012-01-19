@@ -10,6 +10,7 @@
  */
 package first;
 
+import netCardInterfaces.Client;
 import durakVisualClient.DurakGameInterface;
 import durakVisualClient.DurakPlayer;
 import java.awt.Dialog.ModalityType;
