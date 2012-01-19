@@ -125,5 +125,7 @@ public class Client {
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        System.out.printf("Client: sending...: '%s\n'", str);
     }
 }

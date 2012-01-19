@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import durakVisualClient.DurakPlayer.*;
 import first.Card;
 import first.Card.*;
 import first.GamblingTable;
@@ -48,7 +49,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             
             drawCloth(g, width, height);
             drawGamblingTable(g);
-            drawThrowOrPass(g, width, height);
+            drawThrowOrTrump(g, width, height);
             drawDeck(g, width, height);
         }
     }
@@ -108,6 +109,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
         
         m_currCardInd = 0;
         
+        jBtnGetOrPass.setText("Затянуть/Пропустить");
         m_userBtnCards = new LinkedList<JButton>();
         m_userBtnCards.add(jBtn1);
         m_userBtnCards.add(jBtn2);
@@ -138,7 +140,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
         m_cardInStackShiftX = 15;
         m_cardInStackShiftY = 20;
         
-        Font f = new Font("Times New Roman", Font.PLAIN, 14);
+        Font f = new Font("Tahoma", Font.PLAIN, 30);
         m_canvas.getGraphics().setFont(f);
         m_canvas.getGraphics().setColor(java.awt.Color.WHITE);
         
@@ -155,7 +157,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
         drawCloth(g, width, height);
         drawUserCards();
         drawGamblingTable(g);
-        drawThrowOrPass(g, width, height);
+        drawThrowOrTrump(g, width, height);
         drawDeck(g, width, height);
         
         m_canvas.getGraphics().drawImage(img, 0, 0, null);
@@ -266,24 +268,24 @@ public class DurakGameInterface extends javax.swing.JFrame {
         }
     }
     
-    private void drawThrowOrPass(Graphics g, int width, int heigth) {
+    private void drawThrowOrTrump(Graphics g, int w, int h) {
         if (m_durakClient == null) {
             return;
         }
         
         String s;
-        char whose = m_durakClient.getM_whoseTurn();
+        ThrowOrTrump thrTrmp = m_durakClient.getThrowOrTrump();
         
-        if (whose == '+') {
+        if (thrTrmp == ThrowOrTrump.discard) {
             s = "Подкидывай!";
-        } else if (whose == '-') {
+        } else if (thrTrmp == ThrowOrTrump.trump) {
             s = "Отбивайся!";
         } else {
             s = "";
         }
         
-        int x = width / 2;
-        int y = heigth / 2;
+        int x = w / 4;
+        int y = h - h / 4;
         
         g.drawString(s, x, y);
     }
@@ -419,17 +421,17 @@ public class DurakGameInterface extends javax.swing.JFrame {
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(DurakGameInterface.class);
         jBtn1.setText(resourceMap.getString("jBtn1.text")); // NOI18N
         jBtn1.setName("jBtn1"); // NOI18N
-        jBtn1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jBtn1MouseClicked(evt);
+        jBtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtn1ActionPerformed(evt);
             }
         });
 
         jBtn2.setText(resourceMap.getString("jBtn2.text")); // NOI18N
         jBtn2.setName("jBtn2"); // NOI18N
-        jBtn2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jBtn2MouseClicked(evt);
+        jBtn2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtn2ActionPerformed(evt);
             }
         });
 
@@ -553,22 +555,10 @@ private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRS
         m_canvas.setBounds(0, 0, width, height);
 }//GEN-LAST:event_formComponentResized
 
-private void jBtn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBtn1MouseClicked
-// TODO add your handling code here:
-    int ind = m_currCardInd;
-    Card c = m_durakClient.getM_cards().get(ind);
-    m_durakClient.sendTurn(c);
-}//GEN-LAST:event_jBtn1MouseClicked
-
-    private void jBtn2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBtn2MouseClicked
-        // TODO add your handling code here:
-        int ind = m_currCardInd + 1;
-        Card c = m_durakClient.getM_cards().get(ind);
-        m_durakClient.sendTurn(c);
-    }//GEN-LAST:event_jBtn2MouseClicked
-
     private void jBtn3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtn3ActionPerformed
         // TODO add your handling code here:
+        System.out.printf("Pressed button: %d\n", 3);
+        
         int ind = m_currCardInd + 2;
         Card c = m_durakClient.getM_cards().get(ind);
         m_durakClient.sendTurn(c);
@@ -576,6 +566,8 @@ private void jBtn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
 
     private void jBtn4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtn4ActionPerformed
         // TODO add your handling code here:
+        System.out.printf("Pressed button: %d\n", 4);
+        
         int ind = m_currCardInd + 3;
         Card c = m_durakClient.getM_cards().get(ind);
         m_durakClient.sendTurn(c);
@@ -583,6 +575,7 @@ private void jBtn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
 
     private void jBtn5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtn5ActionPerformed
         // TODO add your handling code here:
+        System.out.printf("Pressed button: %d\n", 5);
         int ind = m_currCardInd + 4;
         Card c = m_durakClient.getM_cards().get(ind);
         m_durakClient.sendTurn(c);
@@ -590,6 +583,8 @@ private void jBtn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
 
     private void jBtn6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtn6ActionPerformed
         // TODO add your handling code here:
+        System.out.printf("Pressed button: %d\n", 6);
+        
         int ind = m_currCardInd + 5;
         Card c = m_durakClient.getM_cards().get(ind);
         m_durakClient.sendTurn(c);
@@ -615,8 +610,28 @@ private void jBtn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event
 
     private void jBtnGetOrPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnGetOrPassActionPerformed
         // TODO add your handling code here:
+        System.out.printf("Pressed button: PASS\n");
+        
         m_durakClient.sendTurn(null);
     }//GEN-LAST:event_jBtnGetOrPassActionPerformed
+
+    private void jBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtn1ActionPerformed
+        // TODO add your handling code here:
+        System.out.printf("Pressed button: %d\n", 1);
+    
+        int ind = m_currCardInd;
+        Card c = m_durakClient.getM_cards().get(ind);
+        m_durakClient.sendTurn(c);
+    }//GEN-LAST:event_jBtn1ActionPerformed
+
+    private void jBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtn2ActionPerformed
+        // TODO add your handling code here:
+        System.out.printf("Pressed button: %d\n", 2);
+        
+        int ind = m_currCardInd + 1;
+        Card c = m_durakClient.getM_cards().get(ind);
+        m_durakClient.sendTurn(c);
+    }//GEN-LAST:event_jBtn2ActionPerformed
 
     /**
      * @param args the command line arguments

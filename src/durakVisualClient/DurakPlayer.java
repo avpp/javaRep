@@ -14,6 +14,9 @@ import java.io.*;
  * @author Andrew
  */
 public class DurakPlayer extends Player{
+    public enum WhoseTurn {a, p, t};
+    public enum ThrowOrTrump {discard, trump, wait};
+    
     private String m_name;
     private DurakDeck m_deck;
     private GamblingTable m_gambTable;
@@ -22,13 +25,19 @@ public class DurakPlayer extends Player{
     private DurakWinTable m_winTable;
     private int m_active;
     private int m_passive;
-    private char m_whoseTurn;
+    private WhoseTurn m_whoseTurn;
+    private ThrowOrTrump m_throwOrTrump;
+     
     private int m_me;
     private DurakScore m_score;
     private Card m_trump;
     private LinkedList<String> m_chat;
     
     private DurakGameInterface gameInterface;
+    
+    public ThrowOrTrump getThrowOrTrump() {
+        return m_throwOrTrump;
+    }
     
     /**
      * @return the gameInterface
@@ -103,7 +112,7 @@ public class DurakPlayer extends Player{
     /**
      * @return the m_whoseTurn
      */
-    public char getM_whoseTurn() {
+    public WhoseTurn getM_whoseTurn() {
         return m_whoseTurn;
     }
 
@@ -268,12 +277,10 @@ public class DurakPlayer extends Player{
         int i = 5;
         
         if (message.charAt(i) == '+') {
-            m_whoseTurn = '+';
+            m_throwOrTrump = ThrowOrTrump.discard;
         }
         else if (message.charAt(i) == '-') {
-            m_whoseTurn = '-';
-        } else {
-            m_whoseTurn = '0';
+            m_throwOrTrump = ThrowOrTrump.trump;
         }
     }
       
@@ -306,7 +313,7 @@ public class DurakPlayer extends Player{
         m_me = (int)p.charAt(0);
         m_active = (int)p.charAt(1);
         m_passive = (int)p.charAt(2);
-        m_whoseTurn = p.charAt(3);
+        //m_whoseTurn = p.charAt(3);
         
         delim = ",";
         String[] players = data[2].split(delim);
@@ -397,7 +404,7 @@ public class DurakPlayer extends Player{
     }
     
     public void sendTurn(Card c) {
-        m_whoseTurn = '0';
+        m_throwOrTrump = ThrowOrTrump.wait;
         String str = (c == null) ? "turn/no" : "turn/".concat(c.toString());
         send(str);
     }
