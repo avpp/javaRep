@@ -15,7 +15,10 @@ import durakVisualClient.DurakGameInterface;
 import durakVisualClient.DurakPlayer;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.Label;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.logging.Level;
@@ -33,6 +36,12 @@ public class ChooseClient extends javax.swing.JFrame {
         initComponents();
         jIPAddressTextField.setText("localhost");
         jNameTextField.setFocusable(true);
+        
+        Point c = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getCenterPoint();
+        c.x = c.x - this.getWidth() / 2;
+        c.y = c.y - this.getHeight() / 2;
+        setLocation(c);
     }
 
     /** This method is called from within the constructor to

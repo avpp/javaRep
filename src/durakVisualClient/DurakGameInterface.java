@@ -14,7 +14,6 @@ import durakVisualClient.DurakPlayer.ThrowOrTrump;
 import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +24,7 @@ import netCardInterfaces.Card.*;
 import netCardInterfaces.GamblingTable;
 import netCardInterfaces.Turn;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.net.URL;
 import java.util.LinkedList;
 import javax.swing.JButton;
@@ -49,7 +49,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
             
             drawCloth(g, width, height);
             drawGamblingTable(g);
-            drawThrowOrTrump(g, width, height);
+            drawThrowOrTrump((Graphics2D)g, width, height);
             drawDeck(g, width, height);
         }
     }
@@ -118,11 +118,8 @@ public class DurakGameInterface extends javax.swing.JFrame {
         m_userBtnCards.add(jBtn5);
         m_userBtnCards.add(jBtn6);
         
-        String str = ".\\"//"d:\\Programming\\JavaProjects\\NetworkCards\\"
-                + "src\\durakVisualClient\\resources\\images\\cards\\";
+        String str = "";
         loadCardImages(str);
-        str = ".\\"//"d:\\Programming\\JavaProjects\\NetworkCards\\"
-                + "src\\durakVisualClient\\resources\\images\\cloth.jpg";
         loadCloth(str);
         
         m_canvas = new DrawGameCanvas();
@@ -140,10 +137,6 @@ public class DurakGameInterface extends javax.swing.JFrame {
         m_cardInStackShiftX = 15;
         m_cardInStackShiftY = 20;
         
-        Font f = new Font("Tahoma", Font.PLAIN, 30);
-        m_canvas.getGraphics().setFont(f);
-        m_canvas.getGraphics().setColor(java.awt.Color.WHITE);
-        
         drawAll();
     }
 
@@ -157,7 +150,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
         drawCloth(g, width, height);
         drawUserCards();
         drawGamblingTable(g);
-        drawThrowOrTrump(g, width, height);
+        drawThrowOrTrump((Graphics2D)g, width, height);
         drawDeck(g, width, height);
         
         m_canvas.getGraphics().drawImage(img, 0, 0, null);
@@ -268,7 +261,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
         }
     }
     
-    private void drawThrowOrTrump(Graphics g, int w, int h) {
+    private void drawThrowOrTrump(Graphics2D g2d, int w, int h) {
         if (m_durakClient == null) {
             return;
         }
@@ -287,7 +280,10 @@ public class DurakGameInterface extends javax.swing.JFrame {
         int x = w / 4;
         int y = h - h / 4;
         
-        g.drawString(s, x, y);
+        int fontSize = 18;
+        g2d.setFont(new Font("Tahoma", Font.ITALIC, fontSize));
+        g2d.setColor(java.awt.Color.gray);
+        g2d.drawString(s, x, y);
     }
     
     /*
@@ -323,16 +319,29 @@ public class DurakGameInterface extends javax.swing.JFrame {
         m_imgsHearts = new BufferedImage[all];
         m_imgsClubs = new BufferedImage[all];
         try {
-            m_backHoriz = ImageIO.read(getClass().getClassLoader().getResource("images/cards/backHoriz.png"));
-            m_backVertic = ImageIO.read(getClass().getClassLoader().getResource("images/cards/backVertic.png"));
+            m_backHoriz = ImageIO.read(
+                    getClass().getClassLoader().getResource(
+                    "images/cards/backHoriz.png"));
+            m_backVertic = ImageIO.read(
+                    getClass().getClassLoader().getResource(
+                    "images/cards/backVertic.png"));
+            
             for (int i = 0; i < 13; i++)
             {
                 String val = Card.Value.values()[i].name().substring(1);
                 //System.out.printf("load card %s ", val);
-                m_imgsSpades[i] = ImageIO.read(getClass().getClassLoader().getResource("images/cards/s".concat(val).concat(".png")));
-                m_imgsClubs[i] = ImageIO.read(getClass().getClassLoader().getResource("images/cards/c".concat(val).concat(".png")));
-                m_imgsDiamonds[i] = ImageIO.read(getClass().getClassLoader().getResource("images/cards/d".concat(val).concat(".png")));
-                m_imgsHearts[i] = ImageIO.read(getClass().getClassLoader().getResource("images/cards/h".concat(val).concat(".png")));
+                m_imgsSpades[i] = ImageIO.read(
+                        getClass().getClassLoader().getResource(
+                        "images/cards/s".concat(val).concat(".png")));
+                m_imgsClubs[i] = ImageIO.read(
+                        getClass().getClassLoader().getResource(
+                        "images/cards/c".concat(val).concat(".png")));
+                m_imgsDiamonds[i] = ImageIO.read(
+                        getClass().getClassLoader().getResource(
+                        "images/cards/d".concat(val).concat(".png")));
+                m_imgsHearts[i] = ImageIO.read(
+                        getClass().getClassLoader().getResource(
+                        "images/cards/h".concat(val).concat(".png")));
                 //System.out.printf("card %s\n", m_imgsClubs[i].getColorModel().toString());
             }
         } catch (IOException ex) {
@@ -407,7 +416,6 @@ public class DurakGameInterface extends javax.swing.JFrame {
         jBtn6 = new javax.swing.JButton();
         jBtnCardRight = new javax.swing.JButton();
         jBtnCardLeft = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         jBtnGetOrPass = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -482,9 +490,6 @@ public class DurakGameInterface extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
-
         jBtnGetOrPass.setText(resourceMap.getString("jBtnGetOrPass.text")); // NOI18N
         jBtnGetOrPass.setName("jBtnGetOrPass"); // NOI18N
         jBtnGetOrPass.addActionListener(new java.awt.event.ActionListener() {
@@ -498,9 +503,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79)
+                .addGap(188, 188, 188)
                 .addComponent(jBtnCardLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -524,26 +527,21 @@ public class DurakGameInterface extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(558, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jBtn5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jBtn1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jBtn2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jBtn4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
+                    .addComponent(jBtn3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jBtn5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jBtn1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jBtn2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jBtn4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
-                            .addComponent(jBtn3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jBtnCardLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(21, 21, 21))
-                            .addComponent(jBtn6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jBtnCardRight, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(20, 20, 20))
-                            .addComponent(jBtnGetOrPass, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jBtnCardLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21))
+                    .addComponent(jBtn6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jBtnCardRight, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(28, 28, 28))))
+                    .addComponent(jBtnGetOrPass, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
         );
 
         pack();
@@ -679,7 +677,6 @@ private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRS
     private javax.swing.JButton jBtnCardLeft;
     private javax.swing.JButton jBtnCardRight;
     private javax.swing.JButton jBtnGetOrPass;
-    private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables
 }
 

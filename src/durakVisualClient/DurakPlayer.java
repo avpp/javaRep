@@ -9,16 +9,14 @@ import netCardInterfaces.Card;
 import netCardInterfaces.GamblingTable;
 import netCardInterfaces.Player;
 import java.util.LinkedList;
-import first.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.*;
 /**
  *
  * @author Andrew
  */
 public class DurakPlayer extends Player{
-    public enum WhoseTurn {a, p, t};
+    public enum WhoseTurn {active, passive, taking};
     public enum ThrowOrTrump {discard, trump, wait};
     
     private String m_name;
