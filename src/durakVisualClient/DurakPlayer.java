@@ -19,7 +19,6 @@ public class DurakPlayer extends Player{
     public enum WhoseTurn {active, passive, taking};
     public enum ThrowOrTrump {discard, trump, wait};
     
-    private String m_name;
     private DurakDeck m_deck;
     private GamblingTable m_gambTable;
     private LinkedList<Card> m_cards;
@@ -54,14 +53,7 @@ public class DurakPlayer extends Player{
     public void setGameInterface(DurakGameInterface gameInterface) {
         this.gameInterface = gameInterface;
     }
-    
-    /**
-     * @return the m_name
-     */
-    public String getM_name() {
-        return m_name;
-    }
-
+   
     /**
      * @return the m_deck
      */
@@ -312,10 +304,10 @@ public class DurakPlayer extends Player{
         String[] data = message.split(delim);
         String p = data[1];
         
-        m_me = (int)p.charAt(0);
-        m_active = (int)p.charAt(1);
-        m_passive = (int)p.charAt(2);
-        //m_whoseTurn = p.charAt(3);
+        String[] indexes = p.split(",");
+        m_me = Integer.parseInt(indexes[0]);
+        m_active = Integer.parseInt(indexes[1]);
+        m_passive = Integer.parseInt(indexes[2]);
         
         delim = ",";
         String[] players = data[2].split(delim);

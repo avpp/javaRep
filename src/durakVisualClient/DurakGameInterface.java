@@ -47,10 +47,13 @@ public class DurakGameInterface extends javax.swing.JFrame {
             int width = getWidth();
             int height = getHeight();
             
+            Graphics2D g2d = (Graphics2D)g;
+            
             drawCloth(g, width, height);
             drawGamblingTable(g);
-            drawThrowOrTrump((Graphics2D)g, width, height);
-            drawDeck(g, width, height);
+            drawThrowOrTrump(g2d, width, height);
+            drawDeck(g2d, width, height);
+            drawPlayers(g2d, width, height);
         }
     }
     
@@ -129,15 +132,13 @@ public class DurakGameInterface extends javax.swing.JFrame {
         this.add(m_canvas);
         
         m_gambTabX = width / 4;
-        m_gambTabY = height / 3;
+        m_gambTabY = (int)(height / 2.5);
         
         m_stackShiftX = 100;
         m_stackShiftY = 150;
         
         m_cardInStackShiftX = 15;
-        m_cardInStackShiftY = 20;
-        
-        drawAll();
+        m_cardInStackShiftY = 25;
     }
 
     public void drawAll() {
@@ -145,13 +146,16 @@ public class DurakGameInterface extends javax.swing.JFrame {
         int height = m_canvas.getHeight();
         BufferedImage img = new BufferedImage(
                 width, height, BufferedImage.TYPE_INT_BGR);
-        Graphics g = img.getGraphics();
+        Graphics2D g2d = (Graphics2D)img.getGraphics();
         
-        drawCloth(g, width, height);
+        drawCloth(g2d, width, height);
         drawUserCards();
-        drawGamblingTable(g);
-        drawThrowOrTrump((Graphics2D)g, width, height);
-        drawDeck(g, width, height);
+        drawGamblingTable(g2d);
+        drawThrowOrTrump(g2d, width, height);
+        drawDeck(g2d, width, height);
+        drawPlayers(g2d, width, height);
+        
+        setBtnNames();
         
         m_canvas.getGraphics().drawImage(img, 0, 0, null);
     }
@@ -237,7 +241,7 @@ public class DurakGameInterface extends javax.swing.JFrame {
         }
     }
     
-    private void drawDeck(Graphics g, int width, int height) {
+    private void drawDeck(Graphics2D g2d, int width, int height) {
         if (m_durakClient == null)
             return;
         
@@ -245,19 +249,23 @@ public class DurakGameInterface extends javax.swing.JFrame {
             return;
         }
         
+        int amount = m_durakClient.getM_deck().getCurrentAmount();
         int x = width - width / 5;
         int y = height / 20;
+        //int shiftForAmount = 40;
         BufferedImage imgTrmp = 
                 imgFromCard(m_durakClient.getM_trump());
         
-        if (m_durakClient.getM_deck().getCurrentAmount() > 0) {
-            g.drawImage(imgTrmp, x, y, null);
+        if (amount > 0) {
+            g2d.drawImage(imgTrmp, x, y, null);
         }
         
-        if (m_durakClient.getM_deck().getCurrentAmount() > 1) {
-            g.drawImage(m_backHoriz, 
+        if (amount > 1) {
+            g2d.drawImage(m_backHoriz, 
                     x + (imgTrmp.getWidth() - imgTrmp.getHeight()) / 2,
                     y - 10, null);
+            g2d.drawString(String.valueOf(amount),
+                    x, y + 20);
         }
     }
     
@@ -281,9 +289,65 @@ public class DurakGameInterface extends javax.swing.JFrame {
         int y = h - h / 4;
         
         int fontSize = 18;
-        g2d.setFont(new Font("Tahoma", Font.ITALIC, fontSize));
-        g2d.setColor(java.awt.Color.gray);
+        g2d.setFont(new Font("Tahoma",  Font.BOLD, fontSize));
+        g2d.setColor(java.awt.Color.ORANGE);
         g2d.drawString(s, x, y);
+    }
+    
+    private void drawPlayers(Graphics2D g2d, int width, int height) {
+        int shiftDown = 30;
+        int x = 25;
+        int y = height / 8;
+        int fontSize = 20;
+        g2d.setFont(new Font("Calibri", Font.PLAIN, fontSize));
+        
+        g2d.setColor(java.awt.Color.ORANGE);
+        g2d.drawString("Игрок/карты", x, y);
+        
+        g2d.setColor(java.awt.Color.WHITE);
+        
+        for (DurakAdversary d : m_durakClient.getM_adversaries()) {
+            y += shiftDown;
+            String info = d.getName().concat(" / ")
+                    .concat(String.valueOf(d.getAmountOfCards()));
+            
+            if (m_durakClient.getName().equals(d.getName())) {
+                info = "Me: ".concat(info);
+            }
+            g2d.drawString(info, x, y);
+        }
+        
+        int a = m_durakClient.getM_active();
+        int p = m_durakClient.getM_passive();
+        
+        int gX = width / 3;
+        int gY = height / 20;
+        
+        if (a >=0 && a < m_durakClient.getM_adversaries().size()
+                && p >=0 && p < m_durakClient.getM_adversaries().size()) {
+            DurakAdversary active = m_durakClient.getM_adversaries().get(a);
+            DurakAdversary passive = m_durakClient.getM_adversaries().get(p);
+
+            int s = 18;
+            g2d.setFont(new Font("Tahoma",  Font.BOLD, s));
+            g2d.setColor(java.awt.Color.ORANGE);
+            g2d.drawString(active.getName().concat("  /")
+                    .concat(String.valueOf(active.getAmountOfCards()))
+                    .concat("    VS    ")
+                    .concat(passive.getName().concat("  /")
+                    .concat(String.valueOf(passive.getAmountOfCards()))),
+                    gX, gY);
+        }
+    }
+    
+    private void setBtnNames() {
+        ThrowOrTrump tot = m_durakClient.getThrowOrTrump();
+        
+        if (tot == ThrowOrTrump.discard) {
+            jBtnGetOrPass.setText("Пасовать");
+        } else if (tot == ThrowOrTrump.trump) {
+            jBtnGetOrPass.setText("Беру!");
+        }
     }
     
     /*
@@ -503,8 +567,8 @@ public class DurakGameInterface extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(188, 188, 188)
-                .addComponent(jBtnCardLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(179, 179, 179)
+                .addComponent(jBtnCardLeft)
                 .addGap(18, 18, 18)
                 .addComponent(jBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -517,15 +581,15 @@ public class DurakGameInterface extends javax.swing.JFrame {
                 .addComponent(jBtn5, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jBtn6, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addComponent(jBtnCardRight, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43)
-                .addComponent(jBtnGetOrPass, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(jBtnCardRight)
+                .addGap(76, 76, 76)
+                .addComponent(jBtnGetOrPass, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(558, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jBtn5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -533,15 +597,18 @@ public class DurakGameInterface extends javax.swing.JFrame {
                     .addComponent(jBtn2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jBtn4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
                     .addComponent(jBtn3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jBtnCardLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21))
                     .addComponent(jBtn6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jBtnCardRight, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20))
-                    .addComponent(jBtnGetOrPass, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(19, 19, 19)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jBtnCardRight, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jBtnGetOrPass, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)))
                 .addGap(20, 20, 20))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(576, 576, 576)
+                .addComponent(jBtnCardLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
