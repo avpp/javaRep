@@ -8,6 +8,6 @@ package netCardInterfaces;
  *
  * @author Alexey
  */
-public interface ICardOwner {
-    
+public interface ICardDestination {
+    void pushCard(Card card, CardCoordinate coordinate);
 }

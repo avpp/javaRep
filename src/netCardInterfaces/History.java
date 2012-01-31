@@ -15,18 +15,27 @@ public class History {
     /**
      * Набор игровых столов
      */
-    private LinkedList<GamblingTable> tables;
+    private LinkedList<GamblingTableHistory> tables;
     /**
      * Конструктор истории
      */
     public History() {
-        tables = new LinkedList<GamblingTable>();
+        tables = new LinkedList<GamblingTableHistory>();
     }
     /**
      * Возвращает последний игровой стол
      * @return последний игровой стол или null, если нет столов
      */
-    public GamblingTable getLast() {
+    public GamblingTable getLastTable() {
+        try {
+            return tables.getLast().getGamblingTable();
+        } catch(NoSuchElementException ex)
+        {
+            return null;
+        }
+    }
+    
+    public GamblingTableHistory getLastHistory() {
         try {
             return tables.getLast();
         } catch(NoSuchElementException ex)
@@ -41,7 +50,7 @@ public class History {
      */
     public GamblingTable getTable(int t) {
         try {
-            return tables.get(t);
+            return tables.get(t).getGamblingTable();
         } catch(IndexOutOfBoundsException ex)
         {
             return null;
@@ -52,8 +61,8 @@ public class History {
      * @return возвращает созданный игровой стол
      */
     public GamblingTable AddNew() {
-        GamblingTable gt = new GamblingTable();
-        tables.add(gt);
-        return gt;
+        GamblingTableHistory gth = new GamblingTableHistory();
+        tables.add(gth);
+        return gth.getGamblingTable();
     }
 }

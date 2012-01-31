@@ -10,11 +10,11 @@ import java.util.LinkedList;
  * Экземпляр данного класса представляет игрока в игре
  * @author Alexey
  */
-public class GamePlayer {
+public class GamePlayer implements ICardSource, ICardDestination{
     /**
      * Набор карт данного игрока
      */
-    public LinkedList<Card> cards;
+    private CardHeap cards;
     
     /**
      * имя данного игрока
@@ -32,7 +32,7 @@ public class GamePlayer {
         p = pl;
         p.setGamePlayer(this);
         name = pl.name;
-        cards = new LinkedList<Card>();
+        cards = new CardHeap();
     }
     
     /**
@@ -53,7 +53,7 @@ public class GamePlayer {
     public String getCards()
     {
         String ans = "your/";
-        for (Card c : cards)
+        for (Card c : cards.getCards())
         {
             ans = ans.concat(c.toString()).concat(",");
         }
@@ -67,5 +67,33 @@ public class GamePlayer {
     public void sendCards()
     {
         p.sendMessage(getCards());
+    }
+
+    @Override
+    public Card fetchCard(Card card, CardCoordinate coordinate) {
+        if (cards.getCards().remove(card))
+            return card;
+        if (coordinate == null || coordinate.getCoordinates().length < 1)
+            return null;
+        return cards.getCards().remove(coordinate.getCoordinates()[0]);
+    }
+
+    @Override
+    public void pushCard(Card card, CardCoordinate coordinate) {
+        cards.getCards().add(card);
+    }
+    
+    public CardCoordinate getCardCoordinate(Card c)
+    {
+        Card fcard = null;
+        for (Card cc : cards.getCards())
+        {
+            if (Card.isEqual(cc, c))
+            {
+                fcard = cc;
+                break;
+            }
+        }
+        return new CardCoordinate(new int[] {cards.getCards().indexOf(fcard)});
     }
 }

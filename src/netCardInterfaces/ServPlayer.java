@@ -180,7 +180,7 @@ public class ServPlayer {
      */
     public void acceptMessage(String message)
     {
-        myAdmin.AddMessage(this, message);
+        myAdmin.addMessage(new Message(this, message));
     }
     /**
      * Отправка сообщения удалённому клиенту
@@ -197,7 +197,7 @@ public class ServPlayer {
             Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
             try {
                 s.close();
-                myAdmin.AddMessage(this, "exit/");
+                myAdmin.addMessage(new Message(this, "exit/"));
             } catch (IOException ex1) {
                 Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex1);
             }

@@ -12,7 +12,7 @@ import java.util.Random;
  * Для конкретной игры требуется реализовать свою колоду
  * @author Alexey
  */
-public abstract class Deck implements IDeck{
+public abstract class Deck implements IDeck, ICardSource{
     /**
      * перечисление SideType представляет две стороны для доступа к колоде
      * top =  сверху
@@ -144,5 +144,12 @@ public abstract class Deck implements IDeck{
     public String getInfo() {
         return "deck/".concat(String.valueOf(getCurrentAmount()))
                 .concat(",").concat(String.valueOf(getMaxAmount()));
+    }
+    
+    @Override
+    public Card fetchCard(Card card, CardCoordinate coordinate) {
+        if (coordinate == null || coordinate.getCoordinates().length < 1)
+            return null;
+        return getCard(SideType.values()[coordinate.getCoordinates()[0]]);
     }
 }

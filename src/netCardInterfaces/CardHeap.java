@@ -11,20 +11,20 @@ import java.util.ArrayList;
  * @author Alexey
  */
 public class CardHeap {
-    private ArrayList<RelationCardOwner> _ownerCards;
+    private ArrayList<Card> _cards;
     
     /**
      * @return the _ownersCards
      */
-    public ArrayList<RelationCardOwner> getOwnerCards() {
-        return _ownerCards;
+    public ArrayList<Card> getCards() {
+        return _cards;
     }
     
     public CardHeap() {
-        _ownerCards = new ArrayList<RelationCardOwner>();
+        _cards = new ArrayList<Card>();
     }
     
     public Card viewCard(int index) {
-        return getOwnerCards().get(index).getCard();
+        return getCards().get(index);
     }
 }

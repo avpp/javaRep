@@ -10,38 +10,7 @@ import java.util.ArrayList;
  * Данный класс реализует игровой стол
  * @author Alexey
  */
-public class GamblingTable {
-    private class TableLog {
-        private Object _source, _destinantion;
-        private Card _card;
-        public TableLog(Object source, Object destination, Card card) {
-            _source = source;
-            _destinantion = destination;
-            _card = card;
-        }
-
-        /**
-         * @return the _source
-         */
-        public Object getSource() {
-            return _source;
-        }
-
-        /**
-         * @return the _destinantion
-         */
-        public Object getDestinantion() {
-            return _destinantion;
-        }
-
-        /**
-         * @return the _card
-         */
-        public Card getCard() {
-            return _card;
-        }
-    }
-    private ArrayList<TableLog> log;
+public class GamblingTable implements ICardSource, ICardDestination {
     /**
      * игровое поле, на котором происходит игра.
      * представляет из себя двумерный "массив" ходов, т.е.
@@ -76,7 +45,7 @@ public class GamblingTable {
      * @param cardNum второй индекс массива, показывает номер карты в этом игровом событии (-1, если необходимо обратится к последней карте)
      * @return возвращает объект класса {@link Turn} либо null, если указан неверный номер
      */
-    public RelationCardOwner viewRelationCardOwner(int rowNum, int colNum, int cardNum)
+    public Card viewCard(int rowNum, int colNum, int cardNum)
     {
         if (rowNum == -1)
             rowNum = _table.size() - 1;
@@ -87,17 +56,17 @@ public class GamblingTable {
 //        if (colNum < 0 || colNum >= _table.get(rowNum).size())
 //            return null;
         if (cardNum == -1)
-            cardNum = _table.get(rowNum).get(colNum).getOwnerCards().size() - 1;
+            cardNum = _table.get(rowNum).get(colNum).getCards().size() - 1;
  //       if (cardNum < 0 || cardNum >= _table.get(rowNum).get(colNum).getOwnerCards().size())
  //           return null;
-        return _table.get(rowNum).get(colNum).getOwnerCards().get(cardNum);
+        return _table.get(rowNum).get(colNum).viewCard(cardNum);
     }
     /**
      * Добавляет новый ход в конец игрового события
      * @param turn ход, который добавляется
      * @param actionNum номер игрового события или -1, если требуется добавить в последнее
      */
-    public void addCard(ICardOwner owner, Card card, int rowNum, int colNum, int cardNum) {
+    public void addCard(Card card, int rowNum, int colNum, int cardNum) {
         if (rowNum == -1)
         {
             if (_resizable)
@@ -113,23 +82,23 @@ public class GamblingTable {
         if (cardNum == -1)
         {
             if (_resizable)
-                _table.get(rowNum).get(colNum).getOwnerCards().add(new RelationCardOwner(card, owner));
+                _table.get(rowNum).get(colNum).getCards().add(card);
         }
         else
         {
-            _table.get(rowNum).get(colNum).getOwnerCards().add(cardNum, new RelationCardOwner(card, owner));
+            _table.get(rowNum).get(colNum).getCards().add(cardNum, card);
         }
     }
     
-    public RelationCardOwner removeCard(int rowNum, int colNum, int cardNum) {
+    public Card removeCard(int rowNum, int colNum, int cardNum) {
         if (rowNum == -1)
             rowNum = _table.size() - 1;
         if (colNum == -1)
             colNum = _table.get(rowNum).size() - 1;
         if (cardNum == -1)
-            cardNum = _table.get(rowNum).get(colNum).getOwnerCards().size() - 1;
-        RelationCardOwner answer = _table.get(rowNum).get(colNum).getOwnerCards().remove(cardNum);
-        if (_table.get(rowNum).get(colNum).getOwnerCards().isEmpty())
+            cardNum = _table.get(rowNum).get(colNum).getCards().size() - 1;
+        Card answer = _table.get(rowNum).get(colNum).getCards().remove(cardNum);
+        if (_table.get(rowNum).get(colNum).getCards().isEmpty())
         {
             _table.get(rowNum).remove(colNum);
             if (_table.get(rowNum).isEmpty())
@@ -147,10 +116,7 @@ public class GamblingTable {
         {
             for(CardHeap ch: cha)
             {
-                for (RelationCardOwner ro : ch.getOwnerCards())
-                {
-                    answer.add(ro.getCard());
-                }
+                answer.addAll(ch.getCards());
             }
         }
         return answer;
@@ -169,9 +135,9 @@ public class GamblingTable {
             for(CardHeap ch: cha)
             {
                 ans = ans.concat("|");
-                for (RelationCardOwner ro : ch.getOwnerCards())
+                for (Card c : ch.getCards())
                 {
-                    ans = ans.concat(ro.getCard().toString()).concat(",");
+                    ans = ans.concat(c.toString()).concat(",");
                 }
             }
         }
@@ -199,11 +165,32 @@ public class GamblingTable {
                 String cards[] =c[j].split(",");
                 for (int k = 0; k < cards.length; k++)
                 {
-                    ans.addCard(null, Card.fromString(cards[k]), i - 1, j, k);
+                    ans.addCard(Card.fromString(cards[k]), i - 1, j, k);
                 }
             }
             
         }
         return ans;
+    }
+
+    @Override
+    public Card fetchCard(Card card, CardCoordinate coordinate) {
+        if (coordinate == null || coordinate.getCoordinates().length < 3)
+            return null;
+        if (Card.isEqual(card, viewCard(coordinate.getCoordinates()[0], 
+                                        coordinate.getCoordinates()[1], 
+                                        coordinate.getCoordinates()[2]))) {
+            return removeCard(coordinate.getCoordinates()[0], 
+                              coordinate.getCoordinates()[1], 
+                              coordinate.getCoordinates()[2]);
+        }
+        return null;
+    }
+
+    @Override
+    public void pushCard(Card card, CardCoordinate coordinate) {
+        addCard(card, coordinate.getCoordinates()[0], 
+                      coordinate.getCoordinates()[1], 
+                      coordinate.getCoordinates()[2]);
     }
 }
