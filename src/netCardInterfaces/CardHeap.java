@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author Alexey
  */
-public class CardHeap {
+public final class CardHeap {
     private ArrayList<Card> _cards;
     
     /**

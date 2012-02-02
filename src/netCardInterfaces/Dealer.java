@@ -39,7 +39,11 @@ public abstract class Dealer implements Runnable {
      */
     protected Admin admin;
     
-    private ArrayList<String> _messageNames;
+    protected ArrayList<String> _messageNames;
+    
+    public ArrayList<String> getMessageNames() {
+        return _messageNames;
+    }
     
     /**
      * Конструктор, который создаёт диллера
@@ -48,7 +52,7 @@ public abstract class Dealer implements Runnable {
      */
     public Dealer(Deck deck, Admin admin)
     {
-        _messageNames = new ArrayList<String>();
+        fillMessageNames();
         this.admin = admin;
         this.deck = deck;
         players = new LinkedList<GamePlayer>();
@@ -56,17 +60,16 @@ public abstract class Dealer implements Runnable {
         wtable = new WinTable();
     }
     
-    public ArrayList<String> getMessageNames() {
-        return _messageNames;
+    private void fillMessageNames() {
+        String names[] = new String [] {};
+        _messageNames = new ArrayList<String>(java.util.Arrays.asList(names));
+        fillAdditionalMessageNames();
     }
     
-    protected void addMessageName(String name) {
-        _messageNames.add(name);
+    protected void fillAdditionalMessageNames() {
     }
     
-    protected void removeMessageName(String name) {
-        _messageNames.remove(name);
-    }
+    public abstract boolean checkPlayer(String s);
     
     /**
      * Абстрактный метод, который должен проверять колоду на пригодность к данной игре

@@ -30,10 +30,11 @@ public class MessageHandler {
         }
     }
     
-    public void tryParseMessage(Message m) {
+    public boolean tryParseMessage(Message m) {
         if (_messageName != null && _messageName.equals(m.getName()))
             try {
             _messageMethod.invoke(_object, m);
+            return true;
         } catch (IllegalAccessException ex) {
             Logger.getLogger(MessageHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalArgumentException ex) {
@@ -41,5 +42,6 @@ public class MessageHandler {
         } catch (InvocationTargetException ex) {
             Logger.getLogger(MessageHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return false;
     }
 }

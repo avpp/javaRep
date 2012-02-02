@@ -4,8 +4,6 @@
  */
 package netCardInterfaces;
 
-import java.util.LinkedList;
-
 /**
  * Экземпляр данного класса представляет игрока в игре
  * @author Alexey
@@ -19,7 +17,7 @@ public class GamePlayer implements ICardSource, ICardDestination{
     /**
      * имя данного игрока
      */
-    public String name;
+    public String getName();
     
     private ServPlayer p;
     

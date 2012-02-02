@@ -4,10 +4,6 @@
  */
 package netCardInterfaces;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.net.SocketException;
-import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,56 +12,14 @@ import java.util.logging.Logger;
  * Экземпляр данного класса осуществляет связь с удалённым клиентом
  * @author Alexey
  */
-public class ServPlayer {
-    /**
-     * Класс для прослушивания входящих сообщений
-     */
-    private class Listen implements Runnable {
-        private Socket s;
-        public Listen(Socket socket)
-        {
-            s = socket;
-        }
-        @Override
-        public void run() {
-            while (!s.isClosed())
-            {
-                try {
-                    try {
-                        Thread.sleep((long)500);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    if (s.getInputStream().available() > 0)
-                    {
-                        byte b[] = new byte[s.getInputStream().available()];
-                        s.getInputStream().read(b);
-                        String mes = new String(b);
-                        LinkedList<String> submes = new LinkedList(java.util.Arrays.asList(mes.split("@")));
-                        /*for (String curString : submes)
-                        {
-                            curString += "\0";
-                        }*/
-                        while (submes.size() > 0)
-                        {
-                            acceptMessage(submes.removeFirst());
-                        }
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        
-    }
-    
-    private Thread l_th;
-    private Socket s;
-    public String name;
+public abstract class ServPlayer {
+
+    private static int _lastNumber = -1;
+    private String _name;
 //    public LinkedList<Card> cards;
     private String answer;
     private Semaphore sem;
-    private Admin myAdmin;
+    protected Admin myAdmin;
     private GamePlayer gp;
     /**
      * Конструктор данного класс, создаёт экземпляр данного класса.
@@ -73,38 +27,12 @@ public class ServPlayer {
      * @param admin экземпляр класса {@link Admin}, который курирует работу данного объекта
      * @throws InterruptedException
      */
-    public ServPlayer(Socket socket, Admin admin) throws InterruptedException
+    public ServPlayer(Admin admin)
     {
         myAdmin = admin;
         gp = null;
-        s = socket;
-        try {
-            Boolean check = true;
-            do
-            {
-                s.getOutputStream().write("name".getBytes());
-                while(s.getInputStream().available() <= 0)
-                {
-                    Thread.sleep((long)100);
-                    if (s.isInputShutdown())
-                        throw new InterruptedException("client don't has name");
-                }
-                byte b[] = new byte [s.getInputStream().available()];
-                s.getInputStream().read(b);
-                name = (new String(b)).split("@")[0];
-                LinkedList<String> ReservedNames = myAdmin.getPlayerList();
-                check = false;
-                for (int i = 0; i < ReservedNames.size() && !check; i++)
-                {
-                    check = ReservedNames.get(i).equals(name);
-                }
-            } while (check);
-        } catch (IOException ex) {
-            Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        l_th = new Thread(new Listen(socket));
-        l_th.setName("Listen player ".concat(name));
-        l_th.start();
+        while (setName("Player".concat(String.valueOf(++_lastNumber))));
+        sendMessage("name/");
         sem = new Semaphore(0);
     }
     /**
@@ -123,18 +51,7 @@ public class ServPlayer {
     {
         return gp;
     }
-    /**
-     * Завершение соединения
-     */
-    public void closeSocket()
-    {
-        try {
-            if (!s.isClosed())
-                s.close();
-        } catch (IOException ex) {
-            Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+    
     Boolean mayMakeTurn = true;
     /**
      * Установка ответа на запрос хода
@@ -151,7 +68,7 @@ public class ServPlayer {
      * получение ответа на запрос хода
      * @return текст ответа
      */
-    private String getAnswer()
+    protected String getAnswer()
     {
         try {
             sem.acquire();
@@ -182,27 +99,21 @@ public class ServPlayer {
     {
         myAdmin.addMessage(new Message(this, message));
     }
+    
     /**
      * Отправка сообщения удалённому клиенту
      * @param message сообщение
      */
-    public void sendMessage(String message)
-    {
-        if (s.isClosed())
-            return;
-        try {
-            s.getOutputStream().write(message.getBytes());
-        } catch (SocketException ex)
-        {
-            Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
-            try {
-                s.close();
-                myAdmin.addMessage(new Message(this, "exit/"));
-            } catch (IOException ex1) {
-                Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public abstract void sendMessage(String message);
+    
+    public String getName() {
+        return _name;
+    }
+    
+    public boolean setName(String name) {
+        if (!myAdmin.reserveName(name))
+            return false;
+        _name = name;
+        return true;
     }
 }

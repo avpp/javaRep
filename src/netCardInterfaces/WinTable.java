@@ -103,7 +103,7 @@ public class WinTable {
         String ans = "wint/";
         for(rec r : records)
         {
-            ans = ans.concat(r.getPlayer().name).concat(",");
+            ans = ans.concat(r.getPlayer().getName()).concat(",");
         }
         ans = ans.concat("\n");
         return ans;

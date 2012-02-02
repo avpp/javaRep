@@ -14,6 +14,7 @@ import java.util.logging.Logger;
  * @author Alexey
  */
 public abstract class Admin {
+
     /**
      * Данный класс реализует метод {@link  Runnable}
      * для разбора пришедших сообщений
@@ -40,9 +41,14 @@ public abstract class Admin {
     
     private Thread _servTh, _gameTh, _mesTh;
     
-    private ArrayList<String> _messagesNames;
+    private ArrayList<String> _reservedClientNames;
+    private MultipleServPlayer _servPlayers;
+    
+    protected ArrayList<String> _messagesNames;
+    protected ArrayList<String> _adminMessageNames;
     
     private ArrayList<MessageHandler> _messageHandlers;
+    private ArrayList<MessageHandler> _adminMessageHandler;
     
     /**
      * Экземпляр класса {@link Dealer}, который используется для игры
@@ -53,17 +59,26 @@ public abstract class Admin {
      * Конструктор класса. Инициализирует переменные.
      */
     public Admin(Dealer d) {
-        _messagesNames = new ArrayList<String>(java.util.Arrays.asList(new String[] {"exit"}));
+        fillMessageNames();
         _messageHandlers = new ArrayList<MessageHandler>();
         for (String mName : _messagesNames)
             _messageHandlers.add(new MessageHandler(this, "onMessageHandler_", mName));
+        _adminMessageHandler = new ArrayList<MessageHandler>();
+        for (String mName : _adminMessageNames)
+            _adminMessageHandler.add(new MessageHandler(this, "onAdminMessageHandler", mName));
         _dealer = d;
         for (String mName : _dealer.getMessageNames())
             _messageHandlers.add(new MessageHandler(_dealer, "onMessageHandler_", mName));
         _messageQueue = new MessageQueue();
-        _server = new Server(this);
+        _reservedClientNames = new ArrayList<String>();
+        _servPlayers = new MultipleServPlayer(this);
+        _server = new SocketServer(this);
         _servTh = new Thread(_server);
         _servTh.setName("Server thread");
+    }
+    
+    public void addClient(ServPlayer sp) {
+        _servPlayers.AddPlayer(sp);
     }
     
     /**
@@ -73,15 +88,28 @@ public abstract class Admin {
         _servTh.start();
     }
     
+    private void fillMessageNames() {
+        String messages[] = {"exit", "admin"};
+        String adminMessages[] = {};
+        _messagesNames = new ArrayList<String>();
+        _messagesNames.addAll(java.util.Arrays.asList(messages));
+        _adminMessageNames = new ArrayList<String>();
+        _adminMessageNames.addAll(java.util.Arrays.asList(adminMessages));
+        fillAdditionalMessageNames();
+    }
+    
+    public void fillAdditionalMessageNames() {
+    }
+    
     /**
      * Возвращает список игроков, которые подключены к серверу
      * @return Список имён игроков
      */
     public LinkedList<String> getPlayerList() {
         LinkedList<String> ans = new LinkedList<String>();
-        for(ServPlayer tmpPl : _server.players)
+        for(ServPlayer tmpPl : _servPlayers.getPlayers())
         {
-            ans.add(tmpPl.name);
+            ans.add(tmpPl.getName());
         }
         return ans;
     }
@@ -95,7 +123,9 @@ public abstract class Admin {
      * @param player Пороверяемый клиент
      * @return возвращает true, если игрок может принять участие, иначе false
      */
-    public abstract Boolean isPlayerOK(ServPlayer player);
+    public boolean isPlayerOK(ServPlayer player) {
+        return _dealer.checkPlayer(player.move("check/"));
+    }
     
     /**
      * Метод по разбору одного сообщение
@@ -105,7 +135,8 @@ public abstract class Admin {
         if (m == null || m.getMessage() == null || m.getMessage().isEmpty())
             return;
         for (MessageHandler mh : _messageHandlers)
-            mh.tryParseMessage(m);
+            if (mh.tryParseMessage(m))
+                break;
     }
     
     /**
@@ -119,28 +150,34 @@ public abstract class Admin {
     /**
      * Список игроков, зарезервированных на игру
      */
-    protected LinkedList<ServPlayer> _reservedPlayers = new LinkedList<ServPlayer>();
+    private ArrayList<ServPlayer> _reservedPlayers = new ArrayList<ServPlayer>();
+    /**
+     * @return the _reservedPlayers
+     */
+    public ArrayList<ServPlayer> getReservedPlayers() {
+        return _reservedPlayers;
+    }
     /**
      * Получение имён игроков, зарезервированных на игру
      * @return список имён игроков
      */
-    public LinkedList<String> getReservedPlayerList()
+    /*public LinkedList<String> getReservedPlayerList()
     {
         LinkedList<String> ans = new LinkedList<String>();
-        for (ServPlayer sp : _reservedPlayers)
+        for (ServPlayer sp : getReservedPlayers())
             ans.add(sp.name);
         return ans;
-    }
+    }*/
     /**
      * Резервирование игрока
      * @param player игрок, который резервируется
      * @return возвращает true, если игрок может принять участие и ещё не содержится в списке зарезервированных игроков, иначе false
      */
-    public Boolean addPlayer(ServPlayer player)
+    public boolean addPlayer(ServPlayer player)
     {
-        if (isPlayerOK(player))
-            if (_reservedPlayers.indexOf(player) == -1)
-                _reservedPlayers.add(player);
+        if (getReservedPlayers().indexOf(player) == -1)
+            if (isPlayerOK(player))
+                getReservedPlayers().add(player);
             else
                 return false;
         else
@@ -152,27 +189,27 @@ public abstract class Admin {
      * @param index индекс игрока
      * @return аналогично {@link addPlayer(ServPlayer player)}
      */
-    public Boolean addPlayer(int index)
+    public boolean addPlayer(int index)
     {
-        return addPlayer(_server.players.get(index));
+        return addPlayer(_servPlayers.getPlayers().get(index));
     }
     /**
      * Удаления игрока из списка зарезервированных
      * @param player игрок для удаления
      * @return возвращает true, если игрок успешно удалён
      */
-    public Boolean removePlayer(ServPlayer player)
+    public boolean removePlayer(ServPlayer player)
     {
-        return _reservedPlayers.remove(player);
+        return getReservedPlayers().remove(player);
     }
     /**
      * Удаление игрока из списка зарезервированных по индексу
      * @param index индекс игрока
      * @return возвращает true, если игрок успешно удалён
      */
-    public Boolean removePlayer(int index)
+    public boolean removePlayer(int index)
     {
-        return removePlayer(_reservedPlayers.get(index));
+        return removePlayer(getReservedPlayers().get(index));
     }
     /**
      * Начало игры.
@@ -180,7 +217,7 @@ public abstract class Admin {
      */
     public void startGame()
     {
-        for (ServPlayer p : _reservedPlayers)
+        for (ServPlayer p : getReservedPlayers())
             _dealer.players.add(new GamePlayer(p));
         _dealer.initGame();
         _gameTh = new Thread(_dealer);
@@ -227,6 +264,19 @@ public abstract class Admin {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
+        return true;
+    }
+    
+    public boolean reserveName(String name) {
+        ArrayList<String> allNames = new ArrayList<String>();
+        for (ServPlayer sp : _servPlayers.getPlayers()) {
+            allNames.add(sp.getName());
+        }
+        _reservedClientNames.removeAll(allNames);
+        allNames.addAll(_reservedClientNames);
+        if (allNames.contains(name))
+            return false;
+        _reservedClientNames.add(name);
         return true;
     }
 }
