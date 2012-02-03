@@ -43,7 +43,7 @@ public class MultipleServPlayer extends ServPlayer {
         return _players;
     }
     
-    public void AddPlayer(ServPlayer p) {
+    public void addPlayer(ServPlayer p) {
         pauseAdding();
         getPlayers().add(p);
         continueAdding();
@@ -53,6 +53,10 @@ public class MultipleServPlayer extends ServPlayer {
         pauseAdding();
         getPlayers().remove(p);
         continueAdding();
+    }
+    
+    public boolean contains(ServPlayer p) {
+        return getPlayers().contains(p);
     }
     
     private void pauseAdding() {

@@ -4,6 +4,8 @@
  */
 package netCardInterfaces;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Andrew
@@ -23,9 +25,15 @@ public abstract class Player {
     private String name;
     private Client client;
     protected Thread thGame;
+    protected ArrayList<String> _messageNames;
+    private ArrayList<MessageHandler> _messageHandlers;
     
     public Player(Client c) {
         client = c;
+        fillMessageNames();
+        _messageHandlers = new ArrayList<MessageHandler>();
+        for (String mName : _messageNames)
+            _messageHandlers.add(new MessageHandler(this, "onMessageHandler_", mName));
     }
     
     /**
@@ -57,34 +65,12 @@ public abstract class Player {
     }
     
     /**
-     * Осуществляет соединение по IP-адресу, порту 
-     * и начинает игру
-     * @param address
-     * @param port
-     * @throws Exception 
+     * 
      */
-    public void startGame(byte address[], int port) throws Exception {
-        String addr = "";
-        for (int i = 0; i < address.length; i++)
-        {
-            addr = addr.concat(String.valueOf(address[i]));
-            if (i != address.length - 1)
-                addr = addr.concat(".");
-        }
-        if (client.tryConnectTo(addr, port)) 
-            runGameLoop();
-        else
-            throw new Exception("Ошибка при подключении");
-    }
-    public void startGame(String address, int port) throws Exception {
-        if (client == null)
-            throw new Exception("Не создано подключение");
-        if (address == null)
-            runGameLoop();
-        if (client.tryConnectTo(address, port))
-            runGameLoop();
-        else
-            throw new Exception("Ошибка при подключении");
+    public void startGame() {
+        if (client == null || !client.isConnected())
+            return;
+        runGameLoop();
     }
 
     /**
@@ -100,7 +86,24 @@ public abstract class Player {
      * Разбирает принятые сообщения
      * @param mesg 
      */
-    public abstract void parseAllString(String mesg);
+    public void parseAllString(String bigMesg) {
+        System.out.println(bigMesg);
+        String delim = "\n";
+        String[] data = bigMesg.split(delim);
+        for (String s : data)
+            parseMessage(s);
+        /*
+        if (gameInterface != null) {
+            gameInterface.drawAll();
+        }*/
+    }
+    
+    public void parseMessage(String s) {
+        Message m = new Message(null, s);
+        for (MessageHandler mh : _messageHandlers)
+            if (mh.tryParseMessage(m))
+                break;
+    }
     
     /**
      * Отправка сообщения на сервер
@@ -108,5 +111,16 @@ public abstract class Player {
      */
     public void send(String mesg) {
         client.write(mesg);
+    }
+    
+    private void fillMessageNames() {
+        String messages[] = new String[] {};
+        _messageNames = new ArrayList<String>();
+        _messageNames.addAll(java.util.Arrays.asList(messages));
+        fillAdditionalMessageNames();
+    }
+    
+    protected void fillAdditionalMessageNames() {
+        
     }
 }

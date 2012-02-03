@@ -51,6 +51,11 @@ public abstract class Admin {
     private ArrayList<MessageHandler> _adminMessageHandler;
     
     /**
+     * Список игроков, зарезервированных на игру
+     */
+    private MultipleServPlayer _reservedPlayers;
+    
+    /**
      * Экземпляр класса {@link Dealer}, который используется для игры
      */
     protected Dealer _dealer;
@@ -65,12 +70,13 @@ public abstract class Admin {
             _messageHandlers.add(new MessageHandler(this, "onMessageHandler_", mName));
         _adminMessageHandler = new ArrayList<MessageHandler>();
         for (String mName : _adminMessageNames)
-            _adminMessageHandler.add(new MessageHandler(this, "onAdminMessageHandler", mName));
+            _adminMessageHandler.add(new MessageHandler(this, "onAdminMessageHandler_", mName));
         _dealer = d;
         for (String mName : _dealer.getMessageNames())
             _messageHandlers.add(new MessageHandler(_dealer, "onMessageHandler_", mName));
         _messageQueue = new MessageQueue();
         _reservedClientNames = new ArrayList<String>();
+        _reservedPlayers = new MultipleServPlayer(this);
         _servPlayers = new MultipleServPlayer(this);
         _server = new SocketServer(this);
         _servTh = new Thread(_server);
@@ -78,7 +84,7 @@ public abstract class Admin {
     }
     
     public void addClient(ServPlayer sp) {
-        _servPlayers.AddPlayer(sp);
+        _servPlayers.addPlayer(sp);
     }
     
     /**
@@ -89,8 +95,8 @@ public abstract class Admin {
     }
     
     private void fillMessageNames() {
-        String messages[] = {"exit", "admin"};
-        String adminMessages[] = {};
+        String messages[] = {"exit", "admin", "mesg"};
+        String adminMessages[] = {"add", "kick", "dealer", "start"};
         _messagesNames = new ArrayList<String>();
         _messagesNames.addAll(java.util.Arrays.asList(messages));
         _adminMessageNames = new ArrayList<String>();
@@ -147,15 +153,12 @@ public abstract class Admin {
      * Метод, который вызывается при изменении списка игроков
      */
     public abstract void playersChanged();
-    /**
-     * Список игроков, зарезервированных на игру
-     */
-    private ArrayList<ServPlayer> _reservedPlayers = new ArrayList<ServPlayer>();
+    
     /**
      * @return the _reservedPlayers
      */
     public ArrayList<ServPlayer> getReservedPlayers() {
-        return _reservedPlayers;
+        return _reservedPlayers.getPlayers();
     }
     /**
      * Получение имён игроков, зарезервированных на игру
@@ -175,9 +178,9 @@ public abstract class Admin {
      */
     public boolean addPlayer(ServPlayer player)
     {
-        if (getReservedPlayers().indexOf(player) == -1)
+        if (!_reservedPlayers.contains(player))
             if (isPlayerOK(player))
-                getReservedPlayers().add(player);
+                _reservedPlayers.addPlayer(player);
             else
                 return false;
         else
