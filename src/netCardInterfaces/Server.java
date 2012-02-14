@@ -4,14 +4,6 @@
  */
 package netCardInterfaces;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.LinkedList;
-import java.util.concurrent.Semaphore;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * Класс, принимающий запросы на подключение
  * @author Alexey

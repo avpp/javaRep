@@ -10,4 +10,5 @@ package netCardInterfaces;
  */
 public interface ICardSource {
     Card fetchCard(Card card, CardCoordinate coordinate);
+    int getCurrentAmount();
 }

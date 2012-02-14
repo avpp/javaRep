@@ -4,6 +4,7 @@
  */
 package netCardInterfaces;
 
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,12 +14,43 @@ import java.util.logging.Logger;
  * @author Alexey
  */
 public abstract class ServPlayer {
+    private class AnsweredMessage {
+        private String _answer;
+        private String _sendingMessageName;
+        private Semaphore _sem;
+        private boolean _wait;
+        public AnsweredMessage(String message) {
+            _sendingMessageName = message.split("/")[0];
+            _wait = true;
+            _sem = new Semaphore(0);
+            sendMessage(message);
+        }
+        public String getAnswer() {
+            if (!_wait)
+                return null;
+            try {
+                _sem.acquire();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            _wait = false;
+            return _answer;
+        }
+        public boolean setAnswer(String answer) {
+            if (!_wait || answer == null || !answer.split("/")[0].equals(_sendingMessageName))
+                return false;
+            _answer = answer;
+            _sem.release();
+            return true;
+        }
+    }
 
     private static int _lastNumber = -1;
+    private int _id;
     private String _name;
 //    public LinkedList<Card> cards;
-    private String answer;
-    private Semaphore sem;
+    private ArrayList<AnsweredMessage> _answers;
+    private Semaphore _sem;
     protected Admin myAdmin;
     private GamePlayer gp;
     /**
@@ -31,9 +63,10 @@ public abstract class ServPlayer {
     {
         myAdmin = admin;
         gp = null;
-        while (setName("Player".concat(String.valueOf(++_lastNumber))));
+        while (!setName("Player".concat(String.valueOf(_id = ++_lastNumber))));
         sendMessage("name/");
-        sem = new Semaphore(0);
+        _answers = new ArrayList<AnsweredMessage>();
+        _sem = new Semaphore(1);
     }
     /**
      * Связь даного экземпляра с экземпляром класса {@link GamePlayer}
@@ -51,46 +84,57 @@ public abstract class ServPlayer {
     {
         return gp;
     }
-    
-    Boolean mayMakeTurn = true;
     /**
      * Установка ответа на запрос хода
      * @param s текст ответа
      */
-    public synchronized void setAnswer(String s)
-    {
-        if (sem.availablePermits() != 0 || !mayMakeTurn)
-            return;
-        answer = s;
-        sem.release();
-    }
-    /**
-     * получение ответа на запрос хода
-     * @return текст ответа
-     */
-    protected String getAnswer()
-    {
+    public void setAnswer(String s) {
         try {
-            sem.acquire();
+            _sem.acquire();
         } catch (InterruptedException ex) {
             Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return answer;
+        int i = 0;
+        while (!_answers.get(i++).setAnswer(s));
+        _sem.release();
     }
+    public void setAllAnswers(String s) {
+        try {
+            _sem.acquire();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (int i = 0; i < _answers.size(); i++)
+            _answers.get(i).setAnswer(s);
+        _sem.release();
+    }
+    
     /**
-     * Запрос хода. Посылает сообщение с текущей игровой ситуацией и ожидает ответа на это сообщение
-     * @param situation игровая ситуация
+     * Метод, возвращающий ответ на данное сообщение
+     * @param message сообщение, передаваемое клиенту
      * @return ответ на запрос
      */
-    public String move(String situation)
+    public String sendAndWaitAnswer(String message)
     {
-        String ans = "";
-        sendMessage(situation);
-        mayMakeTurn = true;
-        ans = getAnswer();
-        mayMakeTurn = false;
-        return ans;
+        try {
+            _sem.acquire();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        AnsweredMessage am = new AnsweredMessage(message);
+        _answers.add(am);
+        _sem.release();
+        String answer = am.getAnswer();
+        try {
+            _sem.acquire();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        _answers.remove(am);
+        _sem.release();
+        return answer;
     }
+    
     /**
      * Добавление сообщения, пришедшего от имени этого игрока в список обработки сообщений администратора
      * @param message 

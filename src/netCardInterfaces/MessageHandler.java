@@ -44,4 +44,8 @@ public class MessageHandler {
         }
         return false;
     }
+    
+    public boolean isHandler(Object o) {
+        return o != null && o.equals(_object);
+    }
 }

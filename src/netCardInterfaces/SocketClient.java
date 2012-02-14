@@ -89,7 +89,7 @@ public class SocketClient extends Client{
     }
     
     @Override
-    protected boolean isConnected() {
+    public boolean isConnected() {
         return s.isConnected();
     }
 }

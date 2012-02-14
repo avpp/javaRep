@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * Клиентская часть
  * @author Andrew
  */
-public abstract class Client {
+public abstract class Client implements IClient {
     
     private Semaphore sem;
     /**
@@ -43,6 +43,7 @@ public abstract class Client {
      * Чтение текущего сообщения. Если нет сообщений, то метод ожидает его
      * @return сообщение
      */
+    @Override
     public String read()
     {
         String ans = "";
@@ -59,6 +60,7 @@ public abstract class Client {
      * Отправление сообщения
      * @param str сообщеие
      */
+    @Override
     public void write(String str)
     {
         str = str.concat("@");
@@ -66,5 +68,4 @@ public abstract class Client {
     }
     
     protected abstract void send(String str);
-    protected abstract boolean isConnected();
 }

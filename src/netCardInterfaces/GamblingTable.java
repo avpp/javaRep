@@ -193,4 +193,9 @@ public class GamblingTable implements ICardSource, ICardDestination {
                       coordinate.getCoordinates()[1], 
                       coordinate.getCoordinates()[2]);
     }
+
+    @Override
+    public int getCurrentAmount() {
+        return getAllCards().size();
+    }
 }

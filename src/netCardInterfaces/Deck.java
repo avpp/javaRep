@@ -12,7 +12,7 @@ import java.util.Random;
  * Для конкретной игры требуется реализовать свою колоду
  * @author Alexey
  */
-public abstract class Deck implements IDeck, ICardSource{
+public abstract class Deck implements IDeck{
     /**
      * перечисление SideType представляет две стороны для доступа к колоде
      * top =  сверху

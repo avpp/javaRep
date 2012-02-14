@@ -93,6 +93,23 @@ public class WinTable {
         for (i = 0; i < records.size() && !records.get(i).getPlayer().equals(p); i++);
         return records.get(i).getScore();
     }
+    
+    public int indexOf(GamePlayer p) {
+        for (rec r : records) {
+            if (r.getPlayer().equals(p))
+                return records.indexOf(r);
+        }
+        return -1;
+    }
+    public String valueToString() {
+        String ans = "";
+        for(rec r : records)
+        {
+            ans = ans.concat(r.getPlayer().getName()).concat(",").concat(String.valueOf(r.getPlayer().getCurrentAmount())).concat(",");
+        }
+        return ans;
+    }
+    
     /**
      * Перевод таблицы в строковое представление (формат: wint/<Имя_игрока>,<Имя_игрока>,...
      * @return строковое представление таблицы (перечисление всех игроков в порядке выхода изигры)

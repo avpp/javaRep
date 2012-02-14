@@ -27,7 +27,7 @@ public abstract class Dealer implements Runnable {
     /**
      * Колода карт, используемая в данной игре
      */
-    public Deck deck;
+    public Deck _deck;
     
     /**
      * История игровых столов данной игры
@@ -37,7 +37,7 @@ public abstract class Dealer implements Runnable {
     /**
      * Администратор, который заведует взаимодействием между игроками
      */
-    protected Admin admin;
+    protected Admin _admin;
     
     protected ArrayList<String> _messageNames;
     
@@ -48,20 +48,19 @@ public abstract class Dealer implements Runnable {
     /**
      * Конструктор, который создаёт диллера
      * @param deck Колода, используемая в данной игре
-     * @param admin Администратор, заведующий данной игрой
+     * @param _admin Администратор, заведующий данной игрой
      */
-    public Dealer(Deck deck, Admin admin)
+    public Dealer(Admin admin)
     {
         fillMessageNames();
-        this.admin = admin;
-        this.deck = deck;
+        this._admin = admin;
         players = new LinkedList<GamePlayer>();
         history = new History();
         wtable = new WinTable();
     }
     
     private void fillMessageNames() {
-        String names[] = new String [] {};
+        String names[] = new String [] {"lspl", "deck", "gamt"};
         _messageNames = new ArrayList<String>(java.util.Arrays.asList(names));
         fillAdditionalMessageNames();
     }
@@ -69,28 +68,47 @@ public abstract class Dealer implements Runnable {
     protected void fillAdditionalMessageNames() {
     }
     
+// <editor-fold desc="Message handlers">
+    public void onMessageHandler_lspl(Message m) {
+        GamePlayer gp = m.getSource().getGamePlayer();
+        int num = -1;
+        if (gp != null) {
+            num = players.indexOf(gp);
+        }
+        String answer = "lspl/".concat(String.valueOf(num)).concat("/");
+        for (GamePlayer g : players) {
+            answer = answer.concat(g.getName()).concat(",").concat(String.valueOf(g.getCurrentAmount())).concat(",");
+        }
+        answer = answer.concat("\nwint/");
+        if (gp != null) {
+            num = wtable.indexOf(gp);
+        }
+        answer = answer.concat(String.valueOf(num)).concat(wtable.valueToString());
+        m.getSource().sendMessage(answer);
+    }
+    public void onMessageHandler_deck(Message m) {
+        if (_deck == null)
+            return;
+        m.getSource().sendMessage(_deck.toString());
+    }
+    public void onMessageHandler_gamt(Message m) {
+        if (history == null)
+            return;
+        m.getSource().sendMessage(history.getLastTable().toString());
+    }
+// </editor-fold>
+    public abstract String getOptions();
+    public abstract void setOptions(String options);
     public abstract boolean checkPlayer(String s);
     
-    /**
-     * Абстрактный метод, который должен проверять колоду на пригодность к данной игре
-     * @param d колода
-     * @return Возвращает true, если колода пригодна для игры
-     */
-    public abstract Boolean checkDeck(Deck d);
-    /**
-     * Абстрактный метод, который инициализирует игру
-     * @return Возвращает true, если инициализация прошла хорошо и можно начинать игру, иначе false
-     */
-    public abstract Boolean initGame();
-    /**
-     * Тоже самое, что и {@link initGame()}, только с возможностью задать новую колоду
-     * @param deck новая колода
-     */
-    public void initGame(Deck deck)
-    {
-        this.deck = deck;
-        initGame();
+    protected abstract Deck initDeck();
+    protected abstract boolean preparationGame();
+    
+    public boolean initGame() {
+        _deck = initDeck();
+        return preparationGame();
     }
+    
     /**
      * метод проведения самой игры. Именно в нём реализуется логика игры
      */

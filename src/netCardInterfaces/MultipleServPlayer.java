@@ -13,27 +13,19 @@ import java.util.logging.Logger;
  *
  * @author Alexey
  */
-public class MultipleServPlayer extends ServPlayer {
+public class MultipleServPlayer {
 
     private ArrayList<ServPlayer> _players;
     private Semaphore _addingSem;
     
-    public MultipleServPlayer(Admin admin) {
-        super(admin);
+    public MultipleServPlayer() {
         _players = new ArrayList<ServPlayer>();
         _addingSem = new Semaphore(1);
     }
     
-    @Override
-    public void sendMessage(String message) {
+    public void sendMessageToAll(String message) {
         for (ServPlayer sp : getPlayers())
             sp.sendMessage(message);
-    }
-    
-    @Override
-    public String getAnswer() {
-        setAnswer("");
-        return super.getAnswer();
     }
 
     /**
@@ -49,14 +41,24 @@ public class MultipleServPlayer extends ServPlayer {
         continueAdding();
     }
     
-    public void removePlayer(ServPlayer p) {
+    public boolean removePlayer(ServPlayer p) {
         pauseAdding();
-        getPlayers().remove(p);
+        boolean answer = getPlayers().remove(p);
         continueAdding();
+        return answer;
     }
     
     public boolean contains(ServPlayer p) {
         return getPlayers().contains(p);
+    }
+    
+    public ServPlayer findByName(String name) {
+        ServPlayer sp = null;
+        for (int i = 0; i < getPlayers().size() && sp == null; i++) {
+            if (getPlayers().get(i).getName().equals(name))
+                sp = getPlayers().get(i);
+        }
+        return sp;
     }
     
     private void pauseAdding() {

@@ -8,8 +8,8 @@ package netCardInterfaces;
  *
  * @author Alexey
  */
-public interface IDeck extends ICardSource{
-    public int getMaxAmount();
-    public void fromInfo(String info);
-    public String getInfo();
+public interface IClient {
+    public String read();
+    public void write(String str);
+    public boolean isConnected();
 }

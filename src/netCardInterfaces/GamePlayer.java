@@ -17,7 +17,9 @@ public class GamePlayer implements ICardSource, ICardDestination{
     /**
      * имя данного игрока
      */
-    public String getName();
+    public String getName() {
+        return p.getName();
+    }
     
     private ServPlayer p;
     
@@ -29,7 +31,6 @@ public class GamePlayer implements ICardSource, ICardDestination{
     {
         p = pl;
         p.setGamePlayer(this);
-        name = pl.name;
         cards = new CardHeap();
     }
     
@@ -41,7 +42,7 @@ public class GamePlayer implements ICardSource, ICardDestination{
      */
     public String move(String s)
     {
-        return p.move(s);
+        return p.sendAndWaitAnswer(s);
     }
     
     /**
@@ -93,5 +94,10 @@ public class GamePlayer implements ICardSource, ICardDestination{
             }
         }
         return new CardCoordinate(new int[] {cards.getCards().indexOf(fcard)});
+    }
+
+    @Override
+    public int getCurrentAmount() {
+        return cards.getCards().size();
     }
 }
