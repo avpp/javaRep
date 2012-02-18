@@ -9,6 +9,7 @@ package netCardInterfaces;
  * @author Alexey
  */
 public interface GameInterface {
-    void drawDeck(IDeck d, Card trump);
+    void drawDeck(IDeck d);
     void drawGamblTable(GamblingTable gt);
+    void drawPlayerCard(CardHeap ch);
 }

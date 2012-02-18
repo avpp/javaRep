@@ -21,6 +21,19 @@ public abstract class Player {
             }
         }
     }
+    
+    private class AnsweredMessagePlayer extends AnsweredMessage {
+        
+        public AnsweredMessagePlayer(String message) {
+            super(message);
+        }
+
+        @Override
+        protected void sendNext(String message) {
+            parseMessage(name);
+        }
+        
+    }
 
     private String name;
     private Client client;
@@ -28,12 +41,15 @@ public abstract class Player {
     protected ArrayList<String> _messageNames;
     private ArrayList<MessageHandler> _messageHandlers;
     
+    private AnsweredMessageList _answeredMessage;
+    
     public Player(Client c) {
         client = c;
         fillMessageNames();
         _messageHandlers = new ArrayList<MessageHandler>();
         for (String mName : _messageNames)
             _messageHandlers.add(new MessageHandler(this, "onMessageHandler_", mName));
+        _answeredMessage = new AnsweredMessageList();
     }
     
     /**
@@ -110,11 +126,12 @@ public abstract class Player {
      * @param mesg 
      */
     public void send(String mesg) {
-        client.write(mesg);
+        if (!_answeredMessage.setAnswer(mesg))
+            client.write(mesg);
     }
     
     private void fillMessageNames() {
-        String messages[] = new String[] {};
+        String messages[] = new String[] {"answered"};
         _messageNames = new ArrayList<String>();
         _messageNames.addAll(java.util.Arrays.asList(messages));
         fillAdditionalMessageNames();
@@ -123,4 +140,10 @@ public abstract class Player {
     protected void fillAdditionalMessageNames() {
         
     }
+    
+//<editor-fold desc="Message handlers">
+    public void onMessageHandler_answered(Message m) {
+        send("answer/".concat(_answeredMessage.addNew(new AnsweredMessagePlayer(m.getMessage())).getAnswer()));
+    }
+//</editor-fold>
 }

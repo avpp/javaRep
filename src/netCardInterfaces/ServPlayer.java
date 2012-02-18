@@ -14,43 +14,24 @@ import java.util.logging.Logger;
  * @author Alexey
  */
 public abstract class ServPlayer {
-    private class AnsweredMessage {
-        private String _answer;
-        private String _sendingMessageName;
-        private Semaphore _sem;
-        private boolean _wait;
-        public AnsweredMessage(String message) {
-            _sendingMessageName = message.split("/")[0];
-            _wait = true;
-            _sem = new Semaphore(0);
-            sendMessage(message);
+    private class AnsweredMessageServPlayer extends AnsweredMessage {
+        
+        public AnsweredMessageServPlayer(String message) {
+            super(message);
         }
-        public String getAnswer() {
-            if (!_wait)
-                return null;
-            try {
-                _sem.acquire();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            _wait = false;
-            return _answer;
+
+        @Override
+        protected void sendNext(String message) {
+            sendMessage("answered/".concat(message));
         }
-        public boolean setAnswer(String answer) {
-            if (!_wait || answer == null || !answer.split("/")[0].equals(_sendingMessageName))
-                return false;
-            _answer = answer;
-            _sem.release();
-            return true;
-        }
+        
     }
 
     private static int _lastNumber = -1;
     private int _id;
     private String _name;
 //    public LinkedList<Card> cards;
-    private ArrayList<AnsweredMessage> _answers;
-    private Semaphore _sem;
+    private AnsweredMessageList _answers;
     protected Admin myAdmin;
     private GamePlayer gp;
     /**
@@ -65,8 +46,7 @@ public abstract class ServPlayer {
         gp = null;
         while (!setName("Player".concat(String.valueOf(_id = ++_lastNumber))));
         sendMessage("name/");
-        _answers = new ArrayList<AnsweredMessage>();
-        _sem = new Semaphore(1);
+        _answers = new AnsweredMessageList();
     }
     /**
      * Связь даного экземпляра с экземпляром класса {@link GamePlayer}
@@ -89,24 +69,10 @@ public abstract class ServPlayer {
      * @param s текст ответа
      */
     public void setAnswer(String s) {
-        try {
-            _sem.acquire();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        int i = 0;
-        while (!_answers.get(i++).setAnswer(s));
-        _sem.release();
+        _answers.setAnswer(s);
     }
     public void setAllAnswers(String s) {
-        try {
-            _sem.acquire();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        for (int i = 0; i < _answers.size(); i++)
-            _answers.get(i).setAnswer(s);
-        _sem.release();
+        _answers.setAllAnswers(s);
     }
     
     /**
@@ -116,23 +82,7 @@ public abstract class ServPlayer {
      */
     public String sendAndWaitAnswer(String message)
     {
-        try {
-            _sem.acquire();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        AnsweredMessage am = new AnsweredMessage(message);
-        _answers.add(am);
-        _sem.release();
-        String answer = am.getAnswer();
-        try {
-            _sem.acquire();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ServPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        _answers.remove(am);
-        _sem.release();
-        return answer;
+        return _answers.addNew(new AnsweredMessageServPlayer(message)).getAnswer();
     }
     
     /**
