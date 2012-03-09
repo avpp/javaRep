@@ -4,6 +4,7 @@
  */
 package netCardInterfaces;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -17,7 +18,7 @@ public abstract class Dealer implements Runnable {
     /**
      * Список игроков, участвующих в игре
      */
-    public LinkedList<GamePlayer> players;
+    public LinkedList<InGamePlayer> players;
     
     /**
      * Таблица победителей в данной игре
@@ -39,10 +40,14 @@ public abstract class Dealer implements Runnable {
      */
     protected Admin _admin;
     
-    protected ArrayList<String> _messageNames;
-    
-    public ArrayList<String> getMessageNames() {
-        return _messageNames;
+    public LinkedList<String> getDeclaredMessageNames(String prefix) {
+        LinkedList<String> answer = new LinkedList<String>();
+        for (Method m : this.getClass().getMethods()) {
+            Class<?> params[] = m.getParameterTypes();                    
+            if (params.length == 1 && params[0].equals(Message.class) && m.getName().startsWith(prefix))
+                answer.add(m.getName().replace(prefix, ""));
+        }
+        return answer;
     }
     
     /**
@@ -52,31 +57,21 @@ public abstract class Dealer implements Runnable {
      */
     public Dealer(Admin admin)
     {
-        fillMessageNames();
         this._admin = admin;
-        players = new LinkedList<GamePlayer>();
+        players = new LinkedList<InGamePlayer>();
         history = new History();
         wtable = new WinTable();
     }
     
-    private void fillMessageNames() {
-        String names[] = new String [] {"lspl", "deck", "gamt"};
-        _messageNames = new ArrayList<String>(java.util.Arrays.asList(names));
-        fillAdditionalMessageNames();
-    }
-    
-    protected void fillAdditionalMessageNames() {
-    }
-    
 // <editor-fold desc="Message handlers">
     public void onMessageHandler_lspl(Message m) {
-        GamePlayer gp = m.getSource().getGamePlayer();
+        InGamePlayer gp = m.getSource().getGamePlayer();
         int num = -1;
         if (gp != null) {
             num = players.indexOf(gp);
         }
         String answer = "lspl/".concat(String.valueOf(num)).concat("/");
-        for (GamePlayer g : players) {
+        for (InGamePlayer g : players) {
             answer = answer.concat(g.getName()).concat(",").concat(String.valueOf(g.getCurrentAmount())).concat(",");
         }
         answer = answer.concat("\nwint/");
@@ -84,17 +79,17 @@ public abstract class Dealer implements Runnable {
             num = wtable.indexOf(gp);
         }
         answer = answer.concat(String.valueOf(num)).concat(wtable.valueToString());
-        m.getSource().sendMessage(answer);
+        m.getSource().sendMessage(new NetPack(answer));
     }
     public void onMessageHandler_deck(Message m) {
         if (_deck == null)
             return;
-        m.getSource().sendMessage(_deck.toString());
+        m.getSource().sendMessage(new NetPack(_deck.toString()));
     }
     public void onMessageHandler_gamt(Message m) {
         if (history == null)
             return;
-        m.getSource().sendMessage(history.getLastTable().toString());
+        m.getSource().sendMessage(new NetPack(history.getLastTable().toString()));
     }
 // </editor-fold>
     public abstract String getOptions();

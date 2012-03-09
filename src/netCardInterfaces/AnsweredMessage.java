@@ -17,12 +17,25 @@ public abstract class AnsweredMessage {
     private String _sendingMessageName;
     private Semaphore _semAns;
     private boolean _wait;
-    public AnsweredMessage(String message) {
-        _sendingMessageName = message.split("/")[0];
+    public AnsweredMessage(NetPack pack) {
+        String message = "";
+        NetPack newPack = new NetPack();
+        if (!pack.isEmpty()) {
+            do {
+                message = pack.getMessage();
+                if (pack.isEmpty())
+                    message = "answered/".concat(message);
+                newPack.addMessage(message);
+            } while(!pack.isEmpty());
+        }
+        String arr[] = message.split("/");
+        if (arr.length < 2)
+            return;
+        _sendingMessageName = arr[1];
         _wait = true;
         _semAns = new Semaphore(0);
         //sendMessage("answered/".concat(message));
-        sendNext(message);
+        sendNext(newPack.toString().replace("@", ""));
     }
     public String getAnswer() {
         if (!_wait)

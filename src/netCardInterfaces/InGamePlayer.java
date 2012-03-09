@@ -8,7 +8,7 @@ package netCardInterfaces;
  * Экземпляр данного класса представляет игрока в игре
  * @author Alexey
  */
-public class GamePlayer implements ICardSource, ICardDestination{
+public class InGamePlayer implements ICardSource, ICardDestination{
     /**
      * Набор карт данного игрока
      */
@@ -27,7 +27,7 @@ public class GamePlayer implements ICardSource, ICardDestination{
      * Конструктор данного класса связывает текущий объект с объектом класса {@link ServPlayer}
      * @param pl объект класса {@link ServPlayer}, с которым необходимо связать данный объект
      */
-    public GamePlayer(ServPlayer pl)
+    public InGamePlayer(ServPlayer pl)
     {
         p = pl;
         p.setGamePlayer(this);
@@ -40,9 +40,9 @@ public class GamePlayer implements ICardSource, ICardDestination{
      * @param s игровая ситуация
      * @return ответ игрока
      */
-    public String move(String s)
+    public String move(NetPack pack, String s)
     {
-        return p.sendAndWaitAnswer(s);
+        return p.sendAndWaitAnswer(pack, s);
     }
     
     /**
@@ -65,7 +65,7 @@ public class GamePlayer implements ICardSource, ICardDestination{
      */
     public void sendCards()
     {
-        p.sendMessage(getCards());
+        p.sendMessage(new NetPack(getCards()));
     }
 
     @Override

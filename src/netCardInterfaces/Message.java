@@ -46,4 +46,8 @@ public class Message {
     public String getName() {
         return _name;
     }
+    
+    public String getFullMessage() {
+        return _name.concat("/").concat(_message);
+    }
 }

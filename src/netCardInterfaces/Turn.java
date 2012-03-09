@@ -16,13 +16,13 @@ public class Turn {
     /**
      * игрок, который кинул карту
      */
-    private GamePlayer player;
+    private InGamePlayer player;
     /**
      * Конструктор, который создаёт один ход
      * @param p - игрок, который походил
      * @param c - карта, которой игрок сделал ход
      */
-    public Turn (GamePlayer p, Card c)
+    public Turn (InGamePlayer p, Card c)
     {
         card = c;
         player = p;
@@ -39,7 +39,7 @@ public class Turn {
      * Возвращает игрока, который сделал данный ход
      * @return игрок
      */
-    public GamePlayer getPlayer()
+    public InGamePlayer getPlayer()
     {
         return player;
     }

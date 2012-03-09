@@ -61,10 +61,9 @@ public abstract class Client implements IClient {
      * @param str сообщеие
      */
     @Override
-    public void write(String str)
+    public void write(NetPack pack)
     {
-        str = str.concat("@");
-        send(str);
+        send(pack.toString());
     }
     
     protected abstract void send(String str);

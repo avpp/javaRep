@@ -5,6 +5,7 @@
 package netCardInterfaces;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -41,7 +42,7 @@ public abstract class Admin {
                 Thread th = new Thread(new GatheringOneMessage(m), "Gathering message ".concat(m.getName()));
                 th.start();
                 try {
-                    th.join(1);
+                    th.join(50);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -65,8 +66,9 @@ public abstract class Admin {
     private MultipleServPlayer _servPlayers;
     private MultipleServPlayer _adminRightsServPlayers;
     
-    protected ArrayList<String> _messagesNames;
-    protected ArrayList<String> _adminMessageNames;
+    private String _messageHandlerPrefix;
+    private String _adminMessageHandlerPrefix;
+    private String _dealerMessageHandlerPrefix;
     
     private ArrayList<MessageHandler> _messageHandlers;
     private ArrayList<MessageHandler> _adminMessageHandler;
@@ -86,13 +88,15 @@ public abstract class Admin {
      * Конструктор класса. Инициализирует переменные.
      */
     public Admin(ArrayList<AboutGame> games) {
-        fillMessageNames();
         _messageHandlers = new ArrayList<MessageHandler>();
-        for (String mName : _messagesNames)
-            _messageHandlers.add(new MessageHandler(this, "onMessageHandler_", mName));
+        _messageHandlerPrefix = "onMessageHandler_";
+        _adminMessageHandlerPrefix = "onAdminMessageHandler_";
+        _dealerMessageHandlerPrefix = "onMessageHandler_";
+        for (String mName : getDeclaredMessageNames(_messageHandlerPrefix))
+            _messageHandlers.add(new MessageHandler(this, _messageHandlerPrefix, mName));
         _adminMessageHandler = new ArrayList<MessageHandler>();
-        for (String mName : _adminMessageNames)
-            _adminMessageHandler.add(new MessageHandler(this, "onAdminMessageHandler_", mName));
+        for (String mName : getDeclaredMessageNames(_adminMessageHandlerPrefix))
+            _adminMessageHandler.add(new MessageHandler(this, _adminMessageHandlerPrefix, mName));
         _messageQueue = new MessageQueue();
         _reservedClientNames = new ArrayList<String>();
         _reservedPlayers = new MultipleServPlayer();
@@ -144,21 +148,19 @@ public abstract class Admin {
         }
         if (_dealer == null)
             return;
-        for (String mName : _dealer.getMessageNames())
-            _messageHandlers.add(new MessageHandler(_dealer, "onMessageHandler_", mName));
+        for (String mName : _dealer.getDeclaredMessageNames(_dealerMessageHandlerPrefix))
+            _messageHandlers.add(new MessageHandler(_dealer, _dealerMessageHandlerPrefix, mName));
     }
     
-    private void fillMessageNames() {
-        String messages[] = {"exit", "admin", "mesg", "cards", "answer"};
-        String adminMessages[] = {"add", "remove", "kick", "admin", "dlopt", "lsdl", "setdl", "start"};
-        _messagesNames = new ArrayList<String>();
-        _messagesNames.addAll(java.util.Arrays.asList(messages));
-        _adminMessageNames = new ArrayList<String>();
-        _adminMessageNames.addAll(java.util.Arrays.asList(adminMessages));
-        fillAdditionalMessageNames();
-    }
     
-    public void fillAdditionalMessageNames() {
+    public LinkedList<String> getDeclaredMessageNames(String prefix) {
+        LinkedList<String> answer = new LinkedList<String>();
+        for (Method m : this.getClass().getMethods()) {
+            Class<?> params[] = m.getParameterTypes();                    
+            if (params.length == 1 && params[0].equals(Message.class) && m.getName().startsWith(prefix))
+                answer.add(m.getName().replace(prefix, ""));
+        }
+        return answer;
     }
     
     /**
@@ -183,12 +185,12 @@ public abstract class Admin {
                 return;
             for (MessageHandler mh : _adminMessageHandler)
                 if (mh.tryParseMessage(m)) {
-                    m.getSource().sendMessage("admin/accept");
+                    m.getSource().sendMessage(new NetPack("admin/accept"));
                     break;
                 }
         }
         else {
-            m.getSource().sendMessage("admin/norights");
+            m.getSource().sendMessage(new NetPack("admin/norights"));
         }
     }
     
@@ -200,16 +202,16 @@ public abstract class Admin {
         if (sm.length > 1) {
             ServPlayer sp = _servPlayers.findByName(sm[0]);
             if (sp != null) {
-                sp.sendMessage(prefix.concat(m.getMessage().substring(sm[0].length() + 1)));
+                sp.sendMessage(new NetPack(prefix.concat(m.getMessage().substring(sm[0].length() + 1))));
                 return;
             }
         }
-        _servPlayers.sendMessageToAll(prefix.concat(m.getMessage()));
+        _servPlayers.sendMessageToAll(new NetPack(prefix.concat(m.getMessage())));
     }
     
     public void onMessageHandler_cards(Message m) {
         if (m.getSource().getGamePlayer() == null) {
-            m.getSource().sendMessage("your/");
+            m.getSource().sendMessage(new NetPack("your/"));
             return;
         }
         m.getSource().getGamePlayer().sendCards();
@@ -217,6 +219,10 @@ public abstract class Admin {
     
     public void onMessageHandler_answer(Message m) {
         m.getSource().setAnswer(m.getMessage());
+    }
+    
+    public void onMessageHandler_answered (Message m) {
+        m.getSource().sendMessage(new NetPack(m.getName().concat("/").concat(m.getMessage())));
     }
     // <editor-fold desc="Admin message handlers">
     public void onAdminMessageHandler_add(Message m) {
@@ -229,7 +235,7 @@ public abstract class Admin {
         ServPlayer sp = _servPlayers.findByName(m.getMessage());
         if (sp == null)
             return;
-        sp.sendMessage("exit/");
+        sp.sendMessage(new NetPack("exit/"));
         sp.acceptMessage("exit/");
     }
     public void onAdminMessageHandler_admin(Message m) {
@@ -241,7 +247,7 @@ public abstract class Admin {
     public void onAdminMessageHandler_dlopt(Message m) {
         
         if ("get".equals(m.getMessage())) {
-            m.getSource().sendMessage(_dealer.getOptions());
+            m.getSource().sendMessage(new NetPack(_dealer.getOptions()));
         }
         else {
             _dealer.setOptions(m.getMessage());
@@ -252,7 +258,7 @@ public abstract class Admin {
         for (AboutGame ag : _availableGames) {
             answer = answer.concat(ag.toString()).concat("/");
         }
-        m.getSource().sendMessage(answer);
+        m.getSource().sendMessage(new NetPack(answer));
     }
     public void onAdminMessageHandler_setdl(Message m) {
         Class<Dealer> dc = null;
@@ -263,7 +269,7 @@ public abstract class Admin {
             }
         }
         if (dc == null) {
-            m.getSource().sendMessage("setdl/nodealer");
+            m.getSource().sendMessage(new NetPack("setdl/nodealer"));
         }
         createDealer(dc);
         m.getSource().acceptMessage("dlopt/get");
@@ -297,7 +303,7 @@ public abstract class Admin {
      * @return возвращает true, если игрок может принять участие, иначе false
      */
     public boolean isPlayerOK(ServPlayer player) {
-        return _dealer.checkPlayer(player.sendAndWaitAnswer("check/"));
+        return _dealer.checkPlayer(player.sendAndWaitAnswer(null, "check/"));
     }
     
     /**
@@ -307,9 +313,14 @@ public abstract class Admin {
     public void gatheringMessage(Message m) {
         if (m == null || m.getMessage() == null || m.getMessage().isEmpty())
             return;
-        for (MessageHandler mh : _messageHandlers)
-            if (mh.tryParseMessage(m))
-                break;
+        if (m.getSource() == null) {
+            _servPlayers.sendMessageToAll(new NetPack(m.getFullMessage()));
+        }
+        else {
+            for (MessageHandler mh : _messageHandlers)
+                if (mh.tryParseMessage(m))
+                    break;
+        }
     }
     
     /**
@@ -394,7 +405,7 @@ public abstract class Admin {
         if (_dealer == null)
             return;
         for (ServPlayer p : getReservedPlayers())
-            _dealer.players.add(new GamePlayer(p));
+            _dealer.players.add(new InGamePlayer(p));
         _dealer.initGame();
         _gameTh = new Thread(_dealer);
         _gameTh.setName("Dealer thread");

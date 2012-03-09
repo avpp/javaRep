@@ -83,7 +83,7 @@ public class SocketServPlayer extends ServPlayer {
     }
     
     @Override
-    public void sendMessage(String message)
+    protected void sendMessage(String message)
     {
         if (s.isClosed())
             return;

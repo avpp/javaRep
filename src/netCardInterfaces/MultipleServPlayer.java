@@ -23,7 +23,7 @@ public class MultipleServPlayer {
         _addingSem = new Semaphore(1);
     }
     
-    public void sendMessageToAll(String message) {
+    public void sendMessageToAll(NetPack message) {
         for (ServPlayer sp : getPlayers())
             sp.sendMessage(message);
     }

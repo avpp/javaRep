@@ -4,7 +4,9 @@
  */
 package netCardInterfaces;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  *
@@ -24,8 +26,8 @@ public abstract class Player {
     
     private class AnsweredMessagePlayer extends AnsweredMessage {
         
-        public AnsweredMessagePlayer(String message) {
-            super(message);
+        public AnsweredMessagePlayer(NetPack pack) {
+            super(pack);
         }
 
         @Override
@@ -36,19 +38,19 @@ public abstract class Player {
     }
 
     private String name;
-    private Client client;
+    private IClient client;
     protected Thread thGame;
-    protected ArrayList<String> _messageNames;
+    protected String _messageHandlerPrefix;
     private ArrayList<MessageHandler> _messageHandlers;
     
     private AnsweredMessageList _answeredMessage;
     
-    public Player(Client c) {
+    public Player(IClient c) {
         client = c;
-        fillMessageNames();
         _messageHandlers = new ArrayList<MessageHandler>();
-        for (String mName : _messageNames)
-            _messageHandlers.add(new MessageHandler(this, "onMessageHandler_", mName));
+        _messageHandlerPrefix = "onMessageHandler_";
+        for (String mName : getDeclaredMessageNames(_messageHandlerPrefix))
+            _messageHandlers.add(new MessageHandler(this, _messageHandlerPrefix, mName));
         _answeredMessage = new AnsweredMessageList();
     }
     
@@ -69,14 +71,14 @@ public abstract class Player {
     /**
      * @return the client
      */
-    public Client getClient() {
+    public IClient getClient() {
         return client;
     }
 
     /**
      * @param client the client to set
      */
-    public void setClient(Client client) {
+    public void setClient(IClient client) {
         this.client = client;
     }
     
@@ -125,25 +127,31 @@ public abstract class Player {
      * Отправка сообщения на сервер
      * @param mesg 
      */
-    public void send(String mesg) {
-        if (!_answeredMessage.setAnswer(mesg))
+    public void send(NetPack mesg) {
+        if (!_answeredMessage.setAnswer(mesg.toString().substring(1, mesg.toString().length() - 1)))
             client.write(mesg);
     }
     
-    private void fillMessageNames() {
-        String messages[] = new String[] {"answered"};
-        _messageNames = new ArrayList<String>();
-        _messageNames.addAll(java.util.Arrays.asList(messages));
-        fillAdditionalMessageNames();
-    }
-    
-    protected void fillAdditionalMessageNames() {
-        
+    public LinkedList<String> getDeclaredMessageNames(String prefix) {
+        LinkedList<String> answer = new LinkedList<String>();
+        for (Method m : this.getClass().getMethods()) {
+            Class<?> params[] = m.getParameterTypes();                    
+            if (params.length == 1 && params[0].equals(Message.class) && m.getName().startsWith(prefix))
+                answer.add(m.getName().replace(prefix, ""));
+        }
+        return answer;
     }
     
 //<editor-fold desc="Message handlers">
     public void onMessageHandler_answered(Message m) {
-        send("answer/".concat(_answeredMessage.addNew(new AnsweredMessagePlayer(m.getMessage())).getAnswer()));
+        final String mesg = m.getMessage();
+        (new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                send(new NetPack("answer/".concat(_answeredMessage.addNew(new AnsweredMessagePlayer(new NetPack(mesg))).getAnswer())));
+            }
+        }, "answered message ".concat(m.getName()))).start();
     }
 //</editor-fold>
 }

@@ -10,6 +10,6 @@ package netCardInterfaces;
  */
 public interface IClient {
     public String read();
-    public void write(String str);
+    public void write(NetPack pack);
     public boolean isConnected();
 }

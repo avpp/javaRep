@@ -9,7 +9,7 @@ import java.util.LinkedList;
 /**
  * Экзепляр данного класса хранит в себе Список игроков и их очки, полученные в ходе игры
  * Использование данного класса:
- * 1. добавляем вышедших "одновременно" из игры игроков с помощью метода {@link addPlayer(GamePlayer p)}
+ * 1. добавляем вышедших "одновременно" из игры игроков с помощью метода {@link addPlayer(InGamePlayer p)}
  * 2. вызываем метод {@link incScore()}, для увеличения очков у всех игроков.
  * @author Alexey
  */
@@ -18,13 +18,13 @@ public class WinTable {
      * Данный класс представлет одну запись табдицы
      */
     public class rec {
-        private GamePlayer sp;
+        private InGamePlayer sp;
         private int score;
         /**
          * Создание записи для игрока (изначально имеет счёт ноль)
          * @param p игрок, для которого создаётся запись
          */
-        public rec(GamePlayer p)
+        public rec(InGamePlayer p)
         {
             sp = p;
             score = 0;
@@ -41,7 +41,7 @@ public class WinTable {
          * получить игрока данной записи
          * @return игрок
          */
-        public GamePlayer getPlayer()
+        public InGamePlayer getPlayer()
         {
             return sp;
         }
@@ -68,7 +68,7 @@ public class WinTable {
      * Добавление игрока в таблицу
      * @param p 
      */
-    public void addPlayer(GamePlayer p)
+    public void addPlayer(InGamePlayer p)
     {
         records.add(new rec(p));
     }
@@ -87,14 +87,14 @@ public class WinTable {
      * @param p игрок, для которого требуется узнать счёт
      * @return счёт игрока
      */
-    public int getScore(GamePlayer p)
+    public int getScore(InGamePlayer p)
     {
         int i;
         for (i = 0; i < records.size() && !records.get(i).getPlayer().equals(p); i++);
         return records.get(i).getScore();
     }
     
-    public int indexOf(GamePlayer p) {
+    public int indexOf(InGamePlayer p) {
         for (rec r : records) {
             if (r.getPlayer().equals(p))
                 return records.indexOf(r);

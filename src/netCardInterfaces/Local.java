@@ -26,7 +26,7 @@ public class Local extends ServPlayer implements IClient {
     }
     
     @Override
-    public void sendMessage(String message) {
+    protected void sendMessage(String message) {
         try {
             _semAdding.acquire();
         } catch (InterruptedException ex) {
@@ -55,8 +55,9 @@ public class Local extends ServPlayer implements IClient {
     }
 
     @Override
-    public void write(String str) {
-        acceptMessage(str);
+    public void write(NetPack pack) {
+        while (!pack.isEmpty())
+            acceptMessage(pack.getMessage());
     }
 
     @Override

@@ -154,10 +154,8 @@ public class GamblingTable implements ICardSource, ICardDestination {
         String[] r = str.split("/");
         if (r.length <= 0)
             return null;
-        if (!"gamt".equals(r[0]))
-            return null;
         GamblingTable ans = new GamblingTable();
-        for (int i = 1; i < r.length; i++)
+        for (int i = 0; i < r.length; i++)
         {
             String[] c = r[i].split("|");
             for (int j = 0; j < c.length; j++)
@@ -165,7 +163,7 @@ public class GamblingTable implements ICardSource, ICardDestination {
                 String cards[] =c[j].split(",");
                 for (int k = 0; k < cards.length; k++)
                 {
-                    ans.addCard(Card.fromString(cards[k]), i - 1, j, k);
+                    ans.addCard(Card.fromString(cards[k]), i, j, k);
                 }
             }
             
